@@ -1,49 +1,70 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { type NextPage } from "next";
-import React from "react";
-import { LandingLayout, Layout } from "../layouts/Layout";
+import {
+  Box,
+  Button,
+  Heading,
+  Image,
+  Text,
+  Center,
+  useMediaQuery,
+} from "@chakra-ui/react";
+import type { NextPage } from "next";
 import { Flare } from "../components/Flare";
-import { Button } from "../components/Button";
-import Link from "next/link";
-
+import { LandingLayout } from "../layouts/Layout";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
+
   return (
-    
     <LandingLayout>
-      <div className="md:flex">
-        <div className="flex flex-col justify-center md:w-1/2">
-          <h1 className="mb-8 text-5xl font-bold text-green-900">
-            Green Pill Network
-          </h1>
-          <p className="mb-12 text-xl leading-8">
-          TURNING
-            DEGENS
-            TO REGENS
+      <Center
+        display="flex"
+        flexDirection={isLargerThan800 ? "row" : "column"}
+        alignItems={'center'}
+      >
+        <Box
+          pt={24}
+          display="flex"
+          justifyContent={isLargerThan800 ? "flex-start" : "space-between"}
+          flexDirection={"column"}
+          gap={8}
+        >
+          <Heading as="h1" fontFamily="volkhov" textAlign="left" fontSize={isLargerThan800 ? '5xl' : '3xl'} color={'yellow'} maxW={'400px'}>
+            Turning  Degens  to Regens 
             (one green pill at a time)
-          <br/>
-            <a
-              className="text-green-500 hover:text-green-800"
-              href={"https://hypercerts.xyz"}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Mint hypercert
-            </a>{" "}
-            to claim your proof of Impact
-          </p>
-          <div className="flex justify-center md:justify-start">
-            <Button color="gradient" as={Link} href={"/design"}>
-              Generate your Gratitude
-            </Button>
-          </div>
-        </div>
-        <div className="px-16 md:w-1/2">
+          </Heading>
+
+          <Button
+            onClick={() => router.push("/design")}
+            size="xl"
+            variant={"primary"}
+          >
+            Generate your HyperCert
+          </Button>
+        </Box>
+
+        <Box
+          flex="1"
+          px="16"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          
+        >
+          <Image
+            src="https://greenpill.network/src/images/footer-img-sequence/32.png"
+            id="hero-img"
+            width={200}
+            height={200}
+            position="absolute"
+            alt="Green Pill"
+            zIndex={20}
+          />
           <Flare />
-        </div>
-      </div>
+        </Box>
+      </Center>
     </LandingLayout>
-    
   );
 };
 

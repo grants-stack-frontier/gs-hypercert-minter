@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+<<<<<<< Updated upstream
 import z from "zod";
 // import { useFormContext } from "react-hook-form";
 
@@ -9,6 +10,11 @@ import { Layout } from "../layouts/Layout";
 // import { Designer } from "components/Designer";
 import { Form } from "../components/Form";
 import { GreenPillForm } from "../components/GreenPillForm";
+=======
+import * as z from "zod";
+import { LandingLayout } from "../layouts/Layout";
+import { createClaim } from "../utils/createClaim";
+>>>>>>> Stashed changes
 import { generateSVG } from "../utils/svg";
 import { createClaim } from "../utils/createClaim";
 import React from "react";
@@ -78,11 +84,23 @@ const Design: NextPage = () => {
 
   // const mint = useMint((data) => router.push(`/tx/${data.hash}`));
   return (
+<<<<<<< Updated upstream
     <Layout>
       <Form
         schema={Schema as never}
         onSubmit={async ({ contributor, contributorAddress, reason }) => {
           // const description = gratitudeTemplate({ contributor, reason });
+=======
+    <LandingLayout>
+      <form
+        onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
+          event.preventDefault();
+          const formData = new FormData(event.currentTarget);
+          const contributor = formData.get('contributor') as string;
+          const contributorAddress = formData.get('contributorAddress') as string;
+          const reason = formData.get('reason') as string;
+
+>>>>>>> Stashed changes
           const svg = await generateSVG({
             contributor,
             reason,
@@ -100,6 +118,7 @@ const Design: NextPage = () => {
           // mint.mutate({ contributor: contributorAddress, claimData });
         }}
       >
+<<<<<<< Updated upstream
         <h1 className="mb-6 text-center text-4xl font-bold text-green-900">
           {headings[step as keyof typeof headings]}
         </h1>
@@ -112,6 +131,22 @@ const Design: NextPage = () => {
         {/* {(mint.error as any)?.message} */}
       </div>
     </Layout>
+=======
+        <Heading
+          fontSize="4xl"
+          fontFamily="bold"
+          color="green.900"
+          mb={6}
+          textAlign="center"
+        >
+          {headings[step as never]}
+        </Heading>
+        
+      </form>
+      <CurrentStep step={step as never} />
+
+    </LandingLayout>
+>>>>>>> Stashed changes
   );
 };
 

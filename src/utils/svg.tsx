@@ -1,7 +1,7 @@
 import satori from "satori";
 import React from "react";
 import { config } from "../components/HyperCertSVG";
-import { content } from "../components/GreenPillForm";
+// import { content } from "../components/GreenPillForm";
 export const generateSVG = ({
   contributor = "",
   reason = "",
@@ -64,7 +64,7 @@ export const generateSVG = ({
                 lineHeight: "180%",
               }}
             >
-              <span>{content.intro}</span>
+              {/* <span>{content.intro}</span> */}
               <span style={{ fontSize: contributor.length > 40 ? 22 : 24 }}>
                 {contributor}
               </span>

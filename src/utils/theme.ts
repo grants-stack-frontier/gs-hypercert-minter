@@ -1,0 +1,126 @@
+import { extendTheme, Input, Textarea } from '@chakra-ui/react';
+
+const theme = extendTheme({
+  colors: {
+    green: "#C2E812",
+    yellow: "#FFD972",
+    white: "#FFFFFF",
+    "dark-green": "#254D32",
+    "mid-green": "#4FB477",
+  },
+  styles: {
+    global: {
+      "html, body": {
+        background: "#254D32",
+        color: "white",
+        overflowX: "hidden",
+        scrollBehavior: "smooth",
+        boxSizing: "border-box",
+        backgroundImage: "url('https://greenpill.network/src/images/greenpill-bg.png')",
+        backgroundPosition: "top",
+        backgroundRepeat: "repeat",
+        backgroundSize: "contain",
+        fontWeight: "500",
+      },
+      "p": {
+        color: "white",
+      },
+      "section": {
+        paddingX: "1rem",
+      },
+    }
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        borderRadius: "35px",
+        minWidth: "160px",
+        fontWeight: "700",
+        padding: "0.5rem 1rem",
+        transition: "all 0.1s ease-out",
+        cursor: "pointer",
+      },
+      variants: {
+        "primary": {
+          bg: "green",
+          color: "dark-green",
+          _hover: {
+            bg: "mid-green",
+            transform: "translate(2px, 2px)",
+          },
+        },
+        "secondary": {
+          bg: "dark-green",
+          color: "green",
+          borderColor: "green",
+          _hover: {
+            borderColor: "mid-green",
+            color: "mid-green",
+          },
+        },
+      }
+    },
+    Link: {
+      baseStyle: {
+        padding: "0.5rem 1rem",
+        color: "green",
+        fontWeight: "500",
+        transition: "all 0.1s ease-out",
+        cursor: "pointer",
+        _hover: {
+          color: "mid-green",
+          transform: "translate(2px, 2px)",
+        },
+      }
+    },
+    Input: {
+      parts: ['field'],
+      baseStyle: {
+        field: {
+          borderColor: "green",
+          _focus: {
+            borderColor: "mid-green",
+            ringColor: "transparent",
+          },
+          _hover: {
+            borderColor: "mid-green",
+          },
+        },
+      },
+      defaultProps: {
+        focusBorderColor: 'green',
+      },
+    },
+    Textarea: {
+      baseStyle: {
+        field: {
+          _placeholder: {
+            color: "gray.400",
+          },
+          color: "black",
+          fontSize: "md",
+        },
+      },
+      sizes: {
+        md: {
+          field: {
+            borderRadius: "none",
+          },
+        },
+      },
+      defaultProps: {
+        focusBorderColor: 'green',
+      },
+    },
+    FormControl: {
+      baseStyle: {
+        marginBottom: "20px",
+      }
+    },
+  },
+  breakpoints: {
+    sm: "800px",
+  }
+})
+
+export default theme;

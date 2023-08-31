@@ -5,7 +5,7 @@ import React from "react";
 import { useNetwork, useWaitForTransaction } from "wagmi";
 import { Button } from "../../components/Button";
 import { Spinner } from "../../components/Spinner";
-import { Layout } from "../../layouts/Layout";
+import { LandingLayout } from "../../layouts/Layout";
 
 const createTxUrl = (hash: string, network: string) => {
   const networkMap = { goerli: "goerli", optimism: "optimistic" };
@@ -22,7 +22,7 @@ const MintingCert: NextPage = () => {
   // TODO: Update this usecase
   
   return (
-    <Layout>
+    <LandingLayout>
       <div className="flex h-full flex-col items-center sm:pt-32">
         <Spinner />
         <div className="mb-16 pt-8 text-2xl font-bold italic text-green-900 sm:mb-32">
@@ -38,7 +38,7 @@ const MintingCert: NextPage = () => {
           View Transaction
         </Button>
       </div>
-    </Layout>
+    </LandingLayout>
   );
 };
 
