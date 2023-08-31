@@ -1,4 +1,4 @@
-import site from "config/site";
+import site from "../config/site";
 import { toYear } from "./date";
 
 const calcTime = (d: Date) => [+d, +d, +d, +d].map((v) => v);

@@ -36,7 +36,7 @@ const GreenPillForm = () => {
   });
 
   return (
-    <Center h="100vh" w="100vw">
+    <Center h="full" w="100vw" >
       <VStack  w={'600px'}>
         <form
           onSubmit={(d) => console.log(d)}

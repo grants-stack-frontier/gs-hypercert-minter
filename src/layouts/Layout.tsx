@@ -1,6 +1,6 @@
 import { Box, Button, Link, Flex, Center, Text } from "@chakra-ui/react";
 import { usePrivy } from "@privy-io/react-auth";
-import site from "config/site";
+import site from "../config/site";
 import Head from "next/head";
 import NextLink from "next/link";
 
@@ -25,7 +25,7 @@ function PrivyAuthButton() {
 }
 
 const Footer = () => (
-  <Center as="footer" position="fixed" bottom="0">
+  <Center as="footer" position="sticky" bottom="0">
     <Text maxW={"70%"} textAlign={"center"}>
       {`Crafted with ❤️ by supermodular.xyz | Pursuing the construction of a more regenerative 🌍 internet`}
       <Link
@@ -61,12 +61,14 @@ export const LandingLayout = ({ children }: any) => {
         </Link>
         <PrivyAuthButton />
       </Flex>
-
+      <Flex direction={"column"} justifyContent={"center"} justify={"space-between"}>
       <Center>{children}</Center>
-
-      <Center>
+      
+      <Center  position={"sticky"} bottom={"0"} alignSelf={"flex-end"} width={"full"}>
         <Footer />
       </Center>
+      </Flex>
+      
     </>
   );
 };

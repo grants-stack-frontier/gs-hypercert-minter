@@ -17,11 +17,12 @@ const Home: NextPage = () => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
   return (
-    <LandingLayout>
+    <LandingLayout height={"100vh"}>
       <Center
         display="flex"
         flexDirection={isLargerThan800 ? "row" : "column"}
         alignItems={'center'}
+        marginBottom={'90px'}
       >
         <Box
           pt={24}
