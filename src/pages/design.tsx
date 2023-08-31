@@ -44,20 +44,9 @@ const CurrentStep = ({ step = "text", isMinting = false }) => {
       );
       case "text":
         return (
-          <>
+          
             <GreenPillForm />
-            {/* <div className="flex justify-center">
-              <Button
-                className="w-48"
-                as={Link}
-                // disabled={!form.formState.isValid}
-                href={"?step=design"}
-                color="gradient"
-              >
-                Next
-              </Button>
-            </div> */}
-          </>
+            
         );
   }
 
