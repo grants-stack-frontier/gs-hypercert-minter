@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import { Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as z from "zod";
@@ -21,23 +22,7 @@ const CurrentStep = ({ step = "text", isMinting = false }) => {
   // const form = useFormContext();
 
   switch (step) {
-    case "text":
-      return (
-        <>
-          <GreenPillForm />
-          <div className="flex justify-center">
-            <Button
-              className="w-48"
-              as={Link}
-              // disabled={!form.formState.isValid}
-              href={"?step=design"}
-              color="gradient"
-            >
-              Next
-            </Button>
-          </div>
-        </>
-      );
+   
     case "design":
       return (
         <>
@@ -57,6 +42,23 @@ const CurrentStep = ({ step = "text", isMinting = false }) => {
           </div>
         </>
       );
+      case "text":
+        return (
+          <>
+            <GreenPillForm />
+            {/* <div className="flex justify-center">
+              <Button
+                className="w-48"
+                as={Link}
+                // disabled={!form.formState.isValid}
+                href={"?step=design"}
+                color="gradient"
+              >
+                Next
+              </Button>
+            </div> */}
+          </>
+        );
   }
 
   return null;
@@ -75,6 +77,7 @@ const Design: NextPage = () => {
   // const mint = useMint((data) => router.push(`/tx/${data.hash}`));
   return (
     <LandingLayout>
+      <Flex flexDirection={'row'}>
       <form
         onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault();
@@ -112,6 +115,7 @@ const Design: NextPage = () => {
         
       </form>
       <CurrentStep step={step as never} />
+      </Flex>
 
     </LandingLayout>
   );
