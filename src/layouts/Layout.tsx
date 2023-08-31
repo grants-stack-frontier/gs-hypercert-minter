@@ -53,6 +53,7 @@ export const LandingLayout = ({ children }: any) => {
         p="6"
         position={"sticky"}
         w={"full"}
+        top={0}
         justifyContent="space-between"
         alignItems="center"
       >

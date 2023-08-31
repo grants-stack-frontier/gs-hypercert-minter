@@ -37,7 +37,7 @@ const GreenPillForm = () => {
 
   return (
     <Center h="100vh" w="100vw">
-      <VStack  w={'600px'}>
+      <VStack w={'600px'} style={{ backdropFilter: 'blur(10px)' }} padding={12}>
         <form
           onSubmit={(d) => console.log(d)}
           onKeyUpCapture={(e) => {
@@ -54,7 +54,7 @@ const GreenPillForm = () => {
               isInvalid={errors.name ? true : false}
               autoFocus
               mb={4}
-            
+
               placeholder=""
             />
           </FormControl>
@@ -73,7 +73,7 @@ const GreenPillForm = () => {
               isInvalid={errors.link ? true : false}
               autoFocus
               mb={4}
-            
+
               placeholder=""
             />
           </FormControl>
@@ -118,7 +118,7 @@ const GreenPillForm = () => {
                 <SingleDatepicker
                   date={value}
                   onDateChange={(date) => onChange(date)}
-                  
+
                 />
               )}
             />
