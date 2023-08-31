@@ -1,22 +1,12 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-<<<<<<< Updated upstream
-import z from "zod";
-// import { useFormContext } from "react-hook-form";
-
-import { Layout } from "../layouts/Layout";
-// import { Button } from "../components/Button";
-// import { Designer } from "components/Designer";
-import { Form } from "../components/Form";
-import { GreenPillForm } from "../components/GreenPillForm";
-=======
 import * as z from "zod";
 import { LandingLayout } from "../layouts/Layout";
+import { Heading } from "@chakra-ui/react";
 import { createClaim } from "../utils/createClaim";
->>>>>>> Stashed changes
 import { generateSVG } from "../utils/svg";
-import { createClaim } from "../utils/createClaim";
+import GreenPillForm from "components/GreenPillForm";
 import React from "react";
 //chakra migration
 import {Button} from '@chakra-ui/react'
@@ -84,13 +74,6 @@ const Design: NextPage = () => {
 
   // const mint = useMint((data) => router.push(`/tx/${data.hash}`));
   return (
-<<<<<<< Updated upstream
-    <Layout>
-      <Form
-        schema={Schema as never}
-        onSubmit={async ({ contributor, contributorAddress, reason }) => {
-          // const description = gratitudeTemplate({ contributor, reason });
-=======
     <LandingLayout>
       <form
         onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
@@ -100,7 +83,6 @@ const Design: NextPage = () => {
           const contributorAddress = formData.get('contributorAddress') as string;
           const reason = formData.get('reason') as string;
 
->>>>>>> Stashed changes
           const svg = await generateSVG({
             contributor,
             reason,
@@ -118,20 +100,6 @@ const Design: NextPage = () => {
           // mint.mutate({ contributor: contributorAddress, claimData });
         }}
       >
-<<<<<<< Updated upstream
-        <h1 className="mb-6 text-center text-4xl font-bold text-green-900">
-          {headings[step as keyof typeof headings]}
-        </h1>
-        <CurrentStep
-          step={router.query.step as string}
-          // isMinting={mint.isLoading}
-        />
-      </Form>
-      <div className="pt-4 font-mono text-sm text-red-600">
-        {/* {(mint.error as any)?.message} */}
-      </div>
-    </Layout>
-=======
         <Heading
           fontSize="4xl"
           fontFamily="bold"
@@ -146,7 +114,6 @@ const Design: NextPage = () => {
       <CurrentStep step={step as never} />
 
     </LandingLayout>
->>>>>>> Stashed changes
   );
 };
 
