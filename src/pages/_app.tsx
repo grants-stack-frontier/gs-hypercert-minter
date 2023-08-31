@@ -1,38 +1,42 @@
 import { type AppType } from "next/dist/shared/lib/utils";
-import "@rainbow-me/rainbowkit/styles.css";
-
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { optimism, goerli } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+// import { PrivyProvider } from '@privy-io/react-auth';
+// import type { User } from '@privy-io/react-auth';
+import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiConfig, createConfig } from "wagmi";
+import { goerli, optimism } from "wagmi/chains";
 
-import "../styles/globals.css";
-import site from "config/site";
+import site from "../config/site";
 import { NextSeo } from "next-seo";
+import "../styles/globals.css";
 
-const availableChains =
-  process.env.NODE_ENV !== "production" ? [goerli, optimism] : [optimism];
+import { ChakraProvider } from '@chakra-ui/react'   
 
-const { chains, provider } = configureChains(
-  [optimism, goerli],
-  [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }),
-    publicProvider(),
-  ]
-);
 
-const { connectors } = getDefaultWallets({ appName: site.title, chains });
 
-const wagmiClient = createClient({ autoConnect: true, connectors, provider });
+  import { createPublicClient, http } from 'viem';
+   
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    publicClient: createPublicClient({
+      chain: process.env.NODE_ENV === 'production' ? optimism : goerli,
+      transport: http()
+    }),
+  })
+
+  const handleLogin = (user: User) => {
+  console.log(`User ${user?.id} logged in!`)
+}
+
 const queryClient = new QueryClient();
 
 const { title, description, url } = site;
 const imageUrl = `${url}/og.png`;
 const MyApp: AppType = ({ Component, pageProps }) => {
+  
   return (
     <>
+    <ChakraProvider>
       <NextSeo
         title={title}
         description={description}
@@ -59,12 +63,27 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         }}
       />
       <QueryClientProvider client={queryClient}>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains}>
+        <WagmiConfig config={wagmiConfig}>
+{/*           
+          <PrivyProvider
+        appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
+        onSuccess={handleLogin}
+        config={{
+          loginMethods: ['email', 'wallet'],
+          appearance: {
+            theme: 'dark',
+            accentColor: '#C2E812',
+            logo: 'https://greenpill.network/src/images/greenpill-logo.svg',
+            
+          },
+        }}
+      > */}
             <Component {...pageProps} />
-          </RainbowKitProvider>
+            {/* </PrivyProvider> */}
+          
         </WagmiConfig>
       </QueryClientProvider>
+      </ChakraProvider>
     </>
   );
 };
