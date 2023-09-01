@@ -7,16 +7,21 @@ const theme = extendTheme({
     white: "#FFFFFF",
     "dark-green": "#254D32",
     "mid-green": "#4FB477",
+    "active-blue" : "#3083DC",
+    "default-grey" : "#C1C1C1",
+    "error-orange" : "#F7A072",
+    "dark-grey" : "#666"
   },
   styles: {
     global: {
       "html, body": {
-        background: "#254D32",
-        color: "white",
+        // background: "#254D32",
+        background: "#FEFFFD",
+        color: "dark-grey",
         overflowX: "hidden",
         scrollBehavior: "smooth",
         boxSizing: "border-box",
-        backgroundImage: "url('https://greenpill.network/src/images/greenpill-bg.png')",
+        // backgroundImage: "url('https://greenpill.network/src/images/greenpill-bg.png')",
         backgroundPosition: "top",
         backgroundRepeat: "repeat",
         backgroundSize: "contain",
@@ -77,10 +82,15 @@ const theme = extendTheme({
       parts: ['field'],
       baseStyle: {
         field: {
-          borderColor: "green",
+          borderColor: "default-grey",
+          border : "2px solid",
+          color : "dark-grey",
           _focus: {
-            borderColor: "mid-green",
+            borderColor: "active-blue",
             ringColor: "transparent",
+          },
+          _placeholder: {
+            color: "default-grey",
           },
           _hover: {
             borderColor: "mid-green",
@@ -88,28 +98,33 @@ const theme = extendTheme({
         },
       },
       defaultProps: {
-        focusBorderColor: 'green',
+        focusBorderColor: 'active-blue',
       },
     },
     Textarea: {
       baseStyle: {
         field: {
           _placeholder: {
-            color: "gray.400",
+            color: "default-grey",
           },
-          color: "black",
+          color: "dark-grey",
           fontSize: "md",
+          _hover: {
+            borderColor: "mid-green",
+          },
         },
       },
       sizes: {
         md: {
           field: {
             borderRadius: "none",
+            
           },
         },
       },
       defaultProps: {
-        focusBorderColor: 'green',
+        focusBorderColor: 'active-blue',
+        
       },
     },
     FormControl: {
