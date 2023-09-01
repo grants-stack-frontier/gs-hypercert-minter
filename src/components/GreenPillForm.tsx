@@ -100,7 +100,7 @@ const GreenPillForm = () => {
             />
           </FormControl>
           <Flex flexDir={"row"} justifyContent={"space-evenly"}>
-          <InputGroup width={"200px"}>
+          <InputGroup width={"150px"}>
           <FormControl id="startDate" zIndex={20} my={4} >
             <FormLabel>Start Date</FormLabel>
             <Controller
@@ -118,7 +118,7 @@ const GreenPillForm = () => {
             </InputRightElement>
           </FormControl>
           </InputGroup>
-          <InputGroup width={"200px"}>
+          <InputGroup width={"150px"}>
           <FormControl id="endDate" zIndex={20} my={4}>
 
             <FormLabel>End Date</FormLabel>
