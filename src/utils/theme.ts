@@ -17,7 +17,7 @@ const theme = extendTheme({
       "html, body": {
         // background: "#254D32",
         background: "#FEFFFD",
-        color: "white",
+        color: "dark-grey",
         overflowX: "hidden",
         scrollBehavior: "smooth",
         boxSizing: "border-box",
