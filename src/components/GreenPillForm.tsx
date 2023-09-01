@@ -2,7 +2,7 @@ import {
   Box,
   Button,
   Center,
-  Container,
+  Text,
   Flex,
   FormControl,
   FormLabel,
@@ -147,14 +147,15 @@ const GreenPillForm = () => {
           </FormControl>
           <FormControl id="others" my={4}>
             <FormLabel>Any Other Contributors?</FormLabel>
-            <Textarea
+            <Input
                       border="1px solid"
                       borderColor="dark-grey"
               {...register("others")}
               isInvalid={errors.others ? true : false}
-              rows={6}
-              placeholder="You can add names, address of contributors that consent to be registered publicly."
+
+              placeholder=""
             />
+            <Text color="default-grey" fontSize={"xs"} >(You can add names, address of contributors that consent to be registered publicly.)</Text>
           </FormControl>
       
           <Center>
