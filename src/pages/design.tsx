@@ -95,7 +95,7 @@ const Design: NextPage = () => {
         <Heading
           fontSize="4xl"
           fontFamily="bold"
-          color="green.900"
+          color="#C2E812"
           mb={6}
           textAlign="center"
         >

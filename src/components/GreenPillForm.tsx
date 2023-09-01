@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Container,
   Flex,
   FormControl,
   FormLabel,
@@ -17,6 +18,8 @@ import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon} from '@chakra-ui/icons';
 import theme from '../utils/theme';
+import * as GreenPillLogo from "../../public/svgPatterns/pattern-7.svg";
+import Image from "next/image";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -27,6 +30,7 @@ const schema = z.object({
   startDate: z.date(),
   endDate: z.date(),
 });
+
 
 const GreenPillForm = () => {
   const {
@@ -39,8 +43,12 @@ const GreenPillForm = () => {
   });
 
   return (
+    <Box>
+
     <Center h="full" w="100vw" >
+      
       <VStack  w={'600px'}>
+      
         <form
           onSubmit={(d) => console.log(d)}
           onKeyUpCapture={(e) => {
@@ -62,6 +70,7 @@ const GreenPillForm = () => {
               placeholder=""
             />
           </FormControl>
+
           <FormControl id="tags" my={4}>
             <FormLabel>Tags for Scope of Work</FormLabel>
             <Input
@@ -71,6 +80,47 @@ const GreenPillForm = () => {
               placeholder="Social Impact, Public Health, Education, etc."
             />
           </FormControl>
+          <Flex flexDir={"row"} justifyContent={"space-between"}>
+          <InputGroup width={"auto"} zIndex={25} >
+          <FormControl id="startDate" zIndex={20} my={4} >
+            <FormLabel>Start Date</FormLabel>
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <SingleDatepicker
+                  date={value}
+                  onDateChange={(date) => onChange(date)}
+                />
+              )}
+            />
+            <InputRightElement pointerEvents={"none"} marginTop={"32px"}>
+              <CalendarIcon />
+            </InputRightElement>
+          </FormControl>
+          </InputGroup>
+          <InputGroup width={"auto"} zIndex={20}>
+          <FormControl id="endDate" zIndex={20} my={4}>
+
+            <FormLabel>End Date</FormLabel>
+             
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <SingleDatepicker
+                
+                  date={value}
+                  onDateChange={(date) => onChange(date)}
+                />
+              )}
+            />
+            <InputRightElement pointerEvents={"none"} marginTop={"32px"}>
+              <CalendarIcon />
+            </InputRightElement>
+          </FormControl>
+          </InputGroup>
+          </Flex>
           <FormControl id="link" my={4}>
             <FormLabel>Link where we can find info about work</FormLabel>
             <Input
@@ -101,53 +151,15 @@ const GreenPillForm = () => {
               placeholder="You can add names, address of contributors that consent to be registered publicly."
             />
           </FormControl>
-          <Flex flexDir={"row"} justifyContent={"space-evenly"}>
-          <InputGroup width={"150px"} zIndex={25} >
-          <FormControl id="startDate" zIndex={20} my={4} >
-            <FormLabel>Start Date</FormLabel>
-            <Controller
-              name="startDate"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <SingleDatepicker
-                  date={value}
-                  onDateChange={(date) => onChange(date)}
-                />
-              )}
-            />
-            <InputRightElement pointerEvents={"none"} marginTop={"32px"}>
-              <CalendarIcon />
-            </InputRightElement>
-          </FormControl>
-          </InputGroup>
-          <InputGroup width={"150px"} zIndex={20}>
-          <FormControl id="endDate" zIndex={20} my={4}>
-
-            <FormLabel>End Date</FormLabel>
-             
-            <Controller
-              name="endDate"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <SingleDatepicker
-                
-                  date={value}
-                  onDateChange={(date) => onChange(date)}
-                />
-              )}
-            />
-            <InputRightElement pointerEvents={"none"} marginTop={"32px"}>
-              <CalendarIcon />
-            </InputRightElement>
-          </FormControl>
-          </InputGroup>
-          </Flex>
+      
+          
           <Button type="submit" variant={"primary"} w={'full'} my={8}>
             Submit
           </Button>
         </form>
       </VStack>
     </Center>
+    </Box>
   );
 };
 

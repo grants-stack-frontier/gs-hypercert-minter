@@ -7,6 +7,9 @@ const theme = extendTheme({
     white: "#FFFFFF",
     "dark-green": "#254D32",
     "mid-green": "#4FB477",
+    "active-blue" : "#3083DC",
+    "default-grey" : "#C1C1C1",
+    "error-orange" : "#F7A072"
   },
   styles: {
     global: {
@@ -77,9 +80,9 @@ const theme = extendTheme({
       parts: ['field'],
       baseStyle: {
         field: {
-          borderColor: "green",
+          borderColor: "default-grey",
           _focus: {
-            borderColor: "mid-green",
+            borderColor: "active-blue",
             ringColor: "transparent",
           },
           _hover: {
@@ -95,7 +98,7 @@ const theme = extendTheme({
       baseStyle: {
         field: {
           _placeholder: {
-            color: "gray.400",
+            color: "default-grey",
           },
           color: "black",
           fontSize: "md",
