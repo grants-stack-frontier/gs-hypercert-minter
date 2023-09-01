@@ -1,16 +1,15 @@
+import { Flex, Heading } from "@chakra-ui/react";
+import GreenPillForm from "components/GreenPillForm";
 import { type NextPage } from "next";
-import { Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import * as z from "zod";
 import { LandingLayout } from "../layouts/Layout";
-import { Heading } from "@chakra-ui/react";
 import { createClaim } from "../utils/createClaim";
 import { generateSVG } from "../utils/svg";
-import GreenPillForm from "components/GreenPillForm";
-import React from "react";
 //chakra migration
-import {Button} from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react';
 
 const Schema = z.object({
   contributor: z.string(),
@@ -19,7 +18,10 @@ const Schema = z.object({
 });
 
 const CurrentStep = ({ step = "text", isMinting = false }) => {
-  // const form = useFormContext();
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   switch (step) {
    
@@ -45,7 +47,7 @@ const CurrentStep = ({ step = "text", isMinting = false }) => {
       case "text":
         return (
           
-            <GreenPillForm />
+            <GreenPillForm isClient={isClient}/>
             
         );
   }

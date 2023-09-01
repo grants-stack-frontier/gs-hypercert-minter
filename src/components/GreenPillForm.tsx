@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+'use client'
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -29,12 +31,12 @@ export const colorOptions = [
   { value: "green", label: "Green", color: "#36B37E" },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
 const animatedComponents = makeAnimated();
 
 const customStyles = {
-  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-  control: (provided) => ({
+  menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
+  control: (provided: object) => ({
     ...provided,
     height: 50,
     minHeight: 50,
@@ -87,7 +89,7 @@ const schema = z.object({
   endDate: z.date(),
 });
 
-const GreenPillForm = ({isClient}: {isClient:Boolean}) => {
+const GreenPillForm = ({isClient}: {isClient:boolean}) => {
   const {
     register,
     formState: { errors },
@@ -133,14 +135,14 @@ const GreenPillForm = ({isClient}: {isClient:Boolean}) => {
             control={control}
             name="tags"
             render={() => (
-              isClient && <Select
+              isClient ? <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
                 isMulti
                 options={colorOptions}
                 styles={customStyles}
                 menuPortalTarget={document.body ?? undefined}
-              />
+              /> : <> </>
             )}
           />
 
