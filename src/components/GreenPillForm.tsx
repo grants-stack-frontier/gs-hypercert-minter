@@ -44,6 +44,39 @@ const customStyles = {
   })
 };
 
+const CalConfig = {
+  dayOfMonthBtnProps: {
+    defaultBtnProps: {
+      _hover: {
+        background: '#254D32',
+        color: '#fff',
+      },
+    },
+    selectedBtnProps: {
+      background: '#C2E812',
+    },
+  },
+  dateNavBtnProps: {
+    _hover: {
+      background: '#fff',
+    },
+  },
+  popoverCompProps: {
+    popoverContentProps: {
+      background: '#FFF',
+      color: 'black',
+      padding: '0px',
+    },
+  },
+  weekdayLabelProps: {
+    fontWeight: 'normal'
+  },
+  dateHeadingProps: {
+    fontWeight: 'semibold'
+  }
+}
+
+
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   tags: z.string().min(1, { message: "Required" }),
@@ -124,6 +157,7 @@ const GreenPillForm = ({isClient}: {isClient:Boolean}) => {
                     <SingleDatepicker
                       date={value}
                       onDateChange={(date) => onChange(date)}
+                      propsConfigs={{...CalConfig}}
                     />
                   )}
                 />
@@ -150,6 +184,7 @@ const GreenPillForm = ({isClient}: {isClient:Boolean}) => {
                     <SingleDatepicker
                       date={value}
                       onDateChange={(date) => onChange(date)}
+                      propsConfigs={{...CalConfig}}
                     />
                   )}
                 />

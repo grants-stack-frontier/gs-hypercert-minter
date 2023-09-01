@@ -44,6 +44,10 @@ const theme = extendTheme({
         padding: "0.5rem 1rem",
         transition: "all 0.1s ease-out",
         cursor: "pointer",
+        _hover: {
+          bg: "mid-green",
+          transform: "translate(2px, 2px)",
+        },
       },
       variants: {
         "primary": {
@@ -139,3 +143,5 @@ const theme = extendTheme({
 })
 
 export default theme;
+
+
