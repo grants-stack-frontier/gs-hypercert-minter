@@ -68,9 +68,9 @@ export const LandingLayout = ({ children }: any) => {
       </Flex>
       <Flex direction={"column"} justifyContent={"center"} justify={"space-between"}>
       <Center>{children}</Center>
-      <Center  position={"sticky"} bottom={"0"} alignSelf={"flex-end"} width={"full"}>
+      {/* <Center  position={"sticky"} bottom={"0"} alignSelf={"flex-end"} width={"full"}>
         <Footer />
-      </Center>
+      </Center> */}
       </Flex>
       
     </>
