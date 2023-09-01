@@ -31,7 +31,6 @@ const schema = z.object({
 const GreenPillForm = () => {
   const {
     register,
-    handleSubmit,
     formState: { errors },
     getValues,
     control,
@@ -56,6 +55,7 @@ const GreenPillForm = () => {
             <Input
               {...register("name")}
               isInvalid={errors.name ? true : false}
+              required={true}
               autoFocus
               mb={4}
             
@@ -66,6 +66,7 @@ const GreenPillForm = () => {
             <FormLabel>Tags for Scope of Work</FormLabel>
             <Input
               {...register("tags")}
+              required={true}
               isInvalid={errors.tags ? true : false}
               placeholder="Social Impact, Public Health, Education, etc."
             />
@@ -75,6 +76,7 @@ const GreenPillForm = () => {
             <Input
               {...register("link")}
               isInvalid={errors.link ? true : false}
+              required={true}
               autoFocus
               mb={4}
             
@@ -100,7 +102,7 @@ const GreenPillForm = () => {
             />
           </FormControl>
           <Flex flexDir={"row"} justifyContent={"space-evenly"}>
-          <InputGroup width={"150px"}>
+          <InputGroup width={"150px"} zIndex={25} >
           <FormControl id="startDate" zIndex={20} my={4} >
             <FormLabel>Start Date</FormLabel>
             <Controller
@@ -118,7 +120,7 @@ const GreenPillForm = () => {
             </InputRightElement>
           </FormControl>
           </InputGroup>
-          <InputGroup width={"150px"}>
+          <InputGroup width={"150px"} zIndex={20}>
           <FormControl id="endDate" zIndex={20} my={4}>
 
             <FormLabel>End Date</FormLabel>
