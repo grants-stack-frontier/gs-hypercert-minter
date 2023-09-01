@@ -2,9 +2,12 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   FormControl,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightElement,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -12,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
+import { CalendarIcon} from '@chakra-ui/icons';
 import theme from '../utils/theme';
 
 const schema = z.object({
@@ -95,8 +99,9 @@ const GreenPillForm = () => {
               placeholder="You can add names, address of contributors that consent to be registered publicly."
             />
           </FormControl>
-
-          <FormControl id="startDate" zIndex={20} my={4}>
+          <Flex flexDir={"row"} justifyContent={"space-evenly"}>
+          <InputGroup width={"200px"}>
+          <FormControl id="startDate" zIndex={20} my={4} >
             <FormLabel>Start Date</FormLabel>
             <Controller
               name="startDate"
@@ -108,22 +113,33 @@ const GreenPillForm = () => {
                 />
               )}
             />
+            <InputRightElement pointerEvents={"none"} marginTop={"32px"}>
+              <CalendarIcon />
+            </InputRightElement>
           </FormControl>
+          </InputGroup>
+          <InputGroup width={"200px"}>
           <FormControl id="endDate" zIndex={20} my={4}>
+
             <FormLabel>End Date</FormLabel>
+             
             <Controller
               name="endDate"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <SingleDatepicker
+                
                   date={value}
                   onDateChange={(date) => onChange(date)}
-                  
                 />
               )}
             />
+            <InputRightElement pointerEvents={"none"} marginTop={"32px"}>
+              <CalendarIcon />
+            </InputRightElement>
           </FormControl>
-
+          </InputGroup>
+          </Flex>
           <Button type="submit" variant={"primary"} w={'full'} my={8}>
             Submit
           </Button>
