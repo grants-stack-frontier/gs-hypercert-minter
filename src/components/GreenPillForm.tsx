@@ -45,11 +45,12 @@ const GreenPillForm = () => {
   return (
     <Box>
 
-    <Center h="full" w="100vw" >
+    <Center  h="full" w="100vw" color={"dark-grey"}>
       
       <VStack  w={'600px'}>
       
         <form
+        
           onSubmit={(d) => console.log(d)}
           onKeyUpCapture={(e) => {
             e.preventDefault();
@@ -59,7 +60,7 @@ const GreenPillForm = () => {
           className="w-full"
         >
           <FormControl id="name" my={4}>
-            <FormLabel>Name of your Chapter</FormLabel>
+            <FormLabel textColor={"dark-grey"}>Name of your Chapter</FormLabel>
             <Input
               {...register("name")}
               isInvalid={errors.name ? true : false}
@@ -100,7 +101,7 @@ const GreenPillForm = () => {
           </FormControl>
           </InputGroup>
           <InputGroup width={"auto"} zIndex={20}>
-          <FormControl id="endDate" zIndex={20} my={4}>
+          <FormControl  id="endDate" zIndex={20} my={4}>
 
             <FormLabel>End Date</FormLabel>
              
@@ -130,12 +131,14 @@ const GreenPillForm = () => {
               autoFocus
               mb={4}
             
-              placeholder=""
+              placeholder="https://..."
             />
           </FormControl>
           <FormControl id="description" my={4}>
             <FormLabel>Description of the Work</FormLabel>
             <Textarea
+                      border="1px solid"
+                      borderColor="dark-grey"
               {...register("description")}
               isInvalid={errors.description ? true : false}
               rows={6}
@@ -145,6 +148,8 @@ const GreenPillForm = () => {
           <FormControl id="others" my={4}>
             <FormLabel>Any Other Contributors?</FormLabel>
             <Textarea
+                      border="1px solid"
+                      borderColor="dark-grey"
               {...register("others")}
               isInvalid={errors.others ? true : false}
               rows={6}
@@ -152,10 +157,11 @@ const GreenPillForm = () => {
             />
           </FormControl>
       
-          
-          <Button type="submit" variant={"primary"} w={'full'} my={8}>
-            Submit
+          <Center>
+          <Button type="submit" variant={"secondary"} w={'full'} my={8} width={"120px"} >
+            Next
           </Button>
+          </Center>
         </form>
       </VStack>
     </Center>

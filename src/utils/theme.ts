@@ -9,17 +9,19 @@ const theme = extendTheme({
     "mid-green": "#4FB477",
     "active-blue" : "#3083DC",
     "default-grey" : "#C1C1C1",
-    "error-orange" : "#F7A072"
+    "error-orange" : "#F7A072",
+    "dark-grey" : "#666"
   },
   styles: {
     global: {
       "html, body": {
-        background: "#254D32",
+        // background: "#254D32",
+        background: "#FEFFFD",
         color: "white",
         overflowX: "hidden",
         scrollBehavior: "smooth",
         boxSizing: "border-box",
-        backgroundImage: "url('https://greenpill.network/src/images/greenpill-bg.png')",
+        // backgroundImage: "url('https://greenpill.network/src/images/greenpill-bg.png')",
         backgroundPosition: "top",
         backgroundRepeat: "repeat",
         backgroundSize: "contain",
@@ -81,9 +83,14 @@ const theme = extendTheme({
       baseStyle: {
         field: {
           borderColor: "default-grey",
+          border : "2px solid",
+          color : "dark-grey",
           _focus: {
             borderColor: "active-blue",
             ringColor: "transparent",
+          },
+          _placeholder: {
+            color: "default-grey",
           },
           _hover: {
             borderColor: "mid-green",
@@ -91,7 +98,7 @@ const theme = extendTheme({
         },
       },
       defaultProps: {
-        focusBorderColor: 'green',
+        focusBorderColor: 'active-blue',
       },
     },
     Textarea: {
@@ -100,19 +107,24 @@ const theme = extendTheme({
           _placeholder: {
             color: "default-grey",
           },
-          color: "black",
+          color: "dark-grey",
           fontSize: "md",
+          _hover: {
+            borderColor: "mid-green",
+          },
         },
       },
       sizes: {
         md: {
           field: {
             borderRadius: "none",
+            
           },
         },
       },
       defaultProps: {
-        focusBorderColor: 'green',
+        focusBorderColor: 'active-blue',
+        
       },
     },
     FormControl: {
