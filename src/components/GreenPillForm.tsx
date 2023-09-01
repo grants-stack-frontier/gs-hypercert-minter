@@ -53,6 +53,7 @@ const CalConfig = {
         background: '#254D32',
         color: '#fff',
       },
+      color: "dark-grey"
     },
     selectedBtnProps: {
       background: '#C2E812',
@@ -62,6 +63,7 @@ const CalConfig = {
     _hover: {
       background: '#fff',
     },
+    color: "dark-grey"
   },
   popoverCompProps: {
     popoverContentProps: {
@@ -71,7 +73,7 @@ const CalConfig = {
     },
   },
   weekdayLabelProps: {
-    fontWeight: 'normal'
+    fontWeight: 'normal',
   },
   dateHeadingProps: {
     fontWeight: 'semibold'
@@ -160,6 +162,7 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
                       date={value}
                       onDateChange={(date) => onChange(date)}
                       propsConfigs={{...CalConfig}}
+                      
                     />
                   )}
                 />
@@ -169,7 +172,7 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
                   display={"flex"}
                   alignItems={"center"}
                 >
-                  <CalendarIcon textColor={"dark-grey"} />
+                  <CalendarIcon color={"dark-grey"} />
                 </InputRightElement>
               </FormControl>
             </InputGroup>
