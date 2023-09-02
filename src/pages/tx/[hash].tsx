@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useNetwork, useWaitForTransaction } from "wagmi";
-import { Button } from "../../components/Button";
+import { Button } from "@chakra-ui/react";
 import { Spinner } from "../../components/Spinner";
 import { LandingLayout } from "../../layouts/Layout";
 

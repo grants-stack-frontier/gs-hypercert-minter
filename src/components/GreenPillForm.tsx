@@ -14,6 +14,7 @@ import {
   Text,
   Textarea,
   VStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -100,9 +101,9 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
   } = useForm({
     resolver: zodResolver(schema),
   });
-
+  const [isLargerThan300] = useMediaQuery("(min-width: 300px)")
   return (
-    <VStack w={"600px"}>
+    <VStack maxW={"600px"} gap={20}>
       <form
         onSubmit={(d) => console.log(d)}
         onKeyUpCapture={(e) => {
@@ -111,6 +112,7 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
           console.log(values);
         }}
         className="w-full"
+        
       >
         <FormControl id="name" my={2}>
           <FormLabel textColor={"dark-grey"} my={2}>
@@ -118,7 +120,7 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
           </FormLabel>
           <Input
             {...register("name")}
-            isInvalid={errors.name ? true : false}
+            isInvalid={!!errors.name}
             required={true}
             autoFocus
             mb={4}
@@ -148,8 +150,8 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
             )}
           />
 
-          <Flex flexDir={"row"} justifyContent={"space-between"} zIndex={15}>
-            <InputGroup width={"auto"} zIndex={12}>
+          <Flex flexDir={isLargerThan300 ? "row" : 'column'} justifyContent={"space-between"} zIndex={15} gap={4}>
+            <InputGroup width={"auto"} zIndex={12} position={'relative'}>
               <FormControl id="startDate" my={2}>
                 <FormLabel textColor={"dark-grey"} my={2}>
                   Start Date
@@ -158,22 +160,17 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
                   name="startDate"
                   control={control}
                   render={({ field: { onChange, value } }) => (
+                    <Box justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
                     <SingleDatepicker
                       date={value}
                       onDateChange={(date) => onChange(date)}
                       propsConfigs={{...CalConfig}}
-                      
                     />
+                      <CalendarIcon color={"dark-grey"}  position={'absolute'} mr={2}/>
+                    </Box>
                   )}
                 />
-                <InputRightElement
-                  pointerEvents={"none"}
-                  marginTop={"38px"}
-                  display={"flex"}
-                  alignItems={"center"}
-                >
-                  <CalendarIcon color={"dark-grey"} />
-                </InputRightElement>
+                
               </FormControl>
             </InputGroup>
             <InputGroup width={"auto"} zIndex={100}>
@@ -186,21 +183,17 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
                   name="endDate"
                   control={control}
                   render={({ field: { onChange, value } }) => (
+                    <Box justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
                     <SingleDatepicker
                       date={value}
                       onDateChange={(date) => onChange(date)}
                       propsConfigs={{...CalConfig}}
                     />
+                      <CalendarIcon color={"dark-grey"}  position={'absolute'} mr={2}/>
+                    </Box>
                   )}
                 />
-                <InputRightElement
-                  pointerEvents={"none"}
-                  marginTop={"38px"}
-                  display={"flex"}
-                  alignItems={"center"}
-                >
-                  <CalendarIcon color={"dark-grey"} />
-                </InputRightElement>
+
               </FormControl>
             </InputGroup>
           </Flex>
@@ -208,11 +201,11 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
 
         <FormControl id="link" my={2}>
           <FormLabel textColor={"dark-grey"} my={2}>
-            Link where we can find info about work
+              Provide a link where we can find more information on the work/impact
           </FormLabel>
           <Input
             {...register("link")}
-            isInvalid={errors.link ? true : false}
+            isInvalid={!!errors.link}
             required={true}
             autoFocus
             mb={4}
@@ -222,13 +215,13 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
         </FormControl>
         <FormControl id="description" my={2}>
           <FormLabel textColor={"dark-grey"} my={2}>
-            Description of the Work
+            Describe the work delivered
           </FormLabel>
           <Textarea
             border="1px solid"
             borderColor="dark-grey"
             {...register("description")}
-            isInvalid={errors.description ? true : false}
+            isInvalid={!!errors.description}
             rows={6}
             placeholder="Social Impact, Public Health, Education, etc."
           />
@@ -241,7 +234,7 @@ const GreenPillForm = ({isClient}: {isClient:boolean}) => {
             border="1px solid"
             borderColor="dark-grey"
             {...register("others")}
-            isInvalid={errors.others ? true : false}
+            isInvalid={!!errors.others}
             placeholder=""
             height={"60px"}
           />

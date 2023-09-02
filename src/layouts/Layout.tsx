@@ -14,7 +14,7 @@ import * as GreenPillLogo from "../../public/svgPatterns/pattern-7.svg";
 import site from "../config/site";
 
 
-export const LandingLayout = ({ children }: any) => {
+export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <VStack minHeight="100vh">
       <Head>

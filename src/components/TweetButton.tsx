@@ -1,13 +1,15 @@
 import hyperCertClient from "hooks/useHypercert";
 import Link from "next/link";
 import { useNetwork } from "wagmi";
-import { Button } from "./Button";
 import { createOpenSeaUrl } from "./OpenSeaButton";
+import { Button } from "@chakra-ui/react";
 
 export const TweetButton = ({ text = "", tokenId = "" }) => {
   const { address } = hyperCertClient.contract;
   const { chain } = useNetwork();
-  if (!chain?.id) return null;
+  if (!chain?.id) {
+    return null;
+  }
   return (
     <Button
       className="w-64"

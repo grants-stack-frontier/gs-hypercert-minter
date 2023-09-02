@@ -1,7 +1,7 @@
 import hyperCertClient from "hooks/useHypercert";
 import Link from "next/link";
 import { useNetwork } from "wagmi";
-import { Button } from "./Button";
+import { Button } from "@chakra-ui/react";
 
 const openseaUrls = {
   5: "https://testnets.opensea.io/assets/goerli/",
@@ -21,7 +21,9 @@ export const OpenSeaButton = ({ tokenId = "" }) => {
   const {address} = hyperCertClient.contract;
   
   const { chain } = useNetwork();
-  if (!chain?.id) return null;
+  if (!chain?.id) {
+    return null;
+  }
   return (
     <Button
       color="gradient"
