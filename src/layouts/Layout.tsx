@@ -12,6 +12,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 import * as GreenPillLogo from "../../public/svgPatterns/pattern-7.svg";
 import site from "../config/site";
+import { formatAddress } from "utils/formatting";
 
 
 export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
@@ -116,10 +117,8 @@ function PrivyAuthButton() {
         marginRight="10px"
         width={"max-content"}
       >
-        Logged in as{" "}
-        {address?.substring(0, 4) +
-          "..." +
-          address?.substring(address?.length - 4)}
+        
+        {`Logged in as ` + formatAddress(address ?? "")}
       </Button>
     );
 

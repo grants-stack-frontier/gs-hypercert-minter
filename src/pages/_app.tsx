@@ -8,7 +8,6 @@ import { goerli, optimism } from "wagmi/chains";
 import theme from "utils/theme";
 import site from "../config/site";
 import { NextSeo } from "next-seo";
-import "../styles/globals.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
 

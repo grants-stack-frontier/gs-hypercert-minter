@@ -51,10 +51,12 @@ const theme = extendTheme({
       },
       variants: {
         "primary": {
-          bg: "green",
-          color: "dark-green",
+          bg: "dark-green",
+          color: "green",
+          borderColor: "green",
           _hover: {
             bg: "mid-green",
+            color: "white",
             transform: "translate(2px, 2px)",
           },
         },
@@ -63,8 +65,9 @@ const theme = extendTheme({
           color: "green",
           borderColor: "green",
           _hover: {
-            borderColor: "mid-green",
-            color: "mid-green",
+            bg: "mid-green",
+            color: "white",
+            transform: "translate(2px, 2px)",
           },
         },
       }

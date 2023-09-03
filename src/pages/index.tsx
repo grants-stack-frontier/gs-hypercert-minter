@@ -1,16 +1,40 @@
+'use client'
 import { Box, useMediaQuery } from "@chakra-ui/react";
+import type { schema } from "components/GreenPillForm";
 import GreenPillForm from "components/GreenPillForm";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import * as z from "zod";
 import { LandingLayout } from "../layouts/Layout";
-import * as GreenGem from '/public/collection_logos/green-gem.png';
+import * as GreenGem from "/public/collection_logos/green-gem.png";
+// import { formatTime } from "utils/formatting";
+
+// import { formatHypercertData } from "@hypercerts-org/sdk";
+// import { validateClaimData } from "@hypercerts-org/sdk";
+// import { HypercertClaimdata } from "@hypercerts-org/sdk";
+// import { createClaim } from "utils/createClaim";
+
 const Home: NextPage = () => {
-  const [isClient, setIsClient] = useState(false)
-  const [isLargerThan600] = useMediaQuery("(min-width: 600px)")
+  const [isClient, setIsClient] = useState(false);
+  const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
+  const [formData, setFormData] = useState<z.infer<typeof schema>>();
+
+
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    
+    setIsClient(true);
+  }, []);
+
+  
+// const y = createClaim(formData)
+
+console.log(formData)
+ 
+  // console.log(validateClaimData(formData))
+
+  
+
   return (
     <LandingLayout>
       <Box
@@ -22,7 +46,7 @@ const Home: NextPage = () => {
         display={"flex"}
         flexDir={isLargerThan600 ? "row" : "column-reverse"}
       >
-        <GreenPillForm isClient={isClient}/>
+        <GreenPillForm isClient={isClient} formData={setFormData}/>
         <Box
           w="400px"
           h="500px"
@@ -34,7 +58,12 @@ const Home: NextPage = () => {
           alignItems={"center"}
           display={"flex"}
         >
-          <Image src={GreenGem} alt="Green pill logo" width={'366'} height={'366'}/>
+          <Image
+            src={GreenGem}
+            alt="Green pill logo"
+            width={"366"}
+            height={"366"}
+          />
         </Box>
       </Box>
     </LandingLayout>
@@ -42,3 +71,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+
+
