@@ -29,11 +29,12 @@ const Home: NextPage = () => {
   }, []);
 
   
- const y = createClaim(formData)
+ const y = createClaim(formData!)
 
   console.log(y.hypercert)
 
-  // console.log(validateClaimData(y.hypercert))  <--- POINT OF FAILURE
+  //TODO fix undefined so that typecast is not needed
+  console.log(validateClaimData(y.hypercert as HypercertClaimdata)) 
   // Status: Ready to mint
   // TODO: Generate Image for NFT
 

@@ -1,5 +1,5 @@
 import { HypercertClient } from "@hypercerts-org/sdk";
-import { goerli, optimism } from "@wagmi/core/chains";
+import { goerli, optimism } from "wagmi/chains";
 import { ethers } from "ethers";
 
 const chain = process.env.NEXT_PUBLIC_ENV as string === "production" ? optimism : goerli;
