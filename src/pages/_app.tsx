@@ -1,26 +1,25 @@
-import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
-import { mainnet, optimism, goerli } from '@wagmi/chains';
-import { configureChains } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-
-
-
-
-
-
-
-import type { User } from "@privy-io/react-auth";
-import { PrivyProvider } from "@privy-io/react-auth";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { NextSeo } from "next-seo";
 import { type AppType } from "next/dist/shared/lib/utils";
+import { PrivyProvider } from "@privy-io/react-auth";
+import type { User } from "@privy-io/react-auth";
+import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiConfig, createConfig } from "wagmi";
+import { goerli, optimism } from "wagmi/chains";
 import theme from "utils/theme";
 import site from "../config/site";
+import { NextSeo } from "next-seo";
 
 import { ChakraProvider } from "@chakra-ui/react";
 
-const wagmiConfig = configureChains([mainnet, goerli], [publicProvider()]);
+import { createPublicClient, http } from "viem";
 
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  publicClient: createPublicClient({
+    chain: process.env.NODE_ENV === "production" ? optimism : goerli,
+    transport: http(),
+  }),
+});
 
 const handleLogin = (user: User) => {
   console.log(`User ${user?.id} logged in!`);
@@ -60,12 +59,12 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           }}
         />
         <QueryClientProvider client={queryClient}>
-          
+          <WagmiConfig config={wagmiConfig}>
             <PrivyProvider
               appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
               onSuccess={handleLogin}
               config={{
-                loginMethods: ['wallet', 'email', 'google', 'twitter', 'discord', 'github'],
+                loginMethods: ["email", "wallet"],
                 appearance: {
                   theme: "dark",
                   accentColor: "#C2E812",
@@ -73,11 +72,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
                 },
               }}
             >
-              <PrivyWagmiConnector wagmiChainsConfig={wagmiConfig}>
               <Component {...pageProps} />
-              </PrivyWagmiConnector>
             </PrivyProvider>
-    
+          </WagmiConfig>
         </QueryClientProvider>
       </ChakraProvider>
     </>
