@@ -1,5 +1,5 @@
 import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
-import { mainnet, optimism, goerli } from '@wagmi/chains';
+import { mainnet, optimism, goerli } from 'wagmi/chains';
 import { configureChains } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -19,7 +19,7 @@ import site from "../config/site";
 
 import { ChakraProvider } from "@chakra-ui/react";
 
-const wagmiConfig = configureChains([mainnet, goerli], [publicProvider()]);
+const wagmiConfig = configureChains([mainnet, goerli, optimism], [publicProvider()]);
 
 
 const handleLogin = (user: User) => {

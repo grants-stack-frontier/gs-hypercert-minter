@@ -12,10 +12,13 @@ import * as GreenGem from "/public/collection_logos/green-gem.png";
 
 // import { formatHypercertData } from "@hypercerts-org/sdk";
 
-import { HypercertClaimdata, validateClaimData } from "@hypercerts-org/sdk";
+// import { HypercertClaimdata } from "@hypercerts-org/sdk";
+
+
+// import { validateClaimData } from "@hypercerts-org/sdk";
 import { createClaim } from "utils/createClaim";
 
-const zodHypercertClaimData = z.ZodType<HypercertClaimdata>
+// const zodHypercertClaimData = z.ZodType<HypercertClaimdata>
 
 const Home: NextPage = () => {
   const [isClient, setIsClient] = useState(false);
@@ -29,7 +32,7 @@ const Home: NextPage = () => {
   }, []);
 
   
- const y = createClaim(formData)
+ const y = createClaim(formData as unknown as never)
 
   console.log(y.hypercert)
 
