@@ -64,7 +64,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
               appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
               onSuccess={handleLogin}
               config={{
-                loginMethods: ["email", "wallet"],
+                loginMethods: ['wallet', 'email', 'google', 'twitter', 'discord', 'github'],
                 appearance: {
                   theme: "dark",
                   accentColor: "#C2E812",
