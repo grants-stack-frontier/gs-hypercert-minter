@@ -2,12 +2,23 @@ import type { schema } from "components/GreenPillForm";
 import type * as z from "zod";
 import { toYear } from "./date";
 import { formatContributors } from "./formatting";
+import { getUnixTime } from 'date-fns';
+import _ from "lodash";
+
 
 export const createClaim = (formData: z.infer<typeof schema>) => {
 
-  const {name, workScope, externalUrl, description, contributors, workTimeframeStart, workTimeframeEnd } = formData;
+  const name = formData?.name;
+  const workScope = _.map(formData?.workScope, 'value');
+  const externalUrl = formData?.externalUrl;
+  const description = formData?.description;
+  const contributors = formData?.contributors;
+  const workTimeframeStart = getUnixTime(formData?.workTimeframeStart);
+  const workTimeframeEnd = getUnixTime(formData?.workTimeframeEnd);
 
-  
+
+
+
 
   return {
     name,
@@ -20,20 +31,20 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
     hypercert: {
       impact_scope: {
         name: "Impact Scope",
-        value: ["all"],
+        value: [...workScope],
         excludes: [],
-        display_value: "all",
+        display_value: [...workScope].join(", "),
       },
       work_scope: {
         name: "Work Scope",
         value: [...workScope],
         excludes: [],
-        display_value: [...workScope], // TODO: Find the right value
+        display_value:[...workScope].join(", "), // TODO: Find the right value
       },
       impact_timeframe: {
         name: "Impact Timeframe",
         value: [workTimeframeEnd, undefined],
-        display_value: `${toYear(+workTimeframeEnd)} → ${toYear(undefined)}`,
+        display_value: `${toYear(+workTimeframeEnd)} → ${toYear(0)}`,
       },
       work_timeframe: {
         name: "Work Timeframe",
@@ -48,7 +59,7 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
       },
       contributors: {
         name: "Contributors",
-        value: formatContributors(contributors?.split(",") ?? []),
+        value: [...contributors?.split(",") ?? []],
         display_value: formatContributors(contributors?.split(",") ?? []),
       },
     },
