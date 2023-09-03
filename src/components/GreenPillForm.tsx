@@ -1,100 +1,297 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
-import * as z from 'zod';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+"use client";
+import { CalendarIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  Text,
+  Textarea,
+  VStack,
+  useMediaQuery,
+} from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import { Box, FormControl, FormLabel, Input, Button, Textarea } from '@chakra-ui/react';
+import { Dispatch } from "react";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import * as z from "zod";
 
-const schema = z.object({
-  name: z.string().min(1, { message: 'Required' }),
-  tags: z.string().min(1, { message: 'Required' }),
-  link: z.string().url({ message: 'Invalid URL' }),
-  description: z.string().min(1, { message: 'Required' }),
-  others: z.string().optional(),
-  startDate: z.date(),
-  endDate: z.date(),
+export const impactOptions = [
+  { value: "carbon", label: "Carbon Neutrality" },
+  { value: "renewable", label: "Renewable Energy" },
+  { value: "recycling", label: "Recycling & Waste Reduction" },
+  { value: "diversity", label: "Diversity & Inclusion" },
+  { value: "community", label: "Community Engagement" },
+  { value: "fair_trade", label: "Fair Trade" },
+];
+
+const animatedComponents = makeAnimated();
+
+const customStyles = {
+  menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
+  control: (provided: object) => ({
+    ...provided,
+    minHeight: 50,
+    height: 'auto',
+    borderRadius: 4,
+    borderColor: "#666666",
+  }),
+};
+
+const CalConfig = {
+  dayOfMonthBtnProps: {
+    defaultBtnProps: {
+      _hover: {
+        background: "#254D32",
+        color: "#fff",
+      },
+      color: "dark-grey",
+    },
+    selectedBtnProps: {
+      background: "#C2E812",
+    },
+  },
+  dateNavBtnProps: {
+    _hover: {
+      background: "#fff",
+    },
+    color: "dark-grey",
+  },
+  popoverCompProps: {
+    popoverContentProps: {
+      background: "#FFF",
+      color: "black",
+      padding: "0px",
+    },
+  },
+  weekdayLabelProps: {
+    fontWeight: "normal",
+  },
+  dateHeadingProps: {
+    fontWeight: "semibold",
+  },
+};
+
+export const schema = z.object({
+  name: z.string().min(1, { message: "Required" }),
+  workScope: z.array(z.string()),
+  externalUrl: z.string().url({ message: "Invalid URL" }),
+  description: z.string().min(1, { message: "Required" }),
+  contributors: z.string().optional(),
+  workTimeframeStart: z.date(),
+  workTimeframeEnd: z.date(),
 });
 
-const GreenPillForm = () => {
+const GreenPillForm = ({
+  isClient,
+  formData,
+}: {
+  isClient: boolean;
+  formData: Dispatch<z.infer<typeof schema>>;
+}) => {
   const {
     register,
-    handleSubmit,
     formState: { errors },
+    getValues,
+    control,
   } = useForm({
     resolver: zodResolver(schema),
   });
 
+  const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
   return (
-    <form onSubmit={handleSubmit((d) => console.log(d))}>
-      <Box fontSize="lg" color="green.900">
-        <FormControl id="name">
-          <FormLabel>Name of your Chapter</FormLabel>
+    <VStack maxW={"600px"} gap={20}>
+      <form
+        onSubmit={(d) => console.log(d)}
+        onKeyUpCapture={(e) => {
+          e.preventDefault();
+          const values = getValues();
+          formData(values as unknown as z.infer<typeof schema>);
+        }}
+        className="w-full"
+      >
+        <FormControl id="name" my={2}>
+          <FormLabel textColor={"dark-grey"} my={2}>
+            Name of your Chapter
+          </FormLabel>
           <Input
-            {...register('name')}
-            isInvalid={errors.name ? true : false}
+            {...register("name")}
+            isInvalid={!!errors.name}
+            required={true}
             autoFocus
             mb={4}
-            w="full"
+            height={"60px"}
             placeholder=""
           />
         </FormControl>
-        <FormControl id="tags">
-          <FormLabel>Tags for Scope of Work</FormLabel>
-          <Input
-            {...register('tags')}
-            isInvalid={errors.tags ? true : false}
-            placeholder="Social Impact, Public Health, Education, etc."
+        <Box
+          bg={"white"}
+          alignItems={"flex-start"}
+          w={"full"}
+          flexDirection={"row"}
+        >
+          <FormLabel>List the tags for the scope of work</FormLabel>
+          <Controller
+            control={control}
+            name="workScope"
+            render={({ field: { onChange, value } }) =>
+              isClient ? (
+                <Select
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  value={value}
+                  options={impactOptions}
+                  styles={customStyles}
+                  onChange={(selected) => onChange(selected)}
+                  menuPortalTarget={document.body ?? undefined}
+                />
+              ) : (
+                <> </>
+              )
+            }
           />
-        </FormControl>
-        <FormControl id="link">
-          <FormLabel>Link where we can find info about work</FormLabel>
+
+          <Flex
+            flexDir={isLargerThan300 ? "row" : "column"}
+            justifyContent={"space-between"}
+            zIndex={15}
+            gap={4}
+          >
+            <InputGroup width={"auto"} zIndex={12} position={"relative"}>
+              <FormControl id="workTimeframeStart" my={2}>
+                <FormLabel textColor={"dark-grey"} my={2}>
+                  Start Date
+                </FormLabel>
+                <Controller
+                  name="workTimeframeStart"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Box
+                      justifyContent={"flex-end"}
+                      alignItems={"center"}
+                      display={"flex"}
+                    >
+                      <SingleDatepicker
+                        date={value}
+                        onDateChange={(date) => onChange(date)}
+                        propsConfigs={{ ...CalConfig }}
+                      />
+                      <CalendarIcon
+                        color={"dark-grey"}
+                        position={"absolute"}
+                        mr={2}
+                      />
+                    </Box>
+                  )}
+                />
+              </FormControl>
+            </InputGroup>
+            <InputGroup width={"auto"} zIndex={100}>
+              <FormControl id="workTimeframeEnd" my={2}>
+                <FormLabel textColor={"dark-grey"} my={2}>
+                  End Date
+                </FormLabel>
+
+                <Controller
+                  name="workTimeframeEnd"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Box
+                      justifyContent={"flex-end"}
+                      alignItems={"center"}
+                      display={"flex"}
+                    >
+                      <SingleDatepicker
+                        date={value}
+                        onDateChange={(date) => onChange(date)}
+                        propsConfigs={{ ...CalConfig }}
+                      />
+                      <CalendarIcon
+                        color={"dark-grey"}
+                        position={"absolute"}
+                        mr={2}
+                      />
+                    </Box>
+                  )}
+                />
+              </FormControl>
+            </InputGroup>
+          </Flex>
+        </Box>
+
+        <FormControl id="externalUrl" my={2}>
+          <FormLabel textColor={"dark-grey"} my={2}>
+            Provide a link where we can find more information on the work/impact
+          </FormLabel>
           <Input
-            {...register('link')}
-            isInvalid={errors.link ? true : false}
+            {...register("externalUrl")}
+            isInvalid={!!errors.externalUrl}
+            required={true}
             autoFocus
             mb={4}
-            w="full"
-            placeholder=""
+            placeholder="https://..."
+            height={"60px"}
           />
         </FormControl>
-        <FormControl id="description">
-          <FormLabel>Description of the Work</FormLabel>
+        <FormControl id="description" my={2}>
+          <FormLabel textColor={"dark-grey"} my={2}>
+            Describe the work delivered
+          </FormLabel>
           <Textarea
-            {...register('description')}
-            isInvalid={errors.description ? true : false}
+            border="1px solid"
+            borderColor="dark-grey"
+            {...register("description")}
+            isInvalid={!!errors.description}
             rows={6}
             placeholder="Social Impact, Public Health, Education, etc."
           />
         </FormControl>
-        <FormControl id="others">
-          <FormLabel>Any Other Contributors?</FormLabel>
-          <Textarea
-            {...register('others')}
-            isInvalid={errors.others ? true : false}
-            rows={6}
-            placeholder="You can add names, address of contributors that consent to be registered publicly."
+        <FormControl id="contributors" my={2}>
+          <FormLabel textColor={"dark-grey"} my={2}>
+            Any Other Contributors?
+          </FormLabel>
+          <Input
+            border="1px solid"
+            borderColor="dark-grey"
+            {...register("contributors")}
+            isInvalid={!!errors.contributors}
+            placeholder=""
+            height={"60px"}
           />
+          <Text
+            color="black"
+            fontSize={"xs"}
+            fontStyle="italic"
+            fontWeight="light"
+            lineHeight="normal"
+            my={2}
+          >
+            (You can add names, addresses of contributors that consent to be
+            registered publicly.)
+          </Text>
         </FormControl>
 
-        <FormControl id="startDate">
-          <FormLabel>Start Date</FormLabel>
-          <SingleDatepicker
-          {...register('startDate')}
-          onDateChange={(date) => console.log(date)}
-          />
-        </FormControl>
-
-        <FormControl id="endDate">
-          <FormLabel>End Date</FormLabel>
-          <SingleDatepicker
-          {...register('endDate')}
-          onDateChange={(date) => console.log(date)}
-          />
-        </FormControl>
-
-        <Button type="submit">Submit</Button>
-      </Box>
-    </form>
+        <Center>
+          <Button
+            type="submit"
+            variant={"secondary"}
+            w={"full"}
+            my={8}
+            width={"120px"}
+          >
+            Next
+          </Button>
+        </Center>
+      </form>
+    </VStack>
   );
 };
 

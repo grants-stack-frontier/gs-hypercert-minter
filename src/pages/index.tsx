@@ -1,50 +1,76 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { type NextPage } from "next";
-import React from "react";
-import { LandingLayout, Layout } from "../layouts/Layout";
-import { Flare } from "../components/Flare";
-import { Button } from "../components/Button";
-import Link from "next/link";
+'use client'
+import { Box, useMediaQuery } from "@chakra-ui/react";
+import type { schema } from "components/GreenPillForm";
+import GreenPillForm from "components/GreenPillForm";
+import type { NextPage } from "next";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import * as z from "zod";
+import { LandingLayout } from "../layouts/Layout";
+import * as GreenGem from "/public/collection_logos/green-gem.png";
+// import { formatTime } from "utils/formatting";
 
+// import { formatHypercertData } from "@hypercerts-org/sdk";
+// import { validateClaimData } from "@hypercerts-org/sdk";
+// import { HypercertClaimdata } from "@hypercerts-org/sdk";
+// import { createClaim } from "utils/createClaim";
 
 const Home: NextPage = () => {
+  const [isClient, setIsClient] = useState(false);
+  const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
+  const [formData, setFormData] = useState<z.infer<typeof schema>>();
+
+
+  useEffect(() => {
+    
+    setIsClient(true);
+  }, []);
+
+  
+// const y = createClaim(formData)
+
+console.log(formData)
+ 
+  // console.log(validateClaimData(formData))
+
+  
+
   return (
-    
     <LandingLayout>
-      <div className="md:flex">
-        <div className="flex flex-col justify-center md:w-1/2">
-          <h1 className="mb-8 text-5xl font-bold text-green-900">
-            Green Pill Network
-          </h1>
-          <p className="mb-12 text-xl leading-8">
-          TURNING
-            DEGENS
-            TO REGENS
-            (one green pill at a time)
-          <br/>
-            <a
-              className="text-green-500 hover:text-green-800"
-              href={"https://hypercerts.xyz"}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Mint hypercert
-            </a>{" "}
-            to claim your proof of Impact
-          </p>
-          <div className="flex justify-center md:justify-start">
-            <Button color="gradient" as={Link} href={"/design"}>
-              Generate your Gratitude
-            </Button>
-          </div>
-        </div>
-        <div className="px-16 md:w-1/2">
-          <Flare />
-        </div>
-      </div>
+      <Box
+        my={10}
+        p={10}
+        w="full"
+        justifyContent={"center"}
+        gap={20}
+        display={"flex"}
+        flexDir={isLargerThan600 ? "row" : "column-reverse"}
+      >
+        <GreenPillForm isClient={isClient} formData={setFormData}/>
+        <Box
+          w="400px"
+          h="500px"
+          flexShrink={0}
+          borderRadius="8px"
+          border="2px solid #4FB477"
+          bg="#C2E812"
+          justifyContent={"center"}
+          alignItems={"center"}
+          display={"flex"}
+        >
+          <Image
+            src={GreenGem}
+            alt="Green pill logo"
+            width={"366"}
+            height={"366"}
+          />
+        </Box>
+      </Box>
     </LandingLayout>
-    
   );
 };
 
 export default Home;
+
+
+

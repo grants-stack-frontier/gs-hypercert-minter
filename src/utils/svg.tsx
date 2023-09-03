@@ -1,7 +1,8 @@
 import satori from "satori";
+import { Image } from "@chakra-ui/react";
 import React from "react";
 import { config } from "../components/HyperCertSVG";
-import { content } from "../components/GreenPillForm";
+// import { content } from "../components/GreenPillForm";
 export const generateSVG = ({
   contributor = "",
   reason = "",
@@ -29,8 +30,9 @@ export const generateSVG = ({
           }}
         >
           <div style={{ display: "flex", position: "relative" }}>
-            <img
+            <Image
               src={`/svgPatterns/pattern-${shape}.svg`}
+              alt=""
               style={{ zIndex: 10, width: "100%" }}
             />
           </div>
@@ -64,7 +66,7 @@ export const generateSVG = ({
                 lineHeight: "180%",
               }}
             >
-              <span>{content.intro}</span>
+              {/* <span>{content.intro}</span> */}
               <span style={{ fontSize: contributor.length > 40 ? 22 : 24 }}>
                 {contributor}
               </span>

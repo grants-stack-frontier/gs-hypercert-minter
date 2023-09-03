@@ -1,23 +1,21 @@
-import site from "config/site";
+import type { schema } from "components/GreenPillForm";
+import type * as z from "zod";
 import { toYear } from "./date";
+import { formatContributors } from "./formatting";
 
-const calcTime = (d: Date) => [+d, +d, +d, +d].map((v) => v);
+export const createClaim = (formData: z.infer<typeof schema>) => {
 
-export const createClaim = ({
-  description = "",
-  svg = "",
-  contributor = "",
-  contributorAddress = "",
-}) => {
-  const [workTimeStart, workTimeEnd, impactTimeStart, impactTimeEnd] = calcTime(
-    new Date()
-  ) as [number, number, number, number];
+  const {name, workScope, externalUrl, description, contributors, workTimeframeStart, workTimeframeEnd } = formData;
+
+  
 
   return {
-    name: site.title,
+    name,
     description,
     version: "0.0.1",
-    image: `data:image/svg+xml;base64,${btoa(svg)}`,
+    // image: `data:image/svg+xml;base64,${btoa(svg)}`,
+    externalUrl,
+    image: "hello",
     properties: [],
     hypercert: {
       impact_scope: {
@@ -28,19 +26,19 @@ export const createClaim = ({
       },
       work_scope: {
         name: "Work Scope",
-        value: ["gratitude"],
+        value: [...workScope],
         excludes: [],
-        display_value: "gratitude",
+        display_value: [...workScope], // TODO: Find the right value
       },
       impact_timeframe: {
         name: "Impact Timeframe",
-        value: [impactTimeStart, impactTimeEnd],
-        display_value: `${toYear(impactTimeStart)} → ${toYear(impactTimeEnd)}`,
+        value: [workTimeframeEnd, undefined],
+        display_value: `${toYear(+workTimeframeEnd)} → ${toYear(undefined)}`,
       },
       work_timeframe: {
         name: "Work Timeframe",
-        value: [workTimeStart, workTimeEnd],
-        display_value: `${toYear(workTimeStart)} → ${toYear(workTimeEnd)}`,
+        value: [workTimeframeStart, workTimeframeEnd],
+        display_value: `${toYear(+workTimeframeStart)} → ${toYear(+workTimeframeEnd)}`,
       },
       rights: {
         name: "Rights",
@@ -50,8 +48,8 @@ export const createClaim = ({
       },
       contributors: {
         name: "Contributors",
-        value: [contributorAddress],
-        display_value: contributor,
+        value: formatContributors(contributors?.split(",") ?? []),
+        display_value: formatContributors(contributors?.split(",") ?? []),
       },
     },
   };
