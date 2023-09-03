@@ -11,9 +11,11 @@ import * as GreenGem from "/public/collection_logos/green-gem.png";
 // import { formatTime } from "utils/formatting";
 
 // import { formatHypercertData } from "@hypercerts-org/sdk";
-// import { validateClaimData } from "@hypercerts-org/sdk";
-// import { HypercertClaimdata } from "@hypercerts-org/sdk";
-// import { createClaim } from "utils/createClaim";
+
+import { HypercertClaimdata, validateClaimData } from "@hypercerts-org/sdk";
+import { createClaim } from "utils/createClaim";
+
+const zodHypercertClaimData = z.ZodType<HypercertClaimdata>
 
 const Home: NextPage = () => {
   const [isClient, setIsClient] = useState(false);
@@ -27,13 +29,13 @@ const Home: NextPage = () => {
   }, []);
 
   
-// const y = createClaim(formData)
+ const y = createClaim(formData)
 
-console.log(formData)
- 
-  // console.log(validateClaimData(formData))
+  console.log(y.hypercert)
 
-  
+  // console.log(validateClaimData(y.hypercert))  <--- POINT OF FAILURE
+  // Status: Ready to mint
+  // TODO: Generate Image for NFT
 
   return (
     <LandingLayout>
@@ -48,8 +50,8 @@ console.log(formData)
       >
         <GreenPillForm isClient={isClient} formData={setFormData}/>
         <Box
-          w="400px"
-          h="500px"
+          w="320px"
+          h="400px"
           flexShrink={0}
           borderRadius="8px"
           border="2px solid #4FB477"
@@ -61,8 +63,8 @@ console.log(formData)
           <Image
             src={GreenGem}
             alt="Green pill logo"
-            width={"366"}
-            height={"366"}
+            width={"320"}
+            height={"400"}
           />
         </Box>
       </Box>

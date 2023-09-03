@@ -80,14 +80,26 @@ const CalConfig = {
 };
 
 export const schema = z.object({
-  name: z.string().min(1, { message: "Required" }),
-  workScope: z.array(z.string()),
-  externalUrl: z.string().url({ message: "Invalid URL" }),
-  description: z.string().min(1, { message: "Required" }),
-  contributors: z.string().optional(),
+  name: z.string()
+    .min(1, { message: "Name is required" })
+    .max(255, { message: "Maximum length of 255 characters exceeded" }),
+  
+  workScope: z.array(z.string())
+    .min(1, { message: "At least one work scope is required" }),
+  
+  externalUrl: z.string()
+    .url({ message: "Invalid URL. Please ensure it follows http(s)://www.example.com format" }),
+  
+  description: z.string()
+    .min(1, { message: "Description is required" })
+    .max(144, { message: "Maximum length of 2000 characters exceeded" }),
+  
+  contributors: z.string()
+    .min(1, { message: "At least one contributor is required" })
+    .optional(),
   workTimeframeStart: z.date(),
   workTimeframeEnd: z.date(),
-});
+}).transform((data) => ((+data.workTimeframeEnd) > (+data.workTimeframeStart))  ? data : { ...data, workTimeframeEnd: 0 });
 
 const GreenPillForm = ({
   isClient,

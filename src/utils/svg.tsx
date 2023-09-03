@@ -2,7 +2,7 @@ import satori from "satori";
 import { Image } from "@chakra-ui/react";
 import React from "react";
 import { config } from "../components/HyperCertSVG";
-// import { content } from "../components/GreenPillForm";
+import { content } from "../components/GreenPillForm";
 export const generateSVG = ({
   contributor = "",
   reason = "",
