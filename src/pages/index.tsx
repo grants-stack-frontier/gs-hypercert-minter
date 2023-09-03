@@ -50,8 +50,8 @@ const Home: NextPage = () => {
       >
         <GreenPillForm isClient={isClient} formData={setFormData}/>
         <Box
-          w="400px"
-          h="500px"
+          w="320px"
+          h="400px"
           flexShrink={0}
           borderRadius="8px"
           border="2px solid #4FB477"
@@ -63,8 +63,8 @@ const Home: NextPage = () => {
           <Image
             src={GreenGem}
             alt="Green pill logo"
-            width={"366"}
-            height={"366"}
+            width={"320"}
+            height={"400"}
           />
         </Box>
       </Box>

@@ -2,17 +2,19 @@ import {
   Box,
   Button,
   Flex,
+  Img,
   Link,
   Text,
   VStack
 } from "@chakra-ui/react";
 import { usePrivy } from "@privy-io/react-auth";
+import {usePrivyWagmi} from '@privy-io/wagmi-connector';
 import Head from "next/head";
-import Image from "next/image";
 import NextLink from "next/link";
-import * as GreenPillLogo from "../../public/svgPatterns/pattern-7.svg";
-import site from "../config/site";
 import { formatAddress } from "utils/formatting";
+import site from "../config/site";
+
+
 
 
 export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
@@ -48,11 +50,11 @@ function Header() {
       top={"0"}
     >
       <Link as={NextLink} href={"/"} variant="primary" textColor={"dark-green"}>
-        <Image
-          src={GreenPillLogo}
+        <Img
+          src={'/logo.svg'}
           alt="Green pill logo"
-          width={"150"}
-          height={"150"}
+          width={"146px"}
+          height={"50px"}
         />
       </Link>
       <PrivyAuthButton />
@@ -72,9 +74,8 @@ function Hero() {
       padding={"4rem"}
       backgroundColor={"green"}
       backgroundImage={"url(/svgPatterns/heroSvg.svg)"}
-      backgroundSize={"auto"}
-      backgroundPosition={"right"}
-      backgroundRepeat={"no-repeat"}
+      backgroundSize={"cover"}
+      backgroundRepeat={"repeat-x"}
       fontSize={"2xl"}
     >
       <Text fontSize={"6xl"} color={"dark-green"} fontWeight={"bold"}>
@@ -105,9 +106,16 @@ const Footer = () => (
 
 function PrivyAuthButton() {
   const { login, ready, authenticated, user, logout } = usePrivy();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  // const {wallet: activeWallet} = usePrivyWagmi()
+
+
+  // console.log(activeWallet)
 
   const address = user?.wallet?.address;
   if (!ready) return <Box>Loading...</Box>;
+
+  
 
   if (authenticated)
     return (
@@ -129,3 +137,9 @@ function PrivyAuthButton() {
       </Button>
     );
 }
+
+
+
+
+
+  
