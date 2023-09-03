@@ -34,11 +34,11 @@ const Home: NextPage = () => {
   
  const y = createClaim(formData as unknown as never)
 
-  console.log(y.hypercert)
+console.log(formData)
+ 
+  // console.log(validateClaimData(formData))
 
-  // console.log(validateClaimData(y.hypercert))  <--- POINT OF FAILURE
-  // Status: Ready to mint
-  // TODO: Generate Image for NFT
+  
 
   return (
     <LandingLayout>
@@ -53,8 +53,8 @@ const Home: NextPage = () => {
       >
         <GreenPillForm isClient={isClient} formData={setFormData}/>
         <Box
-          w="320px"
-          h="400px"
+          w="400px"
+          h="500px"
           flexShrink={0}
           borderRadius="8px"
           border="2px solid #4FB477"
@@ -66,8 +66,8 @@ const Home: NextPage = () => {
           <Image
             src={GreenGem}
             alt="Green pill logo"
-            width={"320"}
-            height={"400"}
+            width={"366"}
+            height={"366"}
           />
         </Box>
       </Box>
