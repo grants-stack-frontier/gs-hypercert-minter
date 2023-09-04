@@ -8,13 +8,11 @@ https://github.com/supermodularxyz/supermodules/issues/23
 
 ---
 
-# This app is a fork of https://github.com/supermodularxyz/gratitude.party
+##### This app is a fork of https://github.com/supermodularxyz/gratitude.party
 
----
 
-Much as been changed to suit our usecase
+> This fork doesn't use same stack as original repo!!!
 
----
 
 # Stack
 1. Privy.io -> Web2 + Wallet Authentication
@@ -24,5 +22,3 @@ Much as been changed to suit our usecase
 5. pnpm -> prefered package manager
 6. next.js -> Frontend Framework
 7. Vercel -> Deploy + CI/CD
-
------
