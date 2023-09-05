@@ -1,6 +1,10 @@
 import { extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
+  fonts: {
+    heading: `'Volkhov', sans-serif`,
+    body: `'Raleway', sans-serif`,
+  },
   colors: {
     green: "#C2E812",
     yellow: "#FFD972",
