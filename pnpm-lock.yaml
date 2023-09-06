@@ -113,6 +113,9 @@ dependencies:
   sharp:
     specifier: ^0.32.5
     version: 0.32.5
+  swr:
+    specifier: ^2.2.2
+    version: 2.2.2(react@18.2.0)
   viem:
     specifier: ^1.9.0
     version: 1.9.2(typescript@5.2.2)(zod@3.22.2)
@@ -18936,6 +18939,16 @@ packages:
     resolution: {integrity: sha512-kc6S2YS/2yXbtkSMunBtKdah4VFETZ8Oh6ONSmSd9bRxhqTrtARUCBUiWXH3xVPpvR7tz2CSnkuXVE42EcGnMw==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /swr@2.2.2(react@18.2.0):
+    resolution: {integrity: sha512-CbR41AoMD4TQBQw9ic3GTXspgfM9Y8Mdhb5Ob4uIKXhWqnRLItwA5fpGvB7SmSw3+zEjb0PdhiEumtUvYoQ+bQ==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /table-layout@1.0.2:

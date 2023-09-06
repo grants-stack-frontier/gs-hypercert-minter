@@ -4,10 +4,6 @@ import { goerli } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
-
-
-
-
 import type { User } from "@privy-io/react-auth";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
