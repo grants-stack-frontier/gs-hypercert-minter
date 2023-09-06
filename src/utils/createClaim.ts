@@ -29,12 +29,7 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
     image: "hello",
     properties: [],
     hypercert: {
-      impact_scope: {
-        name: "Impact Scope",
-        value: [...workScope],
-        excludes: [],
-        display_value: [...workScope].join(", "),
-      },
+      impact_scope:{"name":"Impact Scope","value":["all"],"excludes":[],"display_value":"all"},
       work_scope: {
         name: "Work Scope",
         value: [...workScope],
@@ -43,7 +38,7 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
       },
       impact_timeframe: {
         name: "Impact Timeframe",
-        value: [workTimeframeEnd, undefined],
+        value: [workTimeframeEnd, 0],
         display_value: `${toYear(+workTimeframeEnd)} → ${toYear(0)}`,
       },
       work_timeframe: {

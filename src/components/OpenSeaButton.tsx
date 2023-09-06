@@ -1,7 +1,8 @@
-import hyperCertClient from "hooks/useHypercert";
+import { useHypercertClient } from "hooks/useHypercert";
 import Link from "next/link";
 import { useNetwork } from "wagmi";
 import { Button } from "@chakra-ui/react";
+import type { HypercertClient } from "@hypercerts-org/sdk";
 
 const openseaUrls = {
   5: "https://testnets.opensea.io/assets/goerli/",
@@ -17,9 +18,11 @@ export const createOpenSeaUrl = (
     openseaUrls[chainId as keyof typeof openseaUrls]
   }/${contractAddress}/${tokenId}`;
 
-export const OpenSeaButton = ({ tokenId = "" }) => {
-  const {address} = hyperCertClient.contract;
-  
+export const OpenSeaButton = ({ tokenId = "", }) => {
+  const { hyperCertClient } = useHypercertClient();
+
+  const address = (hyperCertClient as HypercertClient)?.contract?.address;
+
   const { chain } = useNetwork();
   if (!chain?.id) {
     return null;

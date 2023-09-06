@@ -8,7 +8,6 @@ import { publicProvider } from 'wagmi/providers/public';
 
 
 
-
 import type { User } from "@privy-io/react-auth";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -19,7 +18,7 @@ import site from "../config/site";
 
 import { ChakraProvider } from "@chakra-ui/react";
 
-const wagmiConfig = configureChains([mainnet, goerli, optimism], [publicProvider()]);
+export const wagmiConfig = configureChains([goerli], [publicProvider()]);
 
 
 const handleLogin = (user: User) => {
