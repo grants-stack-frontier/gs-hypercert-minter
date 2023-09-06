@@ -24,9 +24,8 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
     name,
     description,
     version: "0.0.1",
-    // image: `data:image/svg+xml;base64,${btoa(svg)}`,
-    externalUrl,
-    image: "hello",
+    image: `data:image/svg+xml;base64,${btoa("svg")}`,
+    external_url: externalUrl,
     properties: [],
     hypercert: {
       impact_scope:{"name":"Impact Scope","value":["all"],"excludes":[],"display_value":"all"},

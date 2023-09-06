@@ -1,15 +1,11 @@
+import { Box, Button } from "@chakra-ui/react";
 import { usePrivy } from "@privy-io/react-auth";
-import { usePrivyWagmi } from "@privy-io/wagmi-connector";
-import { Button, Box } from "@chakra-ui/react";
 import { formatAddress } from "utils/formatting";
 
  const PrivyAuthButton = () => {
-    const { login, ready, authenticated, user, logout } = usePrivy();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const { wallet: activeWallet } = usePrivyWagmi();
-  
-    console.log(activeWallet);
-  
+    
+  const { login, ready, authenticated, user, logout } = usePrivy();
+    
     const address = user?.wallet?.address;
     if (!ready) return <Box>Loading...</Box>;
   

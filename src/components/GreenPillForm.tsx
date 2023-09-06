@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import { Dispatch } from "react";
+import type { Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -104,9 +104,11 @@ export const schema = z.object({
 const GreenPillForm = ({
   isClient,
   formData,
+  handleForm
 }: {
   isClient: boolean;
   formData: Dispatch<z.infer<typeof schema>>;
+  handleForm: () => void;
 }) => {
   const {
     register,
@@ -121,7 +123,11 @@ const GreenPillForm = ({
   return (
     <VStack maxW={"600px"} gap={20}>
       <form
-        onSubmit={(d) => console.log(d)}
+        onSubmit={
+          (e) => {
+            e.preventDefault()
+            handleForm();
+          }}
         onKeyUpCapture={(e) => {
           e.preventDefault();
           const values = getValues();
