@@ -6,20 +6,21 @@ import {
 } from "@chakra-ui/react";
 import type { schema } from "components/GreenPillForm";
 import GreenPillForm from "components/GreenPillForm";
+import HyperCertificate from "components/HyperCert";
 import type { NextPage } from "next";
 import { useState } from "react";
 import type * as z from "zod";
 import { LandingLayout } from "../layouts/Layout";
-import HyperCertificate from "components/HyperCert";
 
 import type { HypercertClaimdata, HypercertMetadata } from "@hypercerts-org/sdk";
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 
 
-import { PrivyInterface, usePrivy } from "@privy-io/react-auth";
-import useMint from "hooks/useMint";
-import { createClaim } from "utils/createClaim";
+import type { PrivyInterface} from "@privy-io/react-auth";
+import { usePrivy } from "@privy-io/react-auth";
 import React from "react";
+import { createClaim } from "utils/createClaim";
+import useMint from "hooks/useMint";
 
 
 // const zodHypercertClaimData = 
@@ -55,12 +56,14 @@ const Home: NextPage = () => {
      const readyToMint = validateFormData(formData as z.infer<typeof schema>);  
     console.log("ready to mint", readyToMint)
     setMetadata(readyToMint as HypercertMetadata);
+    
   };
   
-
   const minting = useMint(metadata as HypercertMetadata);
+  minting ? console.log("minting", minting) : console.log("not minting", minting)
+  
 
-  minting && console.log("logging mint attempt", minting)
+  
 
   return (
     <LandingLayout>

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
-import useSWR from "swr";
-import React, { type Dispatch, useRef, useMemo } from "react";
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -19,11 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
+import { type Dispatch, useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
-import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
-import * as z from "zod";
+import CreatableSelect from "react-select/creatable";
+import useSWR from "swr";
 import supabase from "utils/supabase";
+import * as z from "zod";
 
 async function fetchTags() {
   const { data: options } = await supabase.from("tags").select(
@@ -131,8 +131,8 @@ function GreenPillForm({
   const {
     register,
     formState: { errors },
-    getValues,
     control,
+    watch,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -140,15 +140,9 @@ function GreenPillForm({
   const { data: tags } = useSWR("tags", fetchTags);
 
   const portalRef = useRef<HTMLDivElement>(null);
+  const allValues = watch();
 
-  const values = getValues();
-
-  const memoizedFormData = useMemo(() => {
-    return values as z.infer<typeof schema>;
-  }, [values]);
-  
-  setFormData(memoizedFormData);
- 
+  useEffect(() => setFormData(allValues as z.infer<typeof schema>));
 
   const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
   return (
@@ -156,7 +150,7 @@ function GreenPillForm({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-         handleForm();
+          handleForm();
         }}
         className="w-full"
       >
@@ -213,63 +207,59 @@ function GreenPillForm({
             gap={4}
           >
             <InputGroup width={"auto"} zIndex={12} position={"relative"}>
-              <FormControl id="workTimeframeStart" my={2}>
-                <FormLabel textColor={"dark-grey"} my={2}>
-                  Start Date
-                </FormLabel>
-                <Controller
-                  render={({ field: { onChange, value } }) => (
-                    <Box
-                      justifyContent={"flex-end"}
-                      alignItems={"center"}
-                      display={"flex"}
-                    >
-                      <SingleDatepicker
-                        date={value}
-                        onDateChange={onChange}
-                        propsConfigs={{ ...CalConfig }}
-                      />
-                      <CalendarIcon
-                        color={"dark-grey"}
-                        position={"absolute"}
-                        mr={2}
-                      />
-                    </Box>
-                  )}
-                  name="workTimeframeStart"
-                  control={control}
-                />
-              </FormControl>
+              <FormLabel textColor={"dark-grey"} my={2}>
+                Start Date
+              </FormLabel>
+              <Controller
+                render={({ field: { onChange, value } }) => (
+                  <Box
+                    justifyContent={"flex-end"}
+                    alignItems={"center"}
+                    display={"flex"}
+                  >
+                    <SingleDatepicker
+                      date={value}
+                      onDateChange={onChange}
+                      propsConfigs={{ ...CalConfig }}
+                    />
+                    <CalendarIcon
+                      color={"dark-grey"}
+                      position={"absolute"}
+                      mr={2}
+                    />
+                  </Box>
+                )}
+                name="workTimeframeStart"
+                control={control}
+              />
             </InputGroup>
             <InputGroup width={"auto"} zIndex={100}>
-              <FormControl id="workTimeframeEnd" my={2}>
-                <FormLabel textColor={"dark-grey"} my={2}>
-                  End Date
-                </FormLabel>
+              <FormLabel textColor={"dark-grey"} my={2}>
+                End Date
+              </FormLabel>
 
-                <Controller
-                  render={({ field: { onChange, value } }) => (
-                    <Box
-                      justifyContent={"flex-end"}
-                      alignItems={"center"}
-                      display={"flex"}
-                    >
-                      <SingleDatepicker
-                        date={value}
-                        onDateChange={onChange}
-                        propsConfigs={{ ...CalConfig }}
-                      />
-                      <CalendarIcon
-                        color={"dark-grey"}
-                        position={"absolute"}
-                        mr={2}
-                      />
-                    </Box>
-                  )}
-                  name="workTimeframeEnd"
-                  control={control}
-                />
-              </FormControl>
+              <Controller
+                render={({ field: { onChange, value } }) => (
+                  <Box
+                    justifyContent={"flex-end"}
+                    alignItems={"center"}
+                    display={"flex"}
+                  >
+                    <SingleDatepicker
+                      date={value}
+                      onDateChange={onChange}
+                      propsConfigs={{ ...CalConfig }}
+                    />
+                    <CalendarIcon
+                      color={"dark-grey"}
+                      position={"absolute"}
+                      mr={2}
+                    />
+                  </Box>
+                )}
+                name="workTimeframeEnd"
+                control={control}
+              />
             </InputGroup>
           </Flex>
         </Box>
@@ -342,4 +332,4 @@ function GreenPillForm({
   );
 }
 
-export default React.memo(GreenPillForm);
+export default GreenPillForm;

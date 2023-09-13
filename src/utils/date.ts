@@ -2,7 +2,7 @@ import { format, fromUnixTime } from 'date-fns';
 
 export const toYear = (date: number) => {
 
-  if(date === 0 || date === undefined) {
+  if(date === 0 || isNaN(date)) {
     return "Indefinite";
   }
 
@@ -11,7 +11,6 @@ export const toYear = (date: number) => {
   const formattedDate = format(dateObject, 'yyyy-MM-dd');
   return formattedDate;
  }
-
-  console.error("Invalid timestamp:", date);
-  return null;
+  
+  return "Indefinite";
 }

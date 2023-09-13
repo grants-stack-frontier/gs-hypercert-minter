@@ -1,9 +1,9 @@
-import useSWR from 'swr';
-import type { HypercertClient } from "@hypercerts-org/sdk";
+import type { HypercertClient} from "@hypercerts-org/sdk";
 import { TransferRestrictions, type HypercertMetadata } from "@hypercerts-org/sdk";
-import { getHyperCertClient } from './useHypercert';
-import type { ConnectedWallet} from '@privy-io/react-auth';
+import type { ConnectedWallet } from '@privy-io/react-auth';
 import { useWallets } from '@privy-io/react-auth';
+import useSWR from 'swr';
+import { getHyperCertClient } from './useHypercert';
 
 const totalUnits = "1000";
 
@@ -19,7 +19,10 @@ const fetcher = async (metadata: HypercertMetadata, wallets: ConnectedWallet[]) 
 const useMint = (metadata: HypercertMetadata) => {
   
   const { wallets } = useWallets();
-  const { data, error } = useSWR('get_mint', () => fetcher(metadata, wallets));
+  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
+
+
+  const { data, error } = useSWR(metadata && embeddedWallet, () => fetcher(metadata, wallets));
   
   return {
     data,
