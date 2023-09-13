@@ -16,9 +16,10 @@ import type { HypercertClaimdata, HypercertMetadata } from "@hypercerts-org/sdk"
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 
 
-import { usePrivy } from "@privy-io/react-auth";
+import { PrivyInterface, usePrivy } from "@privy-io/react-auth";
 import useMint from "hooks/useMint";
 import { createClaim } from "utils/createClaim";
+import React from "react";
 
 
 // const zodHypercertClaimData = 
@@ -45,11 +46,13 @@ const Home: NextPage = () => {
   const [formData, setFormData] = useState<z.infer<typeof schema>>();
   const [metadata, setMetadata] = useState<HypercertMetadata>();
 
+  const privy: PrivyInterface = usePrivy()
 
-  const {ready} = usePrivy()
+  const memoisedPrivy = React.useMemo(() => privy, [privy]);
+
 
   const handleForm = () => {
-    const readyToMint = validateFormData(formData as z.infer<typeof schema>);  
+     const readyToMint = validateFormData(formData as z.infer<typeof schema>);  
     console.log("ready to mint", readyToMint)
     setMetadata(readyToMint as HypercertMetadata);
   };
@@ -61,7 +64,7 @@ const Home: NextPage = () => {
 
   return (
     <LandingLayout>
-      <Box
+      {memoisedPrivy.ready && <Box
         my={10}
         p={20}
         w="full"
@@ -70,9 +73,9 @@ const Home: NextPage = () => {
         display={"flex"}
         flexDir={isLargerThan600 ? "row" : "column-reverse"}
       >
-        <GreenPillForm isClient={ready} formData={setFormData} handleForm={handleForm}/>
+         <GreenPillForm  setFormData={setFormData} handleForm={handleForm}/>
         <HyperCertificate formData={formData as z.infer<typeof schema>} />
-      </Box>
+      </Box>}
     </LandingLayout>
   );
 };

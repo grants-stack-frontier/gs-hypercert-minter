@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
 import useSWR from "swr";
+import React, { type Dispatch, useRef, useMemo } from "react";
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -13,30 +14,27 @@ import {
   InputGroup,
   Text,
   Textarea,
-  VStack,
   useMediaQuery,
+  VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import type { Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
 import * as z from "zod";
 import supabase from "utils/supabase";
 
-
 async function fetchTags() {
-  const { data: options } = await supabase.from('tags').select('tag_label, tag_value');;
-  
-  return options?.map(option => ({
+  const { data: options } = await supabase.from("tags").select(
+    "tag_label, tag_value",
+  );
+
+  return options?.map((option) => ({
     label: option.tag_label,
-    value: option.tag_value
+    value: option.tag_value,
   }));
 }
-
-
-
 
 export const impactOptions = [
   { value: "carbon", label: "Carbon Neutrality" },
@@ -54,7 +52,7 @@ const customStyles = {
   control: (provided: object) => ({
     ...provided,
     minHeight: 50,
-    height: 'auto',
+    height: "auto",
     borderRadius: 4,
     borderColor: "#666666",
   }),
@@ -98,33 +96,38 @@ export const schema = z.object({
   name: z.string()
     .min(1, { message: "Name is required" })
     .max(255, { message: "Maximum length of 255 characters exceeded" }),
-  
+
   workScope: z.array(z.string())
     .min(1, { message: "At least one work scope is required" }),
-  
+
   externalUrl: z.string()
-    .url({ message: "Invalid URL. Please ensure it follows http(s)://www.example.com format" }),
-  
+    .url({
+      message:
+        "Invalid URL. Please ensure it follows http(s)://www.example.com format",
+    }),
+
   description: z.string()
     .min(1, { message: "Description is required" })
     .max(144, { message: "Maximum length of 2000 characters exceeded" }),
-  
+
   contributors: z.string()
     .min(1, { message: "At least one contributor is required" })
     .optional(),
   workTimeframeStart: z.date(),
   workTimeframeEnd: z.date(),
-}).transform((data) => ((+data.workTimeframeEnd) > (+data.workTimeframeStart))  ? data : { ...data, workTimeframeEnd: 0 });
+}).transform((data) =>
+  ((+data.workTimeframeEnd) > (+data.workTimeframeStart))
+    ? data
+    : { ...data, workTimeframeEnd: 0 }
+);
 
-export default function GreenPillForm({
-  isClient,
-  formData,
-  handleForm
+function GreenPillForm({
+  setFormData,
+  handleForm,
 }: {
-  isClient: boolean;
-  formData: Dispatch<z.infer<typeof schema>>;
+  setFormData: Dispatch<z.infer<typeof schema>>;
   handleForm: () => void;
-}){
+}) {
   const {
     register,
     formState: { errors },
@@ -134,22 +137,26 @@ export default function GreenPillForm({
     resolver: zodResolver(schema),
   });
 
-  const { data: tags, error } = useSWR('tags', fetchTags);
+  const { data: tags } = useSWR("tags", fetchTags);
 
-  console.log(tags, error)
+  const portalRef = useRef<HTMLDivElement>(null);
+
+  const values = getValues();
+
+  const memoizedFormData = useMemo(() => {
+    return values as z.infer<typeof schema>;
+  }, [values]);
+  
+  setFormData(memoizedFormData);
+ 
+
   const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
   return (
-    <VStack maxW={"600px"} gap={20}>
+    <VStack maxW={"600px"} gap={20} ref={portalRef}>
       <form
-        onSubmit={
-          (e) => {
-            e.preventDefault()
-            handleForm();
-          }}
-        onKeyUpCapture={(e) => {
+        onSubmit={(e) => {
           e.preventDefault();
-          const values = getValues();
-          formData(values as unknown as z.infer<typeof schema>);
+         handleForm();
         }}
         className="w-full"
       >
@@ -175,25 +182,29 @@ export default function GreenPillForm({
         >
           <FormLabel>List the tags for the scope of work</FormLabel>
           <Controller
-            control={control}
+            render={({ field }) => (
+              <CreatableSelect
+                {...field}
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                options={tags}
+                styles={customStyles}
+                controlShouldRenderValue={true}
+                menuPortalTarget={portalRef.current}
+              />
+            )}
             name="workScope"
-            render={({ field: { onChange, value } }) =>
-              isClient ? (
-                <Select
-                  closeMenuOnSelect={false}
-                  components={animatedComponents}
-                  isMulti
-                  value={value}
-                  options={tags}
-                  styles={customStyles}
-                  onChange={(selected) => onChange(selected)}
-                  menuPortalTarget={document.body ?? undefined}
-                />
-              ) : (
-                <> </>
-              )
-            }
+            control={control}
           />
+        </Box>
+        <Box
+          bg={"white"}
+          alignItems={"flex-start"}
+          w={"full"}
+          flexDirection={"row"}
+        >
+          <FormLabel>Select the work timeframe</FormLabel>
 
           <Flex
             flexDir={isLargerThan300 ? "row" : "column"}
@@ -207,8 +218,6 @@ export default function GreenPillForm({
                   Start Date
                 </FormLabel>
                 <Controller
-                  name="workTimeframeStart"
-                  control={control}
                   render={({ field: { onChange, value } }) => (
                     <Box
                       justifyContent={"flex-end"}
@@ -217,7 +226,7 @@ export default function GreenPillForm({
                     >
                       <SingleDatepicker
                         date={value}
-                        onDateChange={(date) => onChange(date)}
+                        onDateChange={onChange}
                         propsConfigs={{ ...CalConfig }}
                       />
                       <CalendarIcon
@@ -227,6 +236,8 @@ export default function GreenPillForm({
                       />
                     </Box>
                   )}
+                  name="workTimeframeStart"
+                  control={control}
                 />
               </FormControl>
             </InputGroup>
@@ -237,8 +248,6 @@ export default function GreenPillForm({
                 </FormLabel>
 
                 <Controller
-                  name="workTimeframeEnd"
-                  control={control}
                   render={({ field: { onChange, value } }) => (
                     <Box
                       justifyContent={"flex-end"}
@@ -247,7 +256,7 @@ export default function GreenPillForm({
                     >
                       <SingleDatepicker
                         date={value}
-                        onDateChange={(date) => onChange(date)}
+                        onDateChange={onChange}
                         propsConfigs={{ ...CalConfig }}
                       />
                       <CalendarIcon
@@ -257,6 +266,8 @@ export default function GreenPillForm({
                       />
                     </Box>
                   )}
+                  name="workTimeframeEnd"
+                  control={control}
                 />
               </FormControl>
             </InputGroup>
@@ -329,6 +340,6 @@ export default function GreenPillForm({
       </form>
     </VStack>
   );
-};
+}
 
-
+export default React.memo(GreenPillForm);

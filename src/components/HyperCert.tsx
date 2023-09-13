@@ -34,7 +34,7 @@ const greenPillProps = {
   };
   
   function HyperCertificate({formData}: {formData: z.infer<typeof schema>}) {
-    const metadata: HypercertMetadata = React.useMemo(() => createClaim(formData), [formData]);
+    const metadata: HypercertMetadata = createClaim(formData);
   
     return (
       <VStack {...vStackProps}>
