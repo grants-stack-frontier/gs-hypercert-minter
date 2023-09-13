@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
+import useSWR from "swr";
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -22,6 +23,20 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import * as z from "zod";
+import supabase from "utils/supabase";
+
+
+async function fetchTags() {
+  const { data: options } = await supabase.from('tags').select('tag_label, tag_value');;
+  
+  return options?.map(option => ({
+    label: option.tag_label,
+    value: option.tag_value
+  }));
+}
+
+
+
 
 export const impactOptions = [
   { value: "carbon", label: "Carbon Neutrality" },
@@ -101,7 +116,7 @@ export const schema = z.object({
   workTimeframeEnd: z.date(),
 }).transform((data) => ((+data.workTimeframeEnd) > (+data.workTimeframeStart))  ? data : { ...data, workTimeframeEnd: 0 });
 
-const GreenPillForm = ({
+export default function GreenPillForm({
   isClient,
   formData,
   handleForm
@@ -109,7 +124,7 @@ const GreenPillForm = ({
   isClient: boolean;
   formData: Dispatch<z.infer<typeof schema>>;
   handleForm: () => void;
-}) => {
+}){
   const {
     register,
     formState: { errors },
@@ -119,6 +134,9 @@ const GreenPillForm = ({
     resolver: zodResolver(schema),
   });
 
+  const { data: tags, error } = useSWR('tags', fetchTags);
+
+  console.log(tags, error)
   const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
   return (
     <VStack maxW={"600px"} gap={20}>
@@ -166,7 +184,7 @@ const GreenPillForm = ({
                   components={animatedComponents}
                   isMulti
                   value={value}
-                  options={impactOptions}
+                  options={tags}
                   styles={customStyles}
                   onChange={(selected) => onChange(selected)}
                   menuPortalTarget={document.body ?? undefined}
@@ -313,4 +331,4 @@ const GreenPillForm = ({
   );
 };
 
-export default GreenPillForm;
+
