@@ -16,13 +16,18 @@ const fetcher = async (metadata: HypercertMetadata, wallets: ConnectedWallet[]) 
   return hyperCertClient?.mintClaim(metadata, totalUnits, TransferRestrictions.FromCreatorOnly);
 }
 
-const useMint = (metadata: HypercertMetadata) => {
+const useMint = (metadata: HypercertMetadata, wantToMint: boolean) => {
   
   const { wallets } = useWallets();
   const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
 
+  let key = null;
+  
+  if (metadata && embeddedWallet && wantToMint) {
+    key = [metadata, embeddedWallet.address, wantToMint.toString()];
+  }
 
-  const { data, error } = useSWR(metadata && embeddedWallet, () => fetcher(metadata, wallets));
+  const { data, error } = useSWR(key, () => fetcher(metadata, wallets));
   
   return {
     data,

@@ -12,12 +12,11 @@ import {
   Text,
   Textarea,
   Tooltip,
-  VStack,
-  useMediaQuery
+  VStack
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import { useEffect, useRef, type Dispatch } from "react";
+import { useRef, type Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
 import makeAnimated from "react-select/animated";
 import CreatableSelect from "react-select/creatable";
@@ -133,7 +132,6 @@ function GreenPillForm({
     formState: { errors },
     control,
     watch,
-    getValues,
     reset,
     
   } = useForm({

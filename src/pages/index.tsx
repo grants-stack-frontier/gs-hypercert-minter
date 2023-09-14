@@ -8,7 +8,7 @@ import type { schema } from "components/GreenPillForm";
 import GreenPillForm from "components/GreenPillForm";
 import HyperCertificate from "components/HyperCert";
 import type { NextPage } from "next";
-import { use, useState } from "react";
+import { useState } from "react";
 import type * as z from "zod";
 import { LandingLayout } from "../layouts/Layout";
 
@@ -16,11 +16,11 @@ import type { HypercertClaimdata, HypercertMetadata } from "@hypercerts-org/sdk"
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 
 
-import type { PrivyInterface} from "@privy-io/react-auth";
+import type { PrivyInterface } from "@privy-io/react-auth";
 import { usePrivy } from "@privy-io/react-auth";
+import useMint from "hooks/useMint";
 import React from "react";
 import { createClaim } from "utils/createClaim";
-import useMint from "hooks/useMint";
 
 
 // const zodHypercertClaimData = 
@@ -46,7 +46,8 @@ const Home: NextPage = () => {
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [formData, setFormData] = useState<z.infer<typeof schema>>();
   const [metadata, setMetadata] = useState<HypercertMetadata>();
-  
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [wantToMint, setWantToMint] = useState<boolean>(false);
   const privy: PrivyInterface = usePrivy()
 
   const memoisedPrivy = React.useMemo(() => privy, [privy]);
@@ -56,10 +57,10 @@ const Home: NextPage = () => {
      const readyToMint = validateFormData(formData as z.infer<typeof schema>);  
     console.log("ready to mint", readyToMint)
     setMetadata(readyToMint as HypercertMetadata);
-    return readyToMint;
+    return Boolean(readyToMint);
   };
   
-  const {data, isError, isLoading} = useMint(metadata as HypercertMetadata);
+  useMint(metadata as HypercertMetadata, wantToMint);
   
   
 
