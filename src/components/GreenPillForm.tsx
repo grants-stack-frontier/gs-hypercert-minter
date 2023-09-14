@@ -23,6 +23,7 @@ import CreatableSelect from "react-select/creatable";
 import useSWR from "swr";
 import supabase from "utils/supabase";
 import * as z from "zod";
+import PreviewComp from "./Preview";
 
 async function fetchTags() {
   const { data: options } = await supabase.from("tags").select(
@@ -351,15 +352,7 @@ function GreenPillForm({
         </FormControl>
 
         <Center>
-          <Button
-            type="submit"
-            variant={"secondary"}
-            w={"full"}
-            my={8}
-            width={"120px"}
-          >
-            Next
-          </Button>
+          <PreviewComp formData={allValues as z.infer<typeof schema>} />
         </Center>
       </form>
     </VStack>
