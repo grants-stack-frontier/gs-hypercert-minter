@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
-import { CalendarIcon } from "@chakra-ui/icons";
+import { CalendarIcon, InfoIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Center,
-  Flex,
   FormControl,
   FormLabel,
+  HStack,
   Input,
-  InputGroup,
   Text,
   Textarea,
-  useMediaQuery,
+  Tooltip,
   VStack,
+  useMediaQuery
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import { type Dispatch, useEffect, useRef } from "react";
+import { useEffect, useRef, type Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
 import makeAnimated from "react-select/animated";
 import CreatableSelect from "react-select/creatable";
@@ -126,13 +126,16 @@ function GreenPillForm({
   handleForm,
 }: {
   setFormData: Dispatch<z.infer<typeof schema>>;
-  handleForm: () => void;
+  handleForm: () => boolean;
 }) {
   const {
     register,
     formState: { errors },
     control,
     watch,
+    getValues,
+    reset,
+    
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -142,15 +145,22 @@ function GreenPillForm({
   const portalRef = useRef<HTMLDivElement>(null);
   const allValues = watch();
 
-  useEffect(() => setFormData(allValues as z.infer<typeof schema>));
+  useSWR(watch(), () => setFormData(allValues as z.infer<typeof schema>));
 
-  const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
+  // const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
   return (
     <VStack maxW={"600px"} gap={20} ref={portalRef}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleForm();
+          const readyToMint = handleForm();
+
+          if(readyToMint)
+            {
+              setTimeout(() => reset(), 30000)
+              
+            }
+
         }}
         className="w-full"
       >
@@ -165,7 +175,7 @@ function GreenPillForm({
             autoFocus
             mb={4}
             height={"60px"}
-            placeholder=""
+            placeholder="e.g. GreenPill Tokyo"
           />
         </FormControl>
         <Box
@@ -174,7 +184,16 @@ function GreenPillForm({
           w={"full"}
           flexDirection={"row"}
         >
-          <FormLabel>List the tags for the scope of work</FormLabel>
+          <FormLabel>List the tags for the scope of work
+          <Tooltip label='Try to keep it simple like beach cleanup' fontSize='md' >
+              <InfoIcon ml={2}/>
+            </Tooltip>
+          </FormLabel>
+
+          
+          
+
+
           <Controller
             render={({ field }) => (
               <CreatableSelect
@@ -192,81 +211,93 @@ function GreenPillForm({
             control={control}
           />
         </Box>
+        
+
+
         <Box
-          bg={"white"}
-          alignItems={"flex-start"}
-          w={"full"}
-          flexDirection={"row"}
+  bg={"white"}
+  alignItems={"flex-start"}
+  w={"full"}
+  my={12}
+  flexDirection={"row"}
+>
+  
+  <FormLabel>Select the work timeframe</FormLabel>
+  <HStack>
+    <Controller
+      render={({ field: { onChange, value } }) => (
+        <Box
+          justifyContent={"flex-end"}
+          alignItems={"start"}
+          width={'full'}
+          display={"flex"}
+          flexDirection={"column"}
+          position={"relative"}
         >
-          <FormLabel>Select the work timeframe</FormLabel>
-
-          <Flex
-            flexDir={isLargerThan300 ? "row" : "column"}
-            justifyContent={"space-between"}
-            zIndex={15}
-            gap={4}
-          >
-            <InputGroup width={"auto"} zIndex={12} position={"relative"}>
-              <FormLabel textColor={"dark-grey"} my={2}>
-                Start Date
-              </FormLabel>
-              <Controller
-                render={({ field: { onChange, value } }) => (
-                  <Box
-                    justifyContent={"flex-end"}
-                    alignItems={"center"}
-                    display={"flex"}
-                  >
-                    <SingleDatepicker
-                      date={value}
-                      onDateChange={onChange}
-                      propsConfigs={{ ...CalConfig }}
-                    />
-                    <CalendarIcon
-                      color={"dark-grey"}
-                      position={"absolute"}
-                      mr={2}
-                    />
-                  </Box>
-                )}
-                name="workTimeframeStart"
-                control={control}
-              />
-            </InputGroup>
-            <InputGroup width={"auto"} zIndex={100}>
-              <FormLabel textColor={"dark-grey"} my={2}>
-                End Date
-              </FormLabel>
-
-              <Controller
-                render={({ field: { onChange, value } }) => (
-                  <Box
-                    justifyContent={"flex-end"}
-                    alignItems={"center"}
-                    display={"flex"}
-                  >
-                    <SingleDatepicker
-                      date={value}
-                      onDateChange={onChange}
-                      propsConfigs={{ ...CalConfig }}
-                    />
-                    <CalendarIcon
-                      color={"dark-grey"}
-                      position={"absolute"}
-                      mr={2}
-                    />
-                  </Box>
-                )}
-                name="workTimeframeEnd"
-                control={control}
-              />
-            </InputGroup>
-          </Flex>
+          <FormLabel textColor={"dark-grey"} my={2}>
+            Start Date
+          </FormLabel>
+          <SingleDatepicker
+            date={value}
+            
+            onDateChange={onChange}
+            propsConfigs={{ ...CalConfig }}
+          />
+          <CalendarIcon
+            color={"dark-grey"}
+            position={"absolute"}
+            bottom={3}
+            right={2}
+          />
         </Box>
+      )}
+      name="workTimeframeStart"
+      control={control}
+    />
+  
+      <Controller
+        render={({ field: { onChange, value } }) => (
+          <Box
+            justifyContent={"flex-end"}
+            alignItems={"start"}
+            display={"flex"}
+            flexDirection={"column"}
+            width={'full'}
+            position={"relative"}
+          >
+            <FormLabel textColor={"dark-grey"} my={2}>
+              End Date
+            </FormLabel>
+            <SingleDatepicker
+              date={value}
+              onDateChange={onChange}
+              propsConfigs={{ ...CalConfig }}
+            />
+            <CalendarIcon
+              color={"dark-grey"}
+              position={"absolute"}
+              bottom={3}
+              right={2}
+            />
+          </Box>
+        )}
+        name="workTimeframeEnd"
+        control={control}
+      />
+    </HStack>
+  
+</Box>
+
+
+
+
 
         <FormControl id="externalUrl" my={2}>
           <FormLabel textColor={"dark-grey"} my={2}>
-            Provide a link where we can find more information on the work/impact
+            Provide a link where we can find more information on the work.
+            <Tooltip label='This can be a set of images, reports, links to blogs, or any other source of information that supports your claim. Make sure the information is publicly available.' fontSize='md' >
+              <InfoIcon ml={2}/>
+            </Tooltip>
           </FormLabel>
           <Input
             {...register("externalUrl")}
@@ -281,6 +312,11 @@ function GreenPillForm({
         <FormControl id="description" my={2}>
           <FormLabel textColor={"dark-grey"} my={2}>
             Describe the work delivered
+
+            
+            <Tooltip label='The desciption is one of the first things people will see when inspecting your claim. Try to strike a balance between complete and concise.' fontSize='md' >
+              <InfoIcon ml={2}/>
+            </Tooltip>
           </FormLabel>
           <Textarea
             border="1px solid"
