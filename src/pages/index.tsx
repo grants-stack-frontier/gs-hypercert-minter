@@ -3,7 +3,6 @@ import { Box, useMediaQuery } from "@chakra-ui/react";
 import type { schema } from "components/GreenPillForm";
 import GreenPillForm from "components/GreenPillForm";
 import HyperCertificate from "components/HyperCert";
-import PreviewComp from "components/Preview";
 import type { NextPage } from "next";
 import { useState } from "react";
 import type * as z from "zod";

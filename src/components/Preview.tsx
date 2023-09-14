@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Code,
   FormLabel,
   Input,
   Modal,
@@ -13,16 +12,16 @@ import {
   ModalOverlay,
   useDisclosure,
   Wrap,
-  WrapItem,
+  WrapItem
 } from "@chakra-ui/react";
 import HyperCertificate from "components/HyperCert";
 import React from "react";
-import type { infer as zInfer } from "zod";
-import type { schema } from "./GreenPillForm";
 import camelToTitle from "utils/case";
+import type * as z from 'zod';
+import type { schema } from "./GreenPillForm";
 
 interface PreviewCompProps {
-  formData: zInfer<typeof schema>;
+  formData: z.infer<typeof schema>;
 }
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData }) => {
@@ -72,7 +71,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData }) => {
               </WrapItem>
               <WrapItem p={3} minW={"50%"}>
                 <HyperCertificate
-                  formData={formData as z.infer<typeof schema>}
+                  formData={formData}
                 />
               </WrapItem>
             </Wrap>
