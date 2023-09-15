@@ -1,9 +1,9 @@
 import type { schema } from "components/GreenPillForm";
+import { getTime, parseISO } from 'date-fns';
+import _ from "lodash";
 import type * as z from "zod";
 import { toYear } from "./date";
 import { formatContributors } from "./formatting";
-import { getUnixTime } from 'date-fns';
-import _ from "lodash";
 
 
 export const createClaim = (formData: z.infer<typeof schema>) => {
@@ -13,8 +13,9 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
   const externalUrl = formData?.externalUrl;
   const description = formData?.description;
   const contributors = formData?.contributors;
-  const workTimeframeStart = getUnixTime(formData?.workTimeframeStart);
-  const workTimeframeEnd = getUnixTime(formData?.workTimeframeEnd);
+  const workTimeframeStart = formData?.workTimeframeStart
+  const workTimeframeEnd = formData?.workTimeframeEnd
+
 
 
 
@@ -37,13 +38,13 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
       },
       impact_timeframe: {
         name: "Impact Timeframe",
-        value: [workTimeframeEnd, 0],
-        display_value: `${toYear(+workTimeframeEnd)} → ${toYear(0)}`,
+        value: [getTime(parseISO(workTimeframeEnd)), 0],
+        display_value: `${workTimeframeEnd} → ${toYear(0)}`,
       },
       work_timeframe: {
         name: "Work Timeframe",
         value: [workTimeframeStart, workTimeframeEnd],
-        display_value: `${toYear(+workTimeframeStart)} → ${toYear(+workTimeframeEnd)}`,
+        display_value: `${workTimeframeStart} → ${workTimeframeEnd}`,
       },
       rights: {
         name: "Rights",
@@ -59,3 +60,5 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
     },
   };
 };
+
+
