@@ -106,7 +106,6 @@ const theme = extendTheme({
           _invalid: {
             borderColor: "error-orange",
             ringColor: "error-orange",
-            backgroundColor: `error-orange`,
             backgroundColor: `rgba(247,160,114, 0.1)`,
           },
         },
