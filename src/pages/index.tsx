@@ -1,11 +1,10 @@
 "use client";
 import { Box, useMediaQuery } from "@chakra-ui/react";
-import type { schema } from "components/GreenPillForm";
 import GreenPillForm from "components/GreenPillForm";
 import HyperCertificate from "components/HyperCert";
 import type { NextPage } from "next";
 import { useState } from "react";
-import type * as z from "zod";
+import type { formSchema } from "utils/types";
 import { LandingLayout } from "../layouts/Layout";
 
 import type {
@@ -21,7 +20,7 @@ import React from "react";
 import { createClaim } from "utils/createClaim";
 
 // const zodHypercertClaimData =
-function validateFormData(formData: z.infer<typeof schema>) {
+function validateFormData(formData: formSchema) {
   const metadata = createClaim(formData);
 
   const validClaim = validateClaimData(
@@ -40,7 +39,7 @@ function validateFormData(formData: z.infer<typeof schema>) {
 
 const Home: NextPage = () => {
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
-  const [formData, setFormData] = useState<z.infer<typeof schema>>();
+  const [formData, setFormData] = useState<formSchema>();
   const [metadata, setMetadata] = useState<HypercertMetadata>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [wantToMint, setWantToMint] = useState<boolean>(false);
@@ -49,7 +48,7 @@ const Home: NextPage = () => {
   const memoisedPrivy = React.useMemo(() => privy, [privy]);
 
   const handleForm = () => {
-    const readyToMint = validateFormData(formData as z.infer<typeof schema>);
+    const readyToMint = validateFormData(formData as formSchema);
     console.log("ready to mint", readyToMint);
     setMetadata(readyToMint as HypercertMetadata);
     return Boolean(readyToMint);
@@ -70,7 +69,7 @@ const Home: NextPage = () => {
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
           <GreenPillForm setFormData={setFormData} handleForm={handleForm} />
-          <HyperCertificate formData={formData as z.infer<typeof schema>} />
+          <HyperCertificate formData={formData as formSchema} />
         </Box>
       )}
     </LandingLayout>

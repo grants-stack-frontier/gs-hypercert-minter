@@ -1,18 +1,16 @@
-import type { schema } from "components/GreenPillForm";
 import { getTime, parseISO } from 'date-fns';
 import _ from "lodash";
-import type * as z from "zod";
 import { toYear } from "./date";
-import { formatContributors } from "./formatting";
+import type { formSchema } from './types';
 
 
-export const createClaim = (formData: z.infer<typeof schema>) => {
+export const createClaim = (formData: formSchema) => {
 
-  const name = formData?.name;
+  const name = _.map(formData?.name, 'label')[0] as string;
   const workScope = _.map(formData?.workScope, 'value');
   const externalUrl = formData?.externalUrl;
   const description = formData?.description;
-  const contributors = formData?.contributors;
+  const contributors = _.map(formData?.contributors, 'value');
   const workTimeframeStart = formData?.workTimeframeStart
   const workTimeframeEnd = formData?.workTimeframeEnd
 
@@ -34,7 +32,7 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
         name: "Work Scope",
         value: [...workScope],
         excludes: [],
-        display_value:[...workScope].join(", "), // TODO: Find the right value
+        display_value: [...workScope].join(", "), 
       },
       impact_timeframe: {
         name: "Impact Timeframe",
@@ -43,7 +41,7 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
       },
       work_timeframe: {
         name: "Work Timeframe",
-        value: [workTimeframeStart, workTimeframeEnd],
+        value: [getTime(parseISO(workTimeframeStart)), getTime(parseISO(workTimeframeEnd))],
         display_value: `${workTimeframeStart} → ${workTimeframeEnd}`,
       },
       rights: {
@@ -54,8 +52,8 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
       },
       contributors: {
         name: "Contributors",
-        value: [...contributors?.split(",") ?? []],
-        display_value: formatContributors(contributors?.split(",") ?? []),
+        value: [...contributors],
+        display_value: [...contributors].join(", "),
       },
     },
   };

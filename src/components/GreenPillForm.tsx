@@ -11,159 +11,18 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type Dispatch, useRef } from "react";
+import { useRef, type Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import CreatableSelect from "react-select/creatable";
-import Select from 'react-select'
-import type { StylesConfig } from "react-select";
 import useSWR from "swr";
-import supabase from "utils/supabase";
-import { z } from "zod";
-import type { optionType } from "utils/types";
-
-
-const customStyles: StylesConfig<optionType> = {
-  control: (styles) => ({...styles, backgroundColor: "white"}),
-  option: (styles, {isDisabled, isFocused, isSelected}):never => {
-    let backgroundColor, textColor, cursorType;
-
-    if (isDisabled) {
-        backgroundColor = 'default-grey';
-        textColor = "#ccc";
-        cursorType = "not-allowed";
-    }
-    else if(isSelected && isFocused){
-        backgroundColor = `rgba(237, 249, 179, 0.5)`;
-        textColor = 'green';
-        cursorType = "default";
-    }
-    else if (isSelected) {
-        textColor = "default-grey";
-        cursorType = "default";
-
-    } else if (isFocused) {
-        textColor = 'green';
-        backgroundColor = `rgba(237, 249, 179, 0.5)`;
-        cursorType = "default";
-    } 
-    else {
-        textColor = 'default-grey';
-        cursorType = "default";
-        
-    }    
-
-    const activeStyle = {
-        ...styles[":active"],
-        backgroundColor: !isDisabled && (isSelected ? "mid-green" : "light-grey"),
-    };
-
-    return {
-        ...styles,
-        backgroundColor: backgroundColor,
-        color: textColor,
-        cursor: cursorType,
-        ":active": activeStyle,
-    } as never
-}
-,
-  input: (styles) => ({...styles, ...{color: "green", p: '4px'}}),
-  placeholder: (styles) => ({...styles, ...{color: "dark-grey"}}),
-  singleValue: (styles) => ({...styles, ...{color: "dark-grey"}}),
-  multiValue: (styles) => ({...styles, ...{backgroundColor: `rgba(237, 249, 179, 0.8)`, padding:'6px 4px', minWidth:'max', borderRadius: '4px'}}),
-  valueContainer(styles) {
-    return {
-      ...styles,
-      height: '54px',
-      padding: '0 6px',
-      color: 'dark-grey',
-    };
-  }
-};
-
-
+import { fetchChapters, fetchMembers, fetchTags } from "utils/db";
+import { customStyles } from "utils/styles";
+import type { formSchema, optionType } from "utils/types";
+import { zFormSchema } from "utils/types";
 
 const animatedComponents = makeAnimated();
-async function fetchTags() {
-  const { data: options } = await supabase.from("tags").select(
-    "tag_label, tag_value",
-  );
-
-  console.log(options)
-
-  return options?.map((option) => ({
-    label: option.tag_label as string,
-    value: option.tag_value as string,
-  }));
-}
-
-async function fetchChapters() {
-  const { data: chapters } = await supabase.from("chapters").select(
-    "chapter_name, id, chapter_lead",
-  );
-
-  console.log(chapters);
-  return chapters?.map((chapter) => ({
-    label: chapter.chapter_name as string,
-    value: chapter.id as string,
-  }));
-}
-
-async function fetchMembers(chapter_id: string) {
-  // find for particular chapter id only
-  const { data: members } = await supabase.from("members").select(
-    "member_name, wallet",
-  ).eq("chapter", chapter_id);
-
-console.log(members)
-
-  return members?.map((member) => ({
-    label: member.member_name as string,
-    value: member.wallet as string,
-  }));
-}
-
-export const impactOptions = [
-  { value: "carbon", label: "Carbon Neutrality" },
-  { value: "renewable", label: "Renewable Energy" },
-  { value: "recycling", label: "Recycling & Waste Reduction" },
-  { value: "diversity", label: "Diversity & Inclusion" },
-  { value: "community", label: "Community Engagement" },
-  { value: "fair_trade", label: "Fair Trade" },
-];
-const zOptionType = z.object({
-  value: z.string(),
-  label: z.string(),
-});
-
-
-const schema = z.object({
-  name: z.string().min(1, { message: "Name is required" }).max(255, {
-    message: "Maximum length of 255 characters exceeded",
-  }),
-  workScope: z.array(z.string()).length(1, {
-    message: "At least one work scope is required",
-  }),
-  externalUrl: z.string().url({
-    message:
-      "Invalid URL. Please ensure it follows http(s)://www.example.com format",
-  }),
-  description: z.string().min(1, { message: "Description is required" }),
-  contributors: z.array(zOptionType).nonempty({
-    message: "At least one contributor is required",
-  }),
-  workTimeframeStart: z.string().min(1, {
-    message: "Work timeframe start is required",
-  }),
-  workTimeframeEnd: z.string().min(1, {
-    message: "Work timeframe end is required",
-  }),
-}).refine((data) => data.workTimeframeEnd > data.workTimeframeStart, {
-    message: "Work timeframe end must be greater than start",
-    path: ["workTimeframeEnd"],
-  });
-
-type formSchema = z.infer<typeof schema>;
 
 function GreenPillForm({
   setFormData,
@@ -176,39 +35,33 @@ function GreenPillForm({
     control,
     handleSubmit,
     register,
-    reset,
     watch,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    formState: { errors },
+  } = useForm<formSchema>({
+    resolver: zodResolver(zFormSchema),
   });
 
-  const selectedChapter = watch("name") as optionType;
+  ;
   const { data: chapters } = useSWR("chapters", fetchChapters);
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
-  
+
+
+
   const { data: members } = useSWR(
-    selectedChapter.label,
-    () => fetchMembers(selectedChapter.value),
+    allValues?.name[0].value,
+    () => fetchMembers(allValues?.name[0]?.value ),
   );
 
-  const portalRef = useRef<HTMLDivElement>(null);
+
   
 
+  const portalRef = useRef<HTMLDivElement>(null);
 
-  // console.log(allValues);
-  console.log(selectedChapter);
-  // useSWR(watch(), () => setFormData(allValues as z.infer<typeof schema>));
-
+  useSWR(allValues, () => setFormData(allValues));
+ 
   const onSubmit = (values: formSchema) => {
     console.log(values);
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     alert(JSON.stringify(values, null, 2));
-    //     resolve(values);
-    //   }, 3000);
-    // });
   };
 
   return (
@@ -372,7 +225,7 @@ function GreenPillForm({
                   closeMenuOnSelect={false}
                   components={animatedComponents}
                   isMulti
-                  options={members as never}
+                  options={members as optionType[]}
                   controlShouldRenderValue={true}
                   menuPortalTarget={portalRef.current}
                   styles={customStyles}

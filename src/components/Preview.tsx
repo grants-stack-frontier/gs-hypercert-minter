@@ -17,11 +17,10 @@ import {
 import HyperCertificate from "components/HyperCert";
 import React from "react";
 import camelToTitle from "utils/case";
-import type * as z from 'zod';
-import type { schema } from "./GreenPillForm";
+import type { formSchema } from "utils/types";
 
 interface PreviewCompProps {
-  formData: z.infer<typeof schema>;
+  formData: formSchema;
 }
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData }) => {
