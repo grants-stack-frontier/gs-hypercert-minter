@@ -1,8 +1,8 @@
+import { ArrowRightIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  FormLabel,
-  Input,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,29 +10,35 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  Wrap,
-  WrapItem
+  useDisclosure
 } from "@chakra-ui/react";
 import HyperCertificate from "components/HyperCert";
+import { useAtom } from "jotai";
+import { intentAtom } from "pages";
 import React from "react";
-import camelToTitle from "utils/case";
-import type { formSchema } from "utils/types";
+import PreviewData from "utils/DataPreview";
+import { type formSchema } from "utils/types";
+import { validateFormData } from "../pages/index";
 
 interface PreviewCompProps {
   formData: formSchema;
+  handleForm: () => boolean;
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({ formData }) => {
-  const data = formData as unknown as Record<string, unknown>;
-
+const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm }) => {
+  
+  
+  
+  const [wantToMint, setWantToMint] = useAtom(intentAtom);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  
 
   return (
     <>
       <Button
+            onClick={() => validateFormData(formData) ?  onOpen() : null}
             type="submit"
-            onClick={onOpen}
             variant={"secondary"}
             w={"full"}
             my={8}
@@ -45,49 +51,42 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData }) => {
           bg="blackAlpha.300"
           backdropFilter="blur(20px)"
         />
-        <ModalContent>
-          <ModalHeader>Preview HyperCert</ModalHeader>
+        <ModalContent background={'#242423'} rounded={'2xl'} p={2}>
+          <ModalHeader fontWeight={'400'}>Preview HyperCert</ModalHeader>
           <ModalCloseButton />
-          <ModalBody flexDirection={"row"}>
-            <Wrap>
-              <WrapItem
-                maxW={"full"}
-                minW={"40%"}
-                justifyContent={"space-between"}
-              >
-                {/* <Code h={'max'}>
-                    {JSON.stringify(formData)}
-                </Code> */}
-
-                <Box w={"full"} gap={4}>
-                  {Object.keys(data).map((key, i) => (
-                    <div key={i}>
-                      <FormLabel htmlFor={key}>{camelToTitle(key)}</FormLabel>
-                      <Input id={key} isDisabled value={String(data[key])} />
-                    </div>
-                  ))}
+          <ModalBody >
+            <Flex flexDirection={'row'} justifyContent={'space-between'} gap={4}>
+              
+              
+                
+                
+                
+                <Box w={'360px'}>
+                <PreviewData formData={formData} />
                 </Box>
-              </WrapItem>
-              <WrapItem p={3} minW={"50%"}>
+                
+              
+                <Box minW={'400px'} justifyContent={'flex-end'} alignItems={'center'}>
                 <HyperCertificate
                   formData={formData}
                 />
-              </WrapItem>
-            </Wrap>
+                </Box>
+              
+            </Flex>
           </ModalBody>
           <ModalFooter gap={4}>
-            <Button variant={"outlined"} onClick={onClose}>Cancel</Button>
+            <Button variant={'secondary'} bgColor={'green'} textColor={'dark-green'} onClick={() => {onClose();  wantToMint ? setWantToMint(false): onClose()}}>Cancel</Button>
             <Button
               type="submit"
               variant={"secondary"}
-              w={"full"}
-              my={8}
-              width={"150px"}
+              width={"max"}
+              onClick={handleForm}
             >
-              Mint HyperCert
+              <ArrowRightIcon mr={2}/> Mint HyperCert
             </Button>
-          </ModalFooter>
+          </ModalFooter>  
         </ModalContent>
+        
       </Modal>
     </>
   );

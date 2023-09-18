@@ -2,13 +2,12 @@
 "use client";
 import { InfoIcon } from "@chakra-ui/icons";
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
   Stack,
-  Tooltip,
+  Tooltip
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, type Dispatch } from "react";
@@ -21,15 +20,17 @@ import { fetchChapters, fetchMembers, fetchTags } from "utils/db";
 import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
+import PreviewComp from "./Preview";
+import _ from "lodash";
 
 const animatedComponents = makeAnimated();
 
 function GreenPillForm({
+  handleForm,
   setFormData,
-  // handleForm,
 }: {
-  setFormData: Dispatch<formSchema>;
   handleForm: () => boolean;
+  setFormData: Dispatch<formSchema>;
 }) {
   const {
     control,
@@ -46,11 +47,14 @@ function GreenPillForm({
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
 
+  const selectedChapter = _.map(allValues)[4] as unknown as  optionType;
+
+
 
 
   const { data: members } = useSWR(
-    allValues?.name[0].value,
-    () => fetchMembers(allValues?.name[0]?.value ),
+    selectedChapter,
+    () => fetchMembers(selectedChapter?.value),
   );
 
 
@@ -91,7 +95,6 @@ function GreenPillForm({
                   options={chapters}
                   controlShouldRenderValue={true}
                   menuPortalTarget={portalRef.current}
-                  isSearchable={true}
                   styles={customStyles}
                 />
                 <FormErrorMessage>
@@ -240,13 +243,7 @@ function GreenPillForm({
           />
         </FormControl>
 
-        <Button
-          type="submit"
-          variant={"primary"}
-          w="full"
-        >
-          Preview
-        </Button>
+            <PreviewComp formData={allValues} handleForm={handleForm} />
       </Stack>
     </form>
   );

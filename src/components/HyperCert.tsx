@@ -3,8 +3,8 @@ import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import Image from "next/image";
 import React from "react";
 import { createClaim } from "utils/createClaim";
-import type { formSchema } from "utils/types";
-
+import type { formSchema, optionType } from "utils/types";
+import _ from "lodash";
 const greenPillProps = {
   src: "/logo-yellow.svg",
   width: 140,
@@ -33,7 +33,7 @@ const vStackProps = {
 
 function HyperCertificate({ formData }: { formData: formSchema }) {
   const metadata: HypercertMetadata = createClaim(formData);
-
+  const selectedChapter = _.map(formData)[4] as unknown as  optionType;
   return (
     <VStack {...vStackProps}>
       <HStack w="full" justifyContent="center">
@@ -58,11 +58,11 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
         fontFamily="Volkhov, serif"
       >
         
-        {Boolean(formData?.name[0]?.label) ? formData?.name[0]?.label : "Name of the chapter"}
+        {selectedChapter?.label ?? "Name of the chapter"}
       </Heading>
 
       <HStack spacing={1} flexWrap="wrap">
-        {(metadata?.hypercert?.work_scope?.display_value ||
+        {(metadata?.hypercert?.work_scope?.display_value ??
           "Work, Scope, goes, here").split(", ").map((tag) => (
             <Tag
               key={tag + tag.substring(0, 2)}

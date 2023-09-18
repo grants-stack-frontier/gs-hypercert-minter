@@ -11,7 +11,7 @@ import { NextSeo } from "next-seo";
 import { type AppType } from "next/dist/shared/lib/utils";
 import theme from "utils/theme";
 import site from "../config/site";
-
+import { Provider } from 'jotai'
 import { ChakraProvider } from "@chakra-ui/react";
 
 export const wagmiConfig = configureChains([goerli], [alchemyProvider({apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string}), publicProvider()]);
@@ -60,7 +60,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
               appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
               onSuccess={handleLogin}
               config={{
-                loginMethods: ['wallet', 'email', 'google', 'twitter', 'discord', 'github'],
+                loginMethods: ['wallet', 'email', 'google', 'discord',],
                 appearance: {
                   theme: "dark",
                   accentColor: "#C2E812",
@@ -69,7 +69,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
               }}
             >
               <PrivyWagmiConnector wagmiChainsConfig={wagmiConfig}>
+                <Provider>
               <Component {...pageProps} />
+              </Provider>
               </PrivyWagmiConnector>
             </PrivyProvider>
     

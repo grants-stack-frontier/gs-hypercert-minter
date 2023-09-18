@@ -1,4 +1,5 @@
 "use client";
+import { atom, useAtom } from 'jotai';
 import { Box, useMediaQuery } from "@chakra-ui/react";
 import GreenPillForm from "components/GreenPillForm";
 import HyperCertificate from "components/HyperCert";
@@ -13,14 +14,10 @@ import type {
 } from "@hypercerts-org/sdk";
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 
-import type { PrivyInterface } from "@privy-io/react-auth";
-import { usePrivy } from "@privy-io/react-auth";
 import useMint from "hooks/useMint";
-import React from "react";
 import { createClaim } from "utils/createClaim";
 
-// const zodHypercertClaimData =
-function validateFormData(formData: formSchema) {
+export function validateFormData(formData: formSchema) {
   const metadata = createClaim(formData);
 
   const validClaim = validateClaimData(
@@ -34,23 +31,22 @@ function validateFormData(formData: formSchema) {
   if (validClaim && validMetadata) {
     return metadata;
   }
-  return false;
+  return validClaim && validMetadata;
 }
+export const intentAtom = atom(false);
 
 const Home: NextPage = () => {
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [formData, setFormData] = useState<formSchema>();
   const [metadata, setMetadata] = useState<HypercertMetadata>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [wantToMint, setWantToMint] = useState<boolean>(false);
-  const privy: PrivyInterface = usePrivy();
+  const [wantToMint, setWantToMint] = useAtom(intentAtom);
 
-  const memoisedPrivy = React.useMemo(() => privy, [privy]);
 
   const handleForm = () => {
     const readyToMint = validateFormData(formData as formSchema);
     console.log("ready to mint", readyToMint);
     setMetadata(readyToMint as HypercertMetadata);
+    setWantToMint(true);
     return Boolean(readyToMint);
   };
 
@@ -58,7 +54,7 @@ const Home: NextPage = () => {
 
   return (
     <LandingLayout>
-      {memoisedPrivy.ready && (
+      {(
         <Box
           my={10}
           p={20}

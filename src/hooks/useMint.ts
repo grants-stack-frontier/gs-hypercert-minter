@@ -19,16 +19,22 @@ const fetcher = async (metadata: HypercertMetadata, wallets: ConnectedWallet[]) 
 const useMint = (metadata: HypercertMetadata, wantToMint: boolean) => {
   
   const { wallets } = useWallets();
-  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
+  // const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
+
+  // console.log(embeddedWallet, wantToMint, metadata, wallets)
+
 
   let key = null;
   
-  if (metadata && embeddedWallet && wantToMint) {
-    key = [metadata, embeddedWallet.address, wantToMint.toString()];
+  if (metadata && wallets[0] && wantToMint) {
+    key = [metadata, wallets[0].address, wantToMint.toString()];
   }
 
+  console.log(key)
   const { data, error } = useSWR(key, () => fetcher(metadata, wallets));
   
+
+  console.log(data, error)
   return {
     data,
     isLoading: !error && !data,

@@ -1,12 +1,15 @@
 import { getTime, parseISO } from 'date-fns';
 import _ from "lodash";
 import { toYear } from "./date";
-import type { formSchema } from './types';
+import type { formSchema, optionType } from './types';
 
 
 export const createClaim = (formData: formSchema) => {
 
-  const name = _.map(formData?.name, 'label')[0] as string;
+  const selectedChapter = _.map(formData)[4] as unknown as optionType;
+
+
+  const name = selectedChapter?.label;
   const workScope = _.map(formData?.workScope, 'value');
   const externalUrl = formData?.externalUrl;
   const description = formData?.description;
