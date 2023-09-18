@@ -1,25 +1,32 @@
 import { HypercertClient } from "@hypercerts-org/sdk";
-import { goerli, optimism } from "wagmi/chains";
-import { ethers } from "ethers";
-
-const chain = process.env.NEXT_PUBLIC_ENV as string === "production" ? optimism : goerli;
-
-// NOTE: you should replace this with your own JSON-RPC provider to the network
-// This should have signing abilities and match the `chainId` passed into HypercertClient
-const operator = ethers.providers.getDefaultProvider(chain.id);
-
+import type { ConnectedWallet} from '@privy-io/react-auth';
 
 const tokens = {
-    nftStorageToken: process.env.NEXT_PUBLIC_NFT_STORAGE_TOKEN as string,
-    web3StorageToken: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN as string,
-  };
+  nftStorageToken: process.env.NEXT_PUBLIC_NFT_STORAGE_TOKEN,
+  web3StorageToken: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN,
+};
+
+export async function getHyperCertClient(wallets: ConnectedWallet[]) {
 
   
 
-const hyperCertClient = new HypercertClient({
-  chainId: chain.id, 
-  operator,
-  ...tokens,
-});
+  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
+  console.log("loaded embedded wallet", embeddedWallet)
+  void embeddedWallet?.switchChain(5);
+  
+  const provider = await embeddedWallet?.getEthersProvider() // ethers provider object
+  
+  if(!provider)
+    return {hyperCertClient: null}
 
-export default hyperCertClient;
+  const signer = provider.getSigner(embeddedWallet?.address); // ethers signer object
+
+  console.log("loaded signer", signer)
+  
+
+  return new HypercertClient({
+    chainId: 5,
+    operator: signer,
+    ...tokens,
+  });
+}

@@ -1,82 +1,75 @@
-'use client'
+"use client";
+import { atom, useAtom } from 'jotai';
 import { Box, useMediaQuery } from "@chakra-ui/react";
-import type { schema } from "components/GreenPillForm";
 import GreenPillForm from "components/GreenPillForm";
+import HyperCertificate from "components/HyperCert";
 import type { NextPage } from "next";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import * as z from "zod";
+import { useState } from "react";
+import type { formSchema } from "utils/types";
 import { LandingLayout } from "../layouts/Layout";
-import * as GreenGem from "/public/collection_logos/green-gem.png";
-// import { formatTime } from "utils/formatting";
 
-// import { formatHypercertData } from "@hypercerts-org/sdk";
+import type {
+  HypercertClaimdata,
+  HypercertMetadata,
+} from "@hypercerts-org/sdk";
+import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 
-import { HypercertClaimdata } from "@hypercerts-org/sdk";
-
-
-import { validateClaimData } from "@hypercerts-org/sdk";
+import useMint from "hooks/useMint";
 import { createClaim } from "utils/createClaim";
 
-// const zodHypercertClaimData = z.ZodType<HypercertClaimdata>
+export function validateFormData(formData: formSchema) {
+  const metadata = createClaim(formData);
+
+  const validClaim = validateClaimData(
+    metadata.hypercert as HypercertClaimdata,
+  );
+  const validMetadata = validateMetaData(metadata as HypercertMetadata);
+
+  console.log("validated claim data", validClaim);
+  console.log("validated metadata", validMetadata);
+
+  if (validClaim && validMetadata) {
+    return metadata;
+  }
+  return validClaim && validMetadata;
+}
+export const intentAtom = atom(false);
 
 const Home: NextPage = () => {
-  const [isClient, setIsClient] = useState(false);
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
-  const [formData, setFormData] = useState<z.infer<typeof schema>>();
+  const [formData, setFormData] = useState<formSchema>();
+  const [metadata, setMetadata] = useState<HypercertMetadata>();
+  const [wantToMint, setWantToMint] = useAtom(intentAtom);
 
 
-  useEffect(() => {
-    
-    setIsClient(true);
-  }, []);
+  const handleForm = () => {
+    const readyToMint = validateFormData(formData as formSchema);
+    console.log("ready to mint", readyToMint);
+    setMetadata(readyToMint as HypercertMetadata);
+    setWantToMint(true);
+    return Boolean(readyToMint);
+  };
 
-  
- const y = createClaim(formData as unknown as never)
-
-  console.log(y.hypercert)
-
-  //TODO fix undefined so that typecast is not needed
-  console.log(validateClaimData(y.hypercert as HypercertClaimdata)) 
-  // Status: Ready to mint
-  // TODO: Generate Image for NFT
+  useMint(metadata as HypercertMetadata, wantToMint);
 
   return (
     <LandingLayout>
-      <Box
-        my={10}
-        p={10}
-        w="full"
-        justifyContent={"center"}
-        gap={20}
-        display={"flex"}
-        flexDir={isLargerThan600 ? "row" : "column-reverse"}
-      >
-        <GreenPillForm isClient={isClient} formData={setFormData}/>
+      {(
         <Box
-          w="320px"
-          h="400px"
-          flexShrink={0}
-          borderRadius="8px"
-          border="2px solid #4FB477"
-          bg="#C2E812"
+          my={10}
+          p={20}
+          w="full"
           justifyContent={"center"}
-          alignItems={"center"}
+          gap={20}
           display={"flex"}
+          flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          <Image
-            src={GreenGem}
-            alt="Green pill logo"
-            width={"320"}
-            height={"400"}
-          />
+          <GreenPillForm setFormData={setFormData} handleForm={handleForm} />
+          <HyperCertificate formData={formData as formSchema} />
         </Box>
-      </Box>
+      )}
     </LandingLayout>
   );
 };
 
 export default Home;
-
-
-

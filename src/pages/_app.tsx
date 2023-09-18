@@ -1,13 +1,8 @@
 import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
-import { mainnet, optimism, goerli } from 'wagmi/chains';
 import { configureChains } from 'wagmi';
+import { goerli } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
-
-
-
-
-
-
+import { alchemyProvider } from "wagmi/providers/alchemy";
 
 import type { User } from "@privy-io/react-auth";
 import { PrivyProvider } from "@privy-io/react-auth";
@@ -16,10 +11,10 @@ import { NextSeo } from "next-seo";
 import { type AppType } from "next/dist/shared/lib/utils";
 import theme from "utils/theme";
 import site from "../config/site";
-
+import { Provider } from 'jotai'
 import { ChakraProvider } from "@chakra-ui/react";
 
-const wagmiConfig = configureChains([mainnet, goerli, optimism], [publicProvider()]);
+export const wagmiConfig = configureChains([goerli], [alchemyProvider({apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string}), publicProvider()]);
 
 
 const handleLogin = (user: User) => {
@@ -65,7 +60,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
               appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
               onSuccess={handleLogin}
               config={{
-                loginMethods: ['wallet', 'email', 'google', 'twitter', 'discord', 'github'],
+                loginMethods: ['wallet', 'email', 'google', 'discord',],
                 appearance: {
                   theme: "dark",
                   accentColor: "#C2E812",
@@ -74,7 +69,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
               }}
             >
               <PrivyWagmiConnector wagmiChainsConfig={wagmiConfig}>
+                <Provider>
               <Component {...pageProps} />
+              </Provider>
               </PrivyWagmiConnector>
             </PrivyProvider>
     

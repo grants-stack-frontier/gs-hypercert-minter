@@ -1,20 +1,22 @@
-import type { schema } from "components/GreenPillForm";
-import type * as z from "zod";
-import { toYear } from "./date";
-import { formatContributors } from "./formatting";
-import { getUnixTime } from 'date-fns';
+import { getTime, parseISO } from 'date-fns';
 import _ from "lodash";
+import { toYear } from "./date";
+import type { formSchema, optionType } from './types';
 
 
-export const createClaim = (formData: z.infer<typeof schema>) => {
+export const createClaim = (formData: formSchema) => {
 
-  const name = formData?.name;
+  const selectedChapter = _.map(formData)[4] as unknown as optionType;
+
+
+  const name = selectedChapter?.label;
   const workScope = _.map(formData?.workScope, 'value');
   const externalUrl = formData?.externalUrl;
   const description = formData?.description;
-  const contributors = formData?.contributors;
-  const workTimeframeStart = getUnixTime(formData?.workTimeframeStart);
-  const workTimeframeEnd = getUnixTime(formData?.workTimeframeEnd);
+  const contributors = _.map(formData?.contributors, 'value');
+  const workTimeframeStart = formData?.workTimeframeStart
+  const workTimeframeEnd = formData?.workTimeframeEnd
+
 
 
 
@@ -24,32 +26,26 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
     name,
     description,
     version: "0.0.1",
-    // image: `data:image/svg+xml;base64,${btoa(svg)}`,
-    externalUrl,
-    image: "hello",
+    image: `data:image/svg+xml;base64,${btoa("svg")}`,
+    external_url: externalUrl,
     properties: [],
     hypercert: {
-      impact_scope: {
-        name: "Impact Scope",
-        value: [...workScope],
-        excludes: [],
-        display_value: [...workScope].join(", "),
-      },
+      impact_scope:{"name":"Impact Scope","value":["all"],"excludes":[],"display_value":"all"},
       work_scope: {
         name: "Work Scope",
         value: [...workScope],
         excludes: [],
-        display_value:[...workScope].join(", "), // TODO: Find the right value
+        display_value: [...workScope].join(", "), 
       },
       impact_timeframe: {
         name: "Impact Timeframe",
-        value: [workTimeframeEnd, undefined],
-        display_value: `${toYear(+workTimeframeEnd)} → ${toYear(0)}`,
+        value: [getTime(parseISO(workTimeframeEnd)), 0],
+        display_value: `${workTimeframeEnd} → ${toYear(0)}`,
       },
       work_timeframe: {
         name: "Work Timeframe",
-        value: [workTimeframeStart, workTimeframeEnd],
-        display_value: `${toYear(+workTimeframeStart)} → ${toYear(+workTimeframeEnd)}`,
+        value: [getTime(parseISO(workTimeframeStart)), getTime(parseISO(workTimeframeEnd))],
+        display_value: `${workTimeframeStart} → ${workTimeframeEnd}`,
       },
       rights: {
         name: "Rights",
@@ -59,9 +55,11 @@ export const createClaim = (formData: z.infer<typeof schema>) => {
       },
       contributors: {
         name: "Contributors",
-        value: [...contributors?.split(",") ?? []],
-        display_value: formatContributors(contributors?.split(",") ?? []),
+        value: [...contributors],
+        display_value: [...contributors].join(", "),
       },
     },
   };
 };
+
+

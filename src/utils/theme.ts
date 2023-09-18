@@ -1,6 +1,10 @@
 import { extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
+  fonts: {
+    heading: `'Volkhov', sans-serif`,
+    body: `'Raleway', sans-serif`,
+  },
   colors: {
     green: "#C2E812",
     yellow: "#FFD972",
@@ -15,17 +19,12 @@ const theme = extendTheme({
   styles: {
     global: {
       "html, body": {
-        // background: "#254D32",
-        background: "#FEFFFD",
+        background: "white",
         color: "dark-grey",
         overflowX: "hidden",
         scrollBehavior: "smooth",
         boxSizing: "border-box",
-        // backgroundImage: "url('https://greenpill.network/src/images/greenpill-bg.png')",
-        backgroundPosition: "top",
-        backgroundRepeat: "repeat",
-        backgroundSize: "contain",
-        fontWeight: "500",
+        fontWeight: "medium",
       },
       "p": {
         color: "white",
@@ -45,17 +44,17 @@ const theme = extendTheme({
         transition: "all 0.1s ease-out",
         cursor: "pointer",
         _hover: {
-          bg: "mid-green",
+          bg: "green",
           transform: "translate(2px, 2px)",
         },
       },
       variants: {
         "primary": {
           bg: "dark-green",
-          color: "green",
+          color: "yellow",
           borderColor: "green",
           _hover: {
-            bg: "mid-green",
+            bg: "green",
             color: "white",
             transform: "translate(2px, 2px)",
           },
@@ -65,7 +64,7 @@ const theme = extendTheme({
           color: "green",
           borderColor: "green",
           _hover: {
-            bg: "mid-green",
+            bg: "green",
             color: "white",
             transform: "translate(2px, 2px)",
           },
@@ -80,58 +79,71 @@ const theme = extendTheme({
         transition: "all 0.1s ease-out",
         cursor: "pointer",
         _hover: {
-          color: "mid-green",
+          color: "green",
           transform: "translate(2px, 2px)",
         },
       }
     },
     Input: {
-      parts: ['field'],
       baseStyle: {
         field: {
+          height: "60px",
           borderColor: "default-grey",
           border : "2px solid",
+          fontWeight: "520",
           color : "dark-grey",
           _focus: {
-            borderColor: "active-blue",
-            ringColor: "transparent",
+            borderColor: "green",
+            ringColor: "mid-green",
+            backgroundColor: `rgba(237, 249, 179, 0.5)`,
           },
           _placeholder: {
             color: "default-grey",
           },
           _hover: {
-            borderColor: "mid-green",
+            borderColor: "green",
+          },
+          _invalid: {
+            borderColor: "error-orange",
+            ringColor: "error-orange",
+            backgroundColor: `rgba(247,160,114, 0.1)`,
           },
         },
       },
       defaultProps: {
-        focusBorderColor: 'active-blue',
+        focusBorderColor: 'green'
       },
     },
     Textarea: {
       baseStyle: {
         field: {
+          height: "50px",
+          borderColor: "default-grey",
+          border: "2px solid",
+          fontWeight: "500",
+
+          _focus: {
+            borderColor: "green",
+            color: 'dark-green',
+            ringColor: "mid-green",
+            backgroundColor: `rgba(237, 249, 179, 0.5)`,
+          },
           _placeholder: {
             color: "default-grey",
           },
-          color: "dark-grey",
-          fontSize: "md",
           _hover: {
-            borderColor: "mid-green",
+            borderColor: "green",
           },
-        },
-      },
-      sizes: {
-        md: {
-          field: {
-            borderRadius: "none",
-            
+          _invalid: {
+            borderColor: "error-orange",
+            ringColor: "error-orange",
+            backgroundColor: `rgba(247,160,114, 0.1)`,
+            textColor: 'black'
           },
         },
       },
       defaultProps: {
-        focusBorderColor: 'active-blue',
-        
+        focusBorderColor: 'green'
       },
     },
     FormControl: {
@@ -146,5 +158,3 @@ const theme = extendTheme({
 })
 
 export default theme;
-
-
