@@ -10,7 +10,9 @@ import {
   Tooltip
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, type Dispatch } from "react";
+import { useAtom } from "jotai";
+import _ from "lodash";
+import { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -21,16 +23,13 @@ import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
-import _ from "lodash";
-
+import { formAtom } from "pages";
 const animatedComponents = makeAnimated();
 
 function GreenPillForm({
   handleForm,
-  setFormData,
 }: {
   handleForm: () => boolean;
-  setFormData: Dispatch<formSchema>;
 }) {
   const {
     control,
@@ -42,7 +41,7 @@ function GreenPillForm({
     resolver: zodResolver(zFormSchema),
   });
 
-  ;
+  const [formData, setFormData] = useAtom(formAtom);
   const { data: chapters } = useSWR("chapters", fetchChapters);
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
@@ -65,7 +64,7 @@ function GreenPillForm({
   useSWR(allValues, () => setFormData(allValues));
  
   const onSubmit = (values: formSchema) => {
-    console.log(values);
+    console.log(values, formData);
   };
 
   return (

@@ -2,7 +2,7 @@
 import { atom, useAtom } from 'jotai';
 import { Box, useMediaQuery } from "@chakra-ui/react";
 import GreenPillForm from "components/GreenPillForm";
-import HyperCertificate from "components/HyperCert";
+// import HyperCertificate from "components/HyperCert";
 import type { NextPage } from "next";
 import { useState } from "react";
 import type { formSchema } from "utils/types";
@@ -16,6 +16,10 @@ import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 
 import useMint from "hooks/useMint";
 import { createClaim } from "utils/createClaim";
+import { HyperCertSVG } from 'components/HyperCertSVG';
+import useSWR from 'swr';
+
+
 
 export function validateFormData(formData: formSchema) {
   const metadata = createClaim(formData);
@@ -34,16 +38,18 @@ export function validateFormData(formData: formSchema) {
   return validClaim && validMetadata;
 }
 export const intentAtom = atom(false);
+export const formAtom = atom({} as formSchema);
 
 const Home: NextPage = () => {
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
-  const [formData, setFormData] = useState<formSchema>();
+  const [formData] = useAtom(formAtom);
   const [metadata, setMetadata] = useState<HypercertMetadata>();
   const [wantToMint, setWantToMint] = useAtom(intentAtom);
 
+  const {data: hyperSVG} = useSWR(formData, (formData) => HyperCertSVG({formData}));
 
   const handleForm = () => {
-    const readyToMint = validateFormData(formData as formSchema);
+    const readyToMint = validateFormData(formData);
     console.log("ready to mint", readyToMint);
     setMetadata(readyToMint as HypercertMetadata);
     setWantToMint(true);
@@ -64,8 +70,12 @@ const Home: NextPage = () => {
           display={"flex"}
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          <GreenPillForm setFormData={setFormData} handleForm={handleForm} />
-          <HyperCertificate formData={formData as formSchema} />
+          <GreenPillForm handleForm={handleForm} />
+          {/* <HyperCertificate formData={formData} /> */}
+          <svg width="320" height="400" xmlns="http://www.w3.org/2000/svg">
+            {hyperSVG}
+          </svg>
+
         </Box>
       )}
     </LandingLayout>
