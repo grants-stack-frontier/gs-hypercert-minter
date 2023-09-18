@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { Flex, Img, Link, Text, VStack } from "@chakra-ui/react";
 import PrivyAuthButton from "components/PrivyAuthButton";
 import Head from "next/head";
@@ -15,8 +16,9 @@ export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
 
       <Header />
       <Hero />
-
+      
       {children}
+      <Analytics />
       <Footer />
     </VStack>
   );
