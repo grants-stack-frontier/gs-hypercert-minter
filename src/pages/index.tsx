@@ -60,7 +60,8 @@ const Home: NextPage =  () => {
     const readyToMint = await validateFormData(formData, hypercertRef);  
     console.log("ready to mint", readyToMint);
     setMetadata(readyToMint as HypercertMetadata);
-      setWantToMint(true);
+    setWantToMint(true);
+    console.log(wantToMint,readyToMint)
     return Boolean(readyToMint) && wantToMint;
   };
 
@@ -81,7 +82,7 @@ const Home: NextPage =  () => {
           display={"flex"}
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          <GreenPillForm setFormData={setFormData} handleForm={handleForm} />
+          <GreenPillForm setFormData={setFormData} handleForm={handleForm} reference={hypercertRef}/>
           <Box  ref={hypercertRef} height={'max'}>
           <HyperCertificate formData={formData as formSchema} />
           </Box>

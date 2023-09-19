@@ -50,6 +50,9 @@ dependencies:
   '@types/lodash':
     specifier: ^4.14.197
     version: 4.14.197
+  '@uidotdev/usehooks':
+    specifier: ^2.3.0
+    version: 2.3.0(react-dom@18.2.0)(react@18.2.0)
   '@vercel/analytics':
     specifier: ^1.0.2
     version: 1.0.2
@@ -8147,6 +8150,17 @@ packages:
       '@typescript-eslint/types': 6.5.0
       eslint-visitor-keys: 3.4.3
     dev: true
+
+  /@uidotdev/usehooks@2.3.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-+8ggcZyY+h3IC9bPYI5kiCFFmR/1TeyjUwTi+Aw5fFKnIfoR29erFqxxK3leOsJnq6IV2gM+NEam6Jm8LkBDag==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@vascosantos/moving-average@1.1.0:
     resolution: {integrity: sha512-MVEJ4vWAPNbrGLjz7ITnHYg+YXZ6ijAqtH5/cHwSoCpbvuJ98aLXwFfPKAUfZpJMQR5uXB58UJajbY130IRF/w==}

@@ -4,6 +4,8 @@ import type { ConnectedWallet } from '@privy-io/react-auth';
 import { useWallets } from '@privy-io/react-auth';
 import useSWR from 'swr';
 import { getHyperCertClient } from './useHypercert';
+import { useAtom } from "jotai";
+import { intentAtom } from "pages";
 
 const totalUnits = "1000";
 
@@ -17,24 +19,36 @@ const fetcher = async (metadata: HypercertMetadata, wallets: ConnectedWallet[]) 
 }
 
 const useMint = (metadata: HypercertMetadata, wantToMint: boolean) => {
-  
+
+
+
   const { wallets } = useWallets();
-  // const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
+  const [, setWantToMint] = useAtom(intentAtom);
 
-  // console.log(embeddedWallet, wantToMint, metadata, wallets)
-
+  const wallet = wallets.find((wallet) => wallet.isConnected);
 
   let key = null;
   
-  if (metadata && wallets[0] && wantToMint) {
-    key = [metadata, wallets[0].address, wantToMint.toString()];
+  if (wallet?.address) {
+    key = [wallet.address, wantToMint];
   }
 
-  console.log(key)
   const { data, error } = useSWR(key, () => fetcher(metadata, wallets));
-  
 
-  console.log(data, error)
+
+
+
+
+  if (error) {
+    console.log("Error minting", error);
+    setWantToMint(false);
+  }
+
+  if (data) {
+    console.log("Minting!", data);
+    setWantToMint(false);
+  }
+
   return {
     data,
     isLoading: !error && !data,

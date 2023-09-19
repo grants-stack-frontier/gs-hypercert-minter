@@ -14,17 +14,18 @@ import {
 } from "@chakra-ui/react";
 import HyperCertificate from "components/HyperCert";
 import { useAtom } from "jotai";
-import { intentAtom } from "pages";
+import { intentAtom, validateFormData } from "pages";
+import type { RefObject } from "react";
 import React from "react";
 import PreviewData from "utils/DataPreview";
 import { type formSchema } from "utils/types";
-
 interface PreviewCompProps {
   formData: formSchema;
   handleForm: () => Promise<boolean>;
+  reference: RefObject<HTMLDivElement>;
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm }) => {
+const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm, reference }) => {
   
   
   
@@ -36,7 +37,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm }) => {
   return (
     <>
       <Button
-            onClick={async () => await handleForm() ?  onOpen() : null}
+            onClick={async () => await validateFormData(formData, reference) ? onOpen() : null}
             type="submit"
             variant={"secondary"}
             w={"full"}

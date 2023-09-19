@@ -10,6 +10,7 @@ import {
   Tooltip
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { RefObject } from "react";
 import { useRef, type Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -28,9 +29,11 @@ const animatedComponents = makeAnimated();
 function GreenPillForm({
   handleForm,
   setFormData,
+  reference,
 }: {
   handleForm: () => Promise<boolean>;
   setFormData: Dispatch<formSchema>;
+  reference: RefObject<HTMLDivElement>;
 }) {
   const {
     control,
@@ -242,8 +245,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-
-            <PreviewComp formData={allValues} handleForm={handleForm} />
+              <PreviewComp formData={allValues} handleForm={handleForm} reference={reference}/>
       </Stack>
     </form>
   );

@@ -1,4 +1,6 @@
+
 "use client";
+// TODO: fix this
 import { Button, Spinner } from "@chakra-ui/react";
 import { HypercertClient } from "@hypercerts-org/sdk";
 import { LandingLayout } from "layouts/Layout";
@@ -31,7 +33,7 @@ const MintingCert: NextPage = () => {
 
   const {data: metadata} = useSWR(tx.data?.logs?.[1], metadatafetcher);
 
-  const {claim}  = metadata || {};
+  const {claim}  = metadata ?? {};
 
   useEffect(() => {
     if (tx.data?.logs) {
