@@ -1,11 +1,9 @@
 import { getTime, parseISO } from 'date-fns';
 import _ from "lodash";
-import type { RefObject } from 'react';
 import { toYear } from "./date";
-import { exportImage } from './svg';
 import type { formSchema, optionType } from './types';
 
-export const createClaim = async (formData: formSchema, ref: RefObject<HTMLDivElement>) => {
+export const createClaim = (formData: formSchema, imageData: string) => {
 
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
 
@@ -17,8 +15,6 @@ export const createClaim = async (formData: formSchema, ref: RefObject<HTMLDivEl
   const contributors = _.map(formData?.contributors, 'value');
   const workTimeframeStart = formData?.workTimeframeStart
   const workTimeframeEnd = formData?.workTimeframeEnd
-  const imageData = await exportImage(ref)
-
 
 
   return {
@@ -59,6 +55,7 @@ export const createClaim = async (formData: formSchema, ref: RefObject<HTMLDivEl
       },
     },
   };
+
 };
 
 

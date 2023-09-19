@@ -2,7 +2,6 @@ import { getHyperCertClient } from "hooks/useHypercert";
 import Link from "next/link";
 import { useNetwork } from "wagmi";
 import { Button } from "@chakra-ui/react";
-import type { HypercertClient } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
 
 const openseaUrls = {
@@ -22,9 +21,9 @@ export const createOpenSeaUrl = (
 export const OpenSeaButton = async ({ tokenId = "", }) => {
   const {wallets} = useWallets();
 
-  const hyperCertClient = await getHyperCertClient(wallets) as HypercertClient;
+  const {hyperCertClient} =  await getHyperCertClient(wallets);
 
-  const address = (hyperCertClient)?.contract?.address;
+  const address = hyperCertClient?.contract.address ?? "";
 
   const { chain } = useNetwork();
   if (!chain?.id) {

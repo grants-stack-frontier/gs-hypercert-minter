@@ -12,32 +12,38 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react";
+import type { HypercertMetadata } from "@hypercerts-org/sdk";
+import { useWallets } from "@privy-io/react-auth";
 import HyperCertificate from "components/HyperCert";
-import { useAtom } from "jotai";
-import { intentAtom, validateFormData } from "pages";
+import { validateFormData } from "pages";
 import type { RefObject } from "react";
 import React from "react";
+import useSWR from "swr";
 import PreviewData from "utils/DataPreview";
+import mintClaim from "utils/mint";
+import { exportImage } from "utils/svg";
 import { type formSchema } from "utils/types";
 interface PreviewCompProps {
   formData: formSchema;
-  handleForm: () => Promise<boolean>;
   reference: RefObject<HTMLDivElement>;
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm, reference }) => {
+const PreviewComp: React.FC<PreviewCompProps> = ({ formData, reference }) => {
   
   
-  
-  const [wantToMint, setWantToMint] = useAtom(intentAtom);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const {wallets} = useWallets();
+  
+  const {data: image} = useSWR(reference, () => exportImage(reference))
+
+  const shouldweMint = validateFormData(formData, image as unknown as string);
   
 
   return (
     <>
       <Button
-            onClick={async () => await validateFormData(formData, reference) ? onOpen() : null}
+            onClick={() => shouldweMint ?  onOpen() : null}
             type="submit"
             variant={"secondary"}
             w={"full"}
@@ -75,12 +81,12 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm, referen
             </Flex>
           </ModalBody>
           <ModalFooter gap={4}>
-            <Button variant={'secondary'} bgColor={'green'} textColor={'dark-green'} onClick={() => {onClose();  wantToMint ? setWantToMint(false): onClose()}}>Cancel</Button>
+            <Button variant={'secondary'} bgColor={'green'} textColor={'dark-green'} onClick={onClose}>Cancel</Button>
             <Button
               type="submit"
               variant={"secondary"}
               width={"max"}
-              onClick={handleForm}
+              onClick={shouldweMint ? () => mintClaim(wallets,shouldweMint as unknown as HypercertMetadata, true) : () => onClose()}
             >
               <ArrowRightIcon mr={2}/> Mint HyperCert
             </Button>
