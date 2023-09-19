@@ -25,7 +25,7 @@ export const createClaim = async (formData: formSchema, ref: RefObject<HTMLDivEl
     name,
     description,
     version: "0.0.1",
-    image: imageData ?? "",
+    image: imageData,
     external_url: externalUrl,
     properties: [],
     hypercert: {

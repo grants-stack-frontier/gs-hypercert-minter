@@ -60,8 +60,8 @@ const Home: NextPage =  () => {
     const readyToMint = await validateFormData(formData, hypercertRef);  
     console.log("ready to mint", readyToMint);
     setMetadata(readyToMint as HypercertMetadata);
-    setWantToMint(true);
-    return Boolean(readyToMint);
+      setWantToMint(true);
+    return Boolean(readyToMint) && wantToMint;
   };
 
 

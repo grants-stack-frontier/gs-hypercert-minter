@@ -10,16 +10,17 @@ export async function getHyperCertClient(wallets: ConnectedWallet[]) {
 
   
 
-  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
-  console.log("loaded embedded wallet", embeddedWallet)
-  void embeddedWallet?.switchChain(5);
+  const wallet = wallets.find((wallet) => wallet.isConnected);
+  console.log("loaded wallet", wallet)
+
+  void wallet?.switchChain(5);
   
-  const provider = await embeddedWallet?.getEthersProvider() // ethers provider object
+  const provider = await wallet?.getEthersProvider() // ethers provider object
   
   if(!provider)
     return {hyperCertClient: null}
 
-  const signer = provider.getSigner(embeddedWallet?.address); // ethers signer object
+  const signer = provider.getSigner(wallet?.address); // ethers signer object
 
   console.log("loaded signer", signer)
   

@@ -36,6 +36,8 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
   const workStartString = (formData?.workTimeframeStart) ;
   const workEndString =(formData?.workTimeframeEnd) ;
 
+  console.log(workScope)
+  
   return (
     <VStack {...vStackProps}>
       <HStack w="full" justifyContent="center">
@@ -66,17 +68,18 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
       </Heading>
 
       <HStack spacing={1} flexWrap="wrap">
-        {workScope ??
-          ("Work, Scope, goes, here").split(", ").map((tag: string) => (
+        {(workScope ?? ("Work, Scope, goes, here").split(", ")).map((tag: string) => (
             <Tag
               key={tag + tag.substring(0, 2)}
               color="green"
               borderColor="green"
               border="1px"
               rounded="full"
+              height={"auto"}
               bgColor="transparent"
               fontSize="12px"
               fontWeight="normal"
+              alignItems={'center'}
             >
               {tag.toLowerCase()}
             </Tag>

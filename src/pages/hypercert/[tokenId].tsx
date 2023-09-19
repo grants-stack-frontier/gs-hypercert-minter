@@ -1,67 +1,65 @@
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-// import type { NextPage } from "next";
-// import React from "react";
-// import { Layout } from "../../layouts/Layout";
-// import { useRouter } from "next/router";
-// import { useQuery } from "@tanstack/react-query";
+"use client";
+import { Button, Spinner } from "@chakra-ui/react";
+import { HypercertClient } from "@hypercerts-org/sdk";
+import { LandingLayout } from "layouts/Layout";
+import type { NextPage } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import useSWR from "swr";
+import { useNetwork, useWaitForTransaction } from "wagmi";
+const createTxUrl = (hash: string, network: string) => {
+  const networkMap = { goerli: "goerli", optimism: "optimistic" };
+  const prefix = networkMap[network as keyof typeof networkMap];
 
-// import { OpenSeaButton } from "../../components/OpenSeaButton";
-// import { TweetButton } from "../../components/TweetButton";
-// import Image from "next/image";
-// import { config } from "../../components/HyperCertSVG";
+  return `https://${prefix}.etherscan.io/tx/${hash}`;
+};
 
-// const HyperCert: NextPage = () => {
-//   const router = useRouter();
-//   const claimId = router.query.tokenId as string;
+const metadatafetcher = async (id: string) => {
+  const hypercertClient = new HypercertClient({
+    chainId: 5,
+  });
 
-//   const tokenId = claimId?.split("-")[1];
-//   const { data: cert, isLoading, isSuccess } = useQuery(["claimById", claimId], () =>
-//     hyperCertClient.indexer.claimById(claimId)
-//   );
+  return hypercertClient.indexer.claimById(id);
+};
 
-//   const { data: metadata, isLoading: isMetadataLoading } = useQuery(
-//     ["metadata", cert?.claim?.uri],
-//     () => hyperCertClient.storage.getMetadata(cert?.claim?.uri as string),
-//       {enabled: isSuccess},
-    
-//   );
+const MintingCert: NextPage = () => {
+  const router = useRouter();
+  const hash = router.query.hash as `0x${string}`;
+  const { chain } = useNetwork();
+  const tx = useWaitForTransaction({ hash, enabled: !!hash });
 
-//   if (isLoading) {
-//     return null;
-//   }
+  const {data: metadata} = useSWR(tx.data?.logs?.[1], metadatafetcher);
 
-//   return (
-//     <Layout>
-//       <div className="mb-16 h-auto w-full">
-//         {cert?.claim?.uri ? (
-//           <Image
-//             width={config.width}
-//             height={config.height}
-//             src={cert.claim.uri}
-//             alt="Hypercert"
-//           />
-//         ) : (
-//           <div
-//             className="animate-pulse bg-gray-200"
-//             style={{ height: config.height }}
-//           />
-//         )}
-//       </div>
-//       <div className="flex flex-col items-center gap-1">
-//         <OpenSeaButton tokenId={tokenId} />
-//         <TweetButton text={cert?.claim as string} tokenId={tokenId} />
-//       </div>
-//     </Layout>
-//   );
-// };
+  const {claim}  = metadata || {};
 
-// export default HyperCert;
+  useEffect(() => {
+    if (tx.data?.logs) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const claimId = [tx.data.to?.toLowerCase(), claim?.id as string].join("-");
+      void router.push(`/hypercert/${claimId}`);
+    }
+  }, [claim, metadata, router, tx.data?.logs, tx.data?.to]);
+  
+  
 
+  return (
+    <LandingLayout>
+      <div className="flex h-full flex-col items-center sm:pt-32">
+        <Spinner />
+        <div className="mb-16 pt-8 text-2xl font-bold italic text-indigo-900 sm:mb-32">
+          Minting...
+        </div>
 
-// export default function HyperCert() {
-//   return (
-//     <div>
-//         I will be working on this     
-//     </div>
-//   )
-// }
+        <Button
+          as={Link}
+          href={createTxUrl(hash, chain?.network as string)}
+        >
+          View Transaction
+        </Button>
+      </div>
+    </LandingLayout>
+  );
+};
+
+export default MintingCert;
