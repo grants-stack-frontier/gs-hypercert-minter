@@ -18,11 +18,10 @@ import { intentAtom } from "pages";
 import React from "react";
 import PreviewData from "utils/DataPreview";
 import { type formSchema } from "utils/types";
-import { validateFormData } from "../pages/index";
 
 interface PreviewCompProps {
   formData: formSchema;
-  handleForm: () => boolean;
+  handleForm: () => Promise<boolean>;
 }
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm }) => {
@@ -37,7 +36,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm }) => {
   return (
     <>
       <Button
-            onClick={() => validateFormData(formData) ?  onOpen() : null}
+            onClick={async () => await handleForm() ?  onOpen() : null}
             type="submit"
             variant={"secondary"}
             w={"full"}

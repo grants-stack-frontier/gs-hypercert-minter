@@ -29,7 +29,7 @@ function GreenPillForm({
   handleForm,
   setFormData,
 }: {
-  handleForm: () => boolean;
+  handleForm: () => Promise<boolean>;
   setFormData: Dispatch<formSchema>;
 }) {
   const {

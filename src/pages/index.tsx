@@ -1,24 +1,26 @@
 "use client";
-import { atom, useAtom } from 'jotai';
 import { Box, useMediaQuery } from "@chakra-ui/react";
-import GreenPillForm from "components/GreenPillForm";
-import HyperCertificate from "components/HyperCert";
-import type { NextPage } from "next";
-import { useState } from "react";
-import type { formSchema } from "utils/types";
-import { LandingLayout } from "../layouts/Layout";
-
 import type {
   HypercertClaimdata,
   HypercertMetadata,
 } from "@hypercerts-org/sdk";
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
+import GreenPillForm from "components/GreenPillForm";
+import HyperCertificate from "components/HyperCert";
+import { atom, useAtom } from 'jotai';
+import type { NextPage } from "next";
+import type { RefObject} from "react";
+import { useRef, useState } from "react";
+import type { formSchema } from "utils/types";
+import { LandingLayout } from "../layouts/Layout";
 
 import useMint from "hooks/useMint";
 import { createClaim } from "utils/createClaim";
 
-export function validateFormData(formData: formSchema) {
-  const metadata = createClaim(formData);
+
+export async function validateFormData(formData: formSchema, ref: RefObject<HTMLDivElement>) {
+
+  const metadata = await createClaim(formData, ref);
 
   const validClaim = validateClaimData(
     metadata.hypercert as HypercertClaimdata,
@@ -33,22 +35,37 @@ export function validateFormData(formData: formSchema) {
   }
   return validClaim && validMetadata;
 }
+
+
+
 export const intentAtom = atom(false);
 
-const Home: NextPage = () => {
+const Home: NextPage =  () => {
+
+  
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [formData, setFormData] = useState<formSchema>();
   const [metadata, setMetadata] = useState<HypercertMetadata>();
   const [wantToMint, setWantToMint] = useAtom(intentAtom);
+  const hypercertRef = useRef<HTMLDivElement>(null);
 
+  
+  
+  
 
-  const handleForm = () => {
-    const readyToMint = validateFormData(formData as formSchema);
+  const handleForm = async () => {
+    if (!formData) {
+      return false;
+    }
+    const readyToMint = await validateFormData(formData, hypercertRef);  
     console.log("ready to mint", readyToMint);
     setMetadata(readyToMint as HypercertMetadata);
     setWantToMint(true);
     return Boolean(readyToMint);
   };
+
+
+  
 
   useMint(metadata as HypercertMetadata, wantToMint);
 
@@ -65,7 +82,9 @@ const Home: NextPage = () => {
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
           <GreenPillForm setFormData={setFormData} handleForm={handleForm} />
+          <Box  ref={hypercertRef} height={'max'}>
           <HyperCertificate formData={formData as formSchema} />
+          </Box>
         </Box>
       )}
     </LandingLayout>

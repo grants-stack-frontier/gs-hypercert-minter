@@ -4,7 +4,7 @@
 // import { Layout } from "../../layouts/Layout";
 // import { useRouter } from "next/router";
 // import { useQuery } from "@tanstack/react-query";
-// import hyperCertClient from "../../hooks/useHypercert";
+
 // import { OpenSeaButton } from "../../components/OpenSeaButton";
 // import { TweetButton } from "../../components/TweetButton";
 // import Image from "next/image";
@@ -58,10 +58,10 @@
 // export default HyperCert;
 
 
-export default function HyperCert() {
-  return (
-    <div>
-        I will be working on this     
-    </div>
-  )
-}
+// export default function HyperCert() {
+//   return (
+//     <div>
+//         I will be working on this     
+//     </div>
+//   )
+// }
