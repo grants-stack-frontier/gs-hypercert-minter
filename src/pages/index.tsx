@@ -15,10 +15,12 @@ import { LandingLayout } from "../layouts/Layout";
 import { createClaim } from "utils/createClaim";
 
 
-export function validateFormData(formData: formSchema, image: string | undefined){
+
+export function validateFormData(formData: formSchema, image: string){
   
   
-  const metadata = createClaim(formData, image as unknown as string);
+
+  const metadata = createClaim(formData, image);
 
   if(!metadata){
     return false;
@@ -36,6 +38,7 @@ export function validateFormData(formData: formSchema, image: string | undefined
 }
 
 
+
 const Home: NextPage =  () => {
 
   
@@ -44,7 +47,7 @@ const Home: NextPage =  () => {
   const hypercertRef = useRef<HTMLDivElement>(null);
   
   
-
+  
 
   
 

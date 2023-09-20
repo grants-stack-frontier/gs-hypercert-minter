@@ -23,7 +23,7 @@ import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
-import { validate } from "graphql";
+import { exportImage } from "utils/svg";
 
 const animatedComponents = makeAnimated();
 
@@ -51,6 +51,7 @@ function GreenPillForm({
 
   const selectedChapter = _.map(allValues)[4] as unknown as  optionType;
 
+  const { data: image } = useSWR(reference, () => exportImage(reference));
 
 
   const { data: members } = useSWR(
@@ -244,7 +245,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-              <PreviewComp formData={allValues} reference={reference} />
+              <PreviewComp formData={allValues} image={image}/>
       </Stack>
     </form>
   );

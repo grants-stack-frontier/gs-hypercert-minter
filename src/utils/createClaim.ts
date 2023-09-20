@@ -3,6 +3,7 @@ import _ from "lodash";
 import { toYear } from "./date";
 import type { formSchema, optionType } from './types';
 
+
 export const createClaim = (formData: formSchema, imageData: string) => {
 
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
@@ -15,6 +16,8 @@ export const createClaim = (formData: formSchema, imageData: string) => {
   const contributors = _.map(formData?.contributors, 'value');
   const workTimeframeStart = formData?.workTimeframeStart
   const workTimeframeEnd = formData?.workTimeframeEnd
+
+
 
 
   return {

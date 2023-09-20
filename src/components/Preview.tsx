@@ -16,24 +16,22 @@ import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
 import HyperCertificate from "components/HyperCert";
 import { validateFormData } from "pages";
-import type { RefObject } from "react";
 import React from "react";
-import useSWR from "swr";
 import PreviewData from "utils/DataPreview";
 import mintClaim from "utils/mint";
-import { exportImage } from "utils/svg";
+
 import { type formSchema } from "utils/types";
 interface PreviewCompProps {
   formData: formSchema;
-  reference: RefObject<HTMLDivElement>;
+  image: string | null | void
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({ formData, reference }) => {
+const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { wallets } = useWallets();
 
-  const { data: image } = useSWR(reference, () => exportImage(reference));
+  
 
 
   const shouldweMint = validateFormData(formData, image as unknown as string);
