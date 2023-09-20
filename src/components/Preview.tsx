@@ -21,6 +21,7 @@ import PreviewData from "utils/DataPreview";
 import mintClaim from "utils/mint";
 
 import { type formSchema } from "utils/types";
+import Confirmation from "./Confirmation";
 interface PreviewCompProps {
   formData: formSchema;
   image: string | null | void
@@ -76,6 +77,8 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
                 />
               </Box>
             </Flex>
+
+            
           </ModalBody>
           <ModalFooter gap={4}>
             <Button

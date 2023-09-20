@@ -38,6 +38,7 @@
     "install": "^0.13.0",
     "jotai": "^2.4.2",
     "lodash": "^4.17.21",
+    "lottie-react": "^2.4.0",
     "next": "13.2.4",
     "next-seo": "^6.0.0",
     "nft.storage": "^7.0.3",
