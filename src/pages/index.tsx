@@ -24,12 +24,13 @@ export function validateFormData(formData: formSchema, image: string | undefined
     return false;
   }
 
-  const validClaim = metadata ? validateClaimData(metadata.hypercert as HypercertClaimdata) : false;
+  const validClaim =  validateClaimData(metadata.hypercert as HypercertClaimdata);
   const validMetadata = validateMetaData(metadata as HypercertMetadata);
-  const isValid = Boolean(validClaim && validMetadata);
+  const isValid = validClaim.valid && validMetadata.valid;
 
   console.log("validClaim", validClaim);
   console.log("validMetadata", validMetadata);
+  console.log("isValid", isValid);
 
   return isValid ? metadata : false;
 }

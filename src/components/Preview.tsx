@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
@@ -29,70 +29,82 @@ interface PreviewCompProps {
 }
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData, reference }) => {
-  
-  
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const {wallets} = useWallets();
-  
-  const {data: image} = useSWR(reference, () => exportImage(reference))
+  const { wallets } = useWallets();
+
+  const { data: image } = useSWR(reference, () => exportImage(reference));
+
 
   const shouldweMint = validateFormData(formData, image as unknown as string);
-  
 
   return (
     <>
       <Button
-            onClick={() => shouldweMint ?  onOpen() : null}
-            type="submit"
-            variant={"secondary"}
-            w={"full"}
-            my={8}
-            width={"max"}
-          >
-            Preview Hypercert
-          </Button>
+        onClick={!shouldweMint ? onClose : onOpen}
+        type="submit"
+        variant={"secondary"}
+        w={"full"}
+        my={8}
+        width={"max"}
+      >
+        Preview Hypercert
+      </Button>
       <Modal isCentered={true} isOpen={isOpen} onClose={onClose} size={"3xl"}>
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(20px)"
         />
-        <ModalContent background={'#242423'} rounded={'2xl'} p={2}>
-          <ModalHeader fontWeight={'400'}>Preview HyperCert</ModalHeader>
+        <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
+          <ModalHeader fontWeight={"400"}>Preview HyperCert</ModalHeader>
           <ModalCloseButton />
-          <ModalBody >
-            <Flex flexDirection={'row'} justifyContent={'space-between'} gap={4}>
-              
-              
-                
-                
-                
-                <Box w={'360px'}>
+          <ModalBody>
+            <Flex
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              gap={4}
+            >
+              <Box w={"360px"}>
                 <PreviewData formData={formData} />
-                </Box>
-                
-              
-                <Box minW={'400px'} justifyContent={'flex-end'} alignItems={'center'}>
+              </Box>
+
+              <Box
+                minW={"400px"}
+                justifyContent={"flex-end"}
+                alignItems={"center"}
+              >
                 <HyperCertificate
                   formData={formData}
                 />
-                </Box>
-              
+              </Box>
             </Flex>
           </ModalBody>
           <ModalFooter gap={4}>
-            <Button variant={'secondary'} bgColor={'green'} textColor={'dark-green'} onClick={onClose}>Cancel</Button>
+            <Button
+              variant={"secondary"}
+              bgColor={"green"}
+              textColor={"dark-green"}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
             <Button
               type="submit"
               variant={"secondary"}
               width={"max"}
-              onClick={shouldweMint ? () => mintClaim(wallets,shouldweMint as unknown as HypercertMetadata, true) : () => onClose()}
+              onClick={shouldweMint
+                ? () =>
+                  mintClaim(
+                    wallets,
+                    shouldweMint as unknown as HypercertMetadata,
+                    true,
+                  )
+                : () => onClose()}
             >
-              <ArrowRightIcon mr={2}/> Mint HyperCert
+              <ArrowRightIcon mr={2} /> Mint HyperCert
             </Button>
-          </ModalFooter>  
+          </ModalFooter>
         </ModalContent>
-        
       </Modal>
     </>
   );

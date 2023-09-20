@@ -23,6 +23,7 @@ import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
+import { validate } from "graphql";
 
 const animatedComponents = makeAnimated();
 
@@ -52,7 +53,6 @@ function GreenPillForm({
 
 
 
-
   const { data: members } = useSWR(
     selectedChapter,
     () => fetchMembers(selectedChapter?.value),
@@ -67,6 +67,7 @@ function GreenPillForm({
  
   const onSubmit = (values: formSchema) => {
     console.log(values);
+    
   };
 
   return (
@@ -243,7 +244,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-              <PreviewComp formData={allValues} reference={reference}/>
+              <PreviewComp formData={allValues} reference={reference} />
       </Stack>
     </form>
   );

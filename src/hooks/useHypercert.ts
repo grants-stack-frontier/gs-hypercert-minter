@@ -11,7 +11,8 @@ export async function getHyperCertClient(wallets: ConnectedWallet[]) {
   const wallet = wallets.find((wallet) => wallet.isConnected);
   console.log("loaded wallet", wallet);
 
-  await wallet?.switchChain(5);
+
+  void wallet?.switchChain(5);
 
   const provider = await wallet?.getEthersProvider(); // ethers provider object
 
