@@ -1,5 +1,7 @@
-import {Claim, HypercertClaimdata} from "@hypercerts-org/sdk";
-import {useGetHypercertData} from "../hooks/useGetHypercertData";
+import type { Claim } from "@hypercerts-org/sdk";
+import { useGetHypercertData } from "../hooks/useGetHypercertData";
+import Link from "next/link";
+import Image from "next/image";
 
 export const HypercertTile = ({ uri, id }: Omit<Claim, 'creation'> ) => {
   const { data } = useGetHypercertData(uri || '')
@@ -13,8 +15,8 @@ export const HypercertTile = ({ uri, id }: Omit<Claim, 'creation'> ) => {
   return (
     <div>
       <h2>{data.name}</h2>
-      <a href={`https://grants-stack-builder-orpin.vercel.app/#/projects/new?chainId=${chainId}&hypercertId=${id}`} target={'_blank'}>Apply</a>
-      <img src={data.image} alt={data.name} style={{ width: '100%', height: 'auto'}}/>
+      <Link href={`https://grants-stack-builder-orpin.vercel.app/#/projects/new?chainId=${chainId}&hypercertId=${id}`} target={'_blank'}>Apply</Link>
+      <Image src={data.image} alt={data.name} style={{ width: '100%', height: 'auto'}}/>
     </div>
   );
 }

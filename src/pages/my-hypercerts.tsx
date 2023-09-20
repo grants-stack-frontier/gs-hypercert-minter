@@ -16,7 +16,7 @@ const MyHypercertsPage = () => {
 
       <SimpleGrid maxWidth={960} columns={3} spacing={4}>
         {data?.claims.map((claim) => (
-          <GridItem>{claim.uri ? <HypercertTile {...claim} />: null}</GridItem>
+          <GridItem key={claim.id}>{claim.uri ? <HypercertTile {...claim} />: null}</GridItem>
         ))}
       </SimpleGrid>
     </Center>

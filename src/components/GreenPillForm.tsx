@@ -20,13 +20,10 @@ import CreatableSelect from "react-select/creatable";
 import useSWR from "swr";
 import { fetchChapters, fetchMembers, fetchTags } from "utils/db";
 import { customStyles } from "utils/styles";
+import { exportImage } from "utils/svg";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
-import satori from "satori/wasm";
-import type { SatoriOptions } from "satori/wasm";
-import HyperCert from "./HyperCert";
-import { exportImage } from "utils/svg";
 
 const animatedComponents = makeAnimated();
 
@@ -41,7 +38,6 @@ function GreenPillForm({
     control,
     handleSubmit,
     register,
-    reset,
     watch,
     formState: { errors },
   } = useForm<formSchema>({

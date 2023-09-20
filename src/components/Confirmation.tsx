@@ -1,7 +1,7 @@
-import Lottie from "lottie-react";
-import confirmation from 'utils/confirmation.json'
-import { Box, Button, HStack, Heading, VStack } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Button, HStack, Heading, VStack } from "@chakra-ui/react";
+import Lottie from "lottie-react";
+import confirmation from 'utils/confirmation.json';
 
 export default function Confirmation({id}:{id:string}) {
     return(
