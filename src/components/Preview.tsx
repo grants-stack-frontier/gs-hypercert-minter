@@ -16,12 +16,14 @@ import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
 import HyperCertificate from "components/HyperCert";
 import { validateFormData } from "pages";
-import React from "react";
+import React, { useState } from "react";
 import PreviewData from "utils/DataPreview";
 import mintClaim from "utils/mint";
 
 import { type formSchema } from "utils/types";
 import Confirmation from "./Confirmation";
+import { result } from "lodash";
+import { ContractTransaction } from "ethers";
 interface PreviewCompProps {
   formData: formSchema;
   image: string | null | void
@@ -33,9 +35,23 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   const { wallets } = useWallets();
 
   
-
+  const [tx, setTx] = useState<ContractTransaction>();
 
   const shouldweMint = validateFormData(formData, image as unknown as string);
+  const mintNow =  async () => await mintClaim(wallets, shouldweMint as unknown as HypercertMetadata, true);
+
+
+  const handleMint = async () => {
+    const result =  shouldweMint ? await mintNow() : false;
+      
+    if(result) 
+      {
+        console.log(result)
+        setTx(result)
+      }
+      return new Error("Something went wrong");
+  }
+
 
   return (
     <>
@@ -45,6 +61,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
         variant={"secondary"}
         w={"full"}
         my={8}
+        color={"white"}
         width={"max"}
       >
         Preview Hypercert
@@ -54,8 +71,18 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
           bg="blackAlpha.300"
           backdropFilter="blur(20px)"
         />
+        {tx?.blockHash ? <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
+          <ModalHeader fontWeight={"400"}>Mint Success</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Confirmation id="confirmation" />
+
+          </ModalBody>
+          </ModalContent>
+              :
+
         <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
-          <ModalHeader fontWeight={"400"}>Preview HyperCert</ModalHeader>
+          <ModalHeader fontWeight={"400"}>Preview Hypercert</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex
@@ -93,19 +120,12 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
               type="submit"
               variant={"secondary"}
               width={"max"}
-              onClick={shouldweMint
-                ? () =>
-                  mintClaim(
-                    wallets,
-                    shouldweMint as unknown as HypercertMetadata,
-                    true,
-                  )
-                : () => onClose()}
+              onClick={handleMint}
             >
               <ArrowRightIcon mr={2} /> Mint HyperCert
             </Button>
           </ModalFooter>
-        </ModalContent>
+        </ModalContent>}
       </Modal>
     </>
   );
