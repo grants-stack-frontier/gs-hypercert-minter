@@ -20,13 +20,12 @@ import React, { useState } from "react";
 import PreviewData from "utils/DataPreview";
 import mintClaim from "utils/mint";
 
+import { ContractTransaction } from "ethers";
 import { type formSchema } from "utils/types";
 import Confirmation from "./Confirmation";
-import { result } from "lodash";
-import { ContractTransaction } from "ethers";
 interface PreviewCompProps {
   formData: formSchema;
-  image: string | null | void
+  image: string | null | void;
 }
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
@@ -43,11 +42,12 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
 
   const handleMint = async () => {
     const result =  shouldweMint ? await mintNow() : false;
-      
+
     if(result) 
       {
         console.log(result)
         setTx(result)
+        
       }
       return new Error("Something went wrong");
   }
@@ -71,9 +71,9 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
           bg="blackAlpha.300"
           backdropFilter="blur(20px)"
         />
-        {tx?.blockHash ? <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
+        {tx?.blockHash || tx?.hash ? <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
           <ModalHeader fontWeight={"400"}>Mint Success</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton onClick={() => {onClose(); setTx(undefined)}} />
           <ModalBody>
             <Confirmation id="confirmation" />
 

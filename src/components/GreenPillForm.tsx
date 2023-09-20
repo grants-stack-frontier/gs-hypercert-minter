@@ -23,6 +23,9 @@ import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
+import satori from "satori/wasm";
+import type { SatoriOptions } from "satori/wasm";
+import HyperCert from "./HyperCert";
 import { exportImage } from "utils/svg";
 
 const animatedComponents = makeAnimated();
@@ -38,13 +41,14 @@ function GreenPillForm({
     control,
     handleSubmit,
     register,
+    reset,
     watch,
     formState: { errors },
   } = useForm<formSchema>({
     resolver: zodResolver(zFormSchema),
   });
 
-  ;
+  
   const { data: chapters } = useSWR("chapters", fetchChapters);
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
@@ -60,7 +64,8 @@ function GreenPillForm({
   );
 
 
-  
+
+
 
   const portalRef = useRef<HTMLDivElement>(null);
 
@@ -245,7 +250,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-              <PreviewComp formData={allValues} image={image}/>
+              <PreviewComp formData={allValues} image={image} />
       </Stack>
     </form>
   );
