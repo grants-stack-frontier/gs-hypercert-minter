@@ -1,5 +1,4 @@
 import { ImageResponse } from "@vercel/og";
-import _ from "lodash";
 import type { NextApiRequest } from "next";
 import type { formSchema } from "utils/types";
 import { Volkhov, Roboto_Mono } from "next/font/google";
@@ -43,7 +42,7 @@ export default function handler(req: NextApiRequest) {
   //   ],
   // };
 
-  const workScope = _.map(formData?.workScope, "value");
+  const workScope = formData.workScope.map(x => x.value);
 
   return new ImageResponse(
     (
