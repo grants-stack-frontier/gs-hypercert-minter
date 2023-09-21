@@ -14,13 +14,14 @@ import {
 } from "@chakra-ui/react";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
-import HyperCertificate from "components/HyperCert";
+// import HyperCertificate from "components/HyperCert";
+import { HypercertDisplay } from "./HypercertDisplay";
 import { validateFormData } from "pages";
 import React, { useState } from "react";
 import PreviewData from "utils/DataPreview";
 import mintClaim from "utils/mint";
 
-import { ContractTransaction } from "ethers";
+import type { ContractTransaction } from "ethers";
 import { type formSchema } from "utils/types";
 import Confirmation from "./Confirmation";
 interface PreviewCompProps {
@@ -100,9 +101,10 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
                 justifyContent={"flex-end"}
                 alignItems={"center"}
               >
-                <HyperCertificate
+                {/* <HyperCertificate
                   formData={formData}
-                />
+                /> */}
+                <HypercertDisplay formData={formData} />
               </Box>
             </Flex>
 

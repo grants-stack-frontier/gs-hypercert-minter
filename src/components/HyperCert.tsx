@@ -33,11 +33,10 @@ const vStackProps = {
 function HyperCertificate({ formData }: { formData: formSchema }) {
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
   const workScope = _.map(formData?.workScope, "value");
-  const workStartString = (formData?.workTimeframeStart) ;
-  const workEndString =(formData?.workTimeframeEnd) ;
+  const workStartString = formData?.workTimeframeStart;
+  const workEndString = formData?.workTimeframeEnd;
+  console.log("FORMDATA", formData);
 
-  console.log(workScope)
-  
   return (
     <VStack {...vStackProps}>
       <HStack w="full" justifyContent="center">
@@ -47,11 +46,9 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
         <Text>Timeframe</Text>
         <Text>
           {workStartString ?? "Start Date"}
-          {' — '}
+          {" — "}
           {workEndString ?? "End Date"}
         </Text>
-        
-        
       </HStack>
 
       <Divider borderColor="green" borderWidth="1px" width="100%" />
@@ -68,7 +65,8 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
       </Heading>
 
       <HStack spacing={1} flexWrap="wrap">
-        {(workScope ?? ("Work, Scope, goes, here").split(", ")).map((tag: string) => (
+        {(workScope ?? "Work, Scope, goes, here".split(", ")).map(
+          (tag: string) => (
             <Tag
               key={tag + tag.substring(0, 2)}
               color="green"
@@ -79,11 +77,12 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
               bgColor="transparent"
               fontSize="12px"
               fontWeight="normal"
-              alignItems={'center'}
+              alignItems={"center"}
             >
               {tag.toLowerCase()}
             </Tag>
-          ))}
+          )
+        )}
       </HStack>
 
       <Divider borderColor="green" borderWidth="1px" width="100%" />

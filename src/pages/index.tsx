@@ -7,6 +7,7 @@ import type {
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 import GreenPillForm from "components/GreenPillForm";
 import HyperCertificate from "components/HyperCert";
+import { HypercertDisplay } from "components/HypercertDisplay";
 import type { NextPage } from "next";
 import { useRef, useState } from "react";
 import type { formSchema } from "utils/types";
@@ -65,7 +66,8 @@ const Home: NextPage =  () => {
         >
           <GreenPillForm setFormData={setFormData}  reference={hypercertRef}/>
           <Box  ref={hypercertRef} height={'max'}>
-          <HyperCertificate formData={formData as formSchema} />
+          {/* <HyperCertificate formData={formData as formSchema} /> */}
+          <HypercertDisplay formData={formData as formSchema} />
           </Box>
         </Box>
       )}
