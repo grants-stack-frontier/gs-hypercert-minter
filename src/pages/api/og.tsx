@@ -16,10 +16,9 @@ export const roboto_mono = Roboto_Mono({
 export default async function handler(req: Request) {
   const form = await req.json();
 
-  try {
+
     const { formData } = form as { formData: formSchema };
-    const selectedChapter = Object.values(formData)
-      ?.[4] as unknown as optionType;
+    const selectedChapter = Object.values(formData)?.[4] as unknown as optionType;
 
     return new ImageResponse(
       (
@@ -68,9 +67,9 @@ export default async function handler(req: Request) {
           >
             <p>Timeframe</p>
             <p>
-              {formData.workTimeframeStart}
+              {formData.workTimeframeStart ?? 'Start Date'}
               {" — "}
-              {formData.workTimeframeEnd}
+              {formData.workTimeframeEnd ?? 'End Date'}
             </p>
           </div>
 
@@ -168,7 +167,3 @@ export default async function handler(req: Request) {
       },
     );
   }
-   catch (error) {
-    return new Response("No data", { status: 400 });
-  }
-}

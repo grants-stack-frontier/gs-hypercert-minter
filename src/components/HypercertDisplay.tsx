@@ -1,4 +1,3 @@
-'use client'
 import { VStack } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
