@@ -1,9 +1,8 @@
-import { Divider, Heading, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import type { formSchema  } from "utils/types";
 import axios from "axios"; 
-import type { AxiosResponse } from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const HypercertDisplay = ({ formData }: { formData: formSchema }) => {
@@ -29,7 +28,7 @@ export const HypercertDisplay = ({ formData }: { formData: formSchema }) => {
   
     useEffect(() => {
       mutation.mutate(formData);
-    }, [formData, mutation]);
+    }, [formData]);
 //   const [imageData, setImageData] = useState<string | null>(null);
 
 //   useEffect(() => {
