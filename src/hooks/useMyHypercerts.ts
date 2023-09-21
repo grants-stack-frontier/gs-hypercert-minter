@@ -1,17 +1,19 @@
-import useSWR from "swr";
-import {getHyperCertClient} from "./useHypercert";
-import {useWallets} from "@privy-io/react-auth";
-import {useAccount} from "wagmi";
+import {useHypercertClient} from "./useHypercert";
+import {usePrivy} from "@privy-io/react-auth";
+import {useQuery} from "@tanstack/react-query";
 
 export const useMyHypercerts = () => {
-  const { wallets } = useWallets();
-  const { address } = useAccount();
+  const { user } = usePrivy();
+  const client = useHypercertClient();
+  const address = user?.wallet?.address;
 
-  return useSWR("myHypercerts", async () => {
-    const hypercertClient = await getHyperCertClient(wallets)
-    if (!address) {
+  return useQuery(["my-hypercerts", address], async () => {
+    if (!client || !address) {
       return null;
     }
-    return hypercertClient.hyperCertClient?.indexer.claimsByOwner(address);
+    return client.indexer.claimsByOwner(address);
+  }, {
+    enabled: !!client && !!address,
   });
+
 }

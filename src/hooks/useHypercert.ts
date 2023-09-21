@@ -1,10 +1,29 @@
 import { HypercertClient } from "@hypercerts-org/sdk";
 import type { ConnectedWallet } from '@privy-io/react-auth';
+import {usePrivy, useWallets} from "@privy-io/react-auth";
+import {useEffect, useState} from "react";
 
 const tokens = {
   nftStorageToken: process.env.NEXT_PUBLIC_NFT_STORAGE_TOKEN,
   web3StorageToken: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN,
 };
+
+export const useHypercertClient = () => {
+  const { ready } = usePrivy();
+  const { wallets } = useWallets();
+  const [hyperCertClient, setHyperCertClient] = useState<HypercertClient | null>(null);
+
+  useEffect(() => {
+    const loadHyperCertClient = async () => {
+      const { hyperCertClient } = await getHyperCertClient(wallets);
+      setHyperCertClient(hyperCertClient);
+    };
+
+    void loadHyperCertClient();
+  }, [wallets, ready]);
+
+  return hyperCertClient;
+}
 
 
 export async function getHyperCertClient(wallets: ConnectedWallet[]) {
