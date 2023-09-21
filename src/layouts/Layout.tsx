@@ -82,7 +82,6 @@ export const Footer = () => (
   <Flex
     as="footer"
     w={"full"}
-    position={"absolute"}
     justifyContent="center"
     alignItems="center"
     textColor={"dark-green"}
