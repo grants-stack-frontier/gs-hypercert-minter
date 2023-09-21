@@ -1,6 +1,5 @@
 import { ImageResponse } from "@vercel/og";
 import { Roboto_Mono, Volkhov } from "next/font/google";
-
 import type { formSchema, optionType } from "utils/types";
 
 export const config = {
@@ -25,7 +24,6 @@ export default async function handler(req: Request) {
     }
 
     const selectedChapter = Object.values(formData)?.[4] as unknown as optionType;
-    
     return new ImageResponse(
       (
         <div
@@ -34,7 +32,7 @@ export default async function handler(req: Request) {
             height: "100%",
             backgroundColor: "#254D32",
             backgroundImage:
-              "url('http://localhost:3000/svgPatterns/certSvg.svg')",
+              "url('https://gs-hypercert.vercel.app/svgPatterns/certSvg.svg')",
             backgroundSize: "cover",
             backgroundRepeat: "repeat-y",
             justifyContent: "flex-end",
@@ -55,7 +53,7 @@ export default async function handler(req: Request) {
             }}
           >
             <img
-              src="http://localhost:3000/collection_logos/green-pill.png"
+              src="https://gs-hypercert.vercel.app/collection_logos/green-pill.png"
               alt=""
               width="140"
             />
@@ -160,7 +158,7 @@ export default async function handler(req: Request) {
             }}
           >
             <img
-              src="http://localhost:3000/logo-yellow.svg"
+              src="https://gs-hypercert.vercel.app/logo-yellow.svg"
               alt="Hypercert"
               width="140"
             />
