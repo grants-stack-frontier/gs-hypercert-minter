@@ -20,12 +20,12 @@ export const createOpenSeaUrl = (
 
 export const OpenSeaButton = async ({ tokenId = "", }) => {
   const {wallets} = useWallets();
+  const { chain } = useNetwork();
 
-  const {hyperCertClient} =  await getHyperCertClient(wallets);
+  const {hyperCertClient} =  await getHyperCertClient(wallets, chain?.id || 10);
 
   const address = hyperCertClient?.contract.address ?? "";
 
-  const { chain } = useNetwork();
   if (!chain?.id) {
     return null;
   }

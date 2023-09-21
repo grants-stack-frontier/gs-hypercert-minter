@@ -2,13 +2,14 @@ import { Button } from "@chakra-ui/react";
 import { useWallets } from "@privy-io/react-auth";
 import { getHyperCertClient } from "hooks/useHypercert";
 import Link from "next/link";
-import { useNetwork } from "wagmi";
+import {useChainId, useNetwork} from "wagmi";
 import { createOpenSeaUrl } from "./OpenSeaButton";
 
 export const TweetButton = async ({ text = "", tokenId = "" }) => {
   const {wallets} = useWallets();
+  const chainId = useChainId();
 
-  const {hyperCertClient} =  await getHyperCertClient(wallets);
+  const {hyperCertClient} =  await getHyperCertClient(wallets, chainId);
   
   const { chain } = useNetwork();
   if (!chain?.id) {

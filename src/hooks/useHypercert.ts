@@ -2,6 +2,7 @@ import { HypercertClient } from "@hypercerts-org/sdk";
 import type { ConnectedWallet } from '@privy-io/react-auth';
 import {usePrivy, useWallets} from "@privy-io/react-auth";
 import {useEffect, useState} from "react";
+import {useNetwork} from "wagmi";
 
 const tokens = {
   nftStorageToken: process.env.NEXT_PUBLIC_NFT_STORAGE_TOKEN,
@@ -12,26 +13,26 @@ export const useHypercertClient = () => {
   const { ready } = usePrivy();
   const { wallets } = useWallets();
   const [hyperCertClient, setHyperCertClient] = useState<HypercertClient | null>(null);
+  const { chain } = useNetwork();
+
 
   useEffect(() => {
     const loadHyperCertClient = async () => {
-      const { hyperCertClient } = await getHyperCertClient(wallets);
+      const { hyperCertClient } = await getHyperCertClient(wallets, chain?.id || 10);
       setHyperCertClient(hyperCertClient);
     };
 
     void loadHyperCertClient();
-  }, [wallets, ready]);
+  }, [wallets, ready, chain?.id]);
 
   return hyperCertClient;
 }
 
 
-export async function getHyperCertClient(wallets: ConnectedWallet[]) {
+export async function getHyperCertClient(wallets: ConnectedWallet[], chainId: number) {
   const wallet = wallets.find((wallet) => wallet.isConnected);
-  console.log("loaded wallet", wallet);
 
-
-  void wallet?.switchChain(5);
+  // void wallet?.switchChain(chainId);
 
   const provider = await wallet?.getEthersProvider(); // ethers provider object
 
@@ -45,7 +46,7 @@ export async function getHyperCertClient(wallets: ConnectedWallet[]) {
 
   return {
     hyperCertClient: new HypercertClient({
-      chainId: 5,
+      chainId: chainId,
       operator: signer,
       ...tokens,
     }),

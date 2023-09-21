@@ -1,12 +1,12 @@
-import useSWR from "swr";
-import {getHyperCertClient} from "./useHypercert";
-import {useWallets} from "@privy-io/react-auth";
+import {useHypercertClient} from "./useHypercert";
+import {useQuery} from "@tanstack/react-query";
 
 export const useGetHypercertData = (uri: string) => {
-  const { wallets } = useWallets();
+  const hypercertClient = useHypercertClient();
 
-  return useSWR(['metadata', uri], async () => {
-    const hypercertClient = await getHyperCertClient(wallets)
-    return hypercertClient.hyperCertClient?.storage.getMetadata(uri)
+  return useQuery(['metadata', uri], async () => {
+    return hypercertClient?.storage.getMetadata(uri)
+  }, {
+    enabled: !!hypercertClient,
   });
 }

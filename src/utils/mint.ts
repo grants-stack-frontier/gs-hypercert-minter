@@ -4,15 +4,13 @@ import { getHyperCertClient } from '../hooks/useHypercert';
 
 const totalUnits = "1000";
 
-const mintClaim = async (wallets: ConnectedWallet[], metadata: HypercertMetadata, wantToMint: boolean) => {
+const mintClaim = async (wallets: ConnectedWallet[], metadata: HypercertMetadata, wantToMint: boolean, chainId: number) => {
   const wallet = wallets.find((wallet) => wallet.isConnected);
 
-  console.log(wallet?.address, wantToMint, "just above here")
 
   if (wallet?.address && wantToMint) {
-    const { hyperCertClient } = await getHyperCertClient(wallets);
+    const { hyperCertClient } = await getHyperCertClient(wallets, chainId);
 
-    console.log("Did we get a hyperCertClient?", hyperCertClient)
     if (hyperCertClient) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       const claim = await hyperCertClient.mintClaim(metadata, totalUnits, TransferRestrictions.FromCreatorOnly);

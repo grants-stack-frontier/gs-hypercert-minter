@@ -24,6 +24,7 @@ import mintClaim from "utils/mint";
 import type { ContractTransaction } from "ethers";
 import { type formSchema } from "utils/types";
 import Confirmation from "./Confirmation";
+import {useChainId} from "wagmi";
 interface PreviewCompProps {
   formData: formSchema;
   image: string;
@@ -31,14 +32,15 @@ interface PreviewCompProps {
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const chainId = useChainId()
 
   const { wallets } = useWallets();
 
   
   const [tx, setTx] = useState<ContractTransaction>();
 
-  const shouldweMint = validateFormData(formData, image);
-  const mintNow =  async () => await mintClaim(wallets, shouldweMint as unknown as HypercertMetadata, true);
+  const shouldweMint = validateFormData(formData, image as unknown as string);
+  const mintNow =  async () => await mintClaim(wallets, shouldweMint as unknown as HypercertMetadata, true, chainId);
 
 
   const handleMint = async () => {
