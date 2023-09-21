@@ -26,7 +26,7 @@ import { type formSchema } from "utils/types";
 import Confirmation from "./Confirmation";
 interface PreviewCompProps {
   formData: formSchema;
-  image: string | null | void;
+  image: string;
 }
 
 const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
@@ -37,7 +37,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   
   const [tx, setTx] = useState<ContractTransaction>();
 
-  const shouldweMint = validateFormData(formData, image as unknown as string);
+  const shouldweMint = validateFormData(formData, image);
   const mintNow =  async () => await mintClaim(wallets, shouldweMint as unknown as HypercertMetadata, true);
 
 
@@ -57,7 +57,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   return (
     <>
       <Button
-        onClick={!shouldweMint ? onClose : onOpen}
+        onClick={shouldweMint ? onOpen : onClose}
         type="submit"
         variant={"secondary"}
         w={"full"}

@@ -13,8 +13,9 @@ import type { formSchema } from "utils/types";
 import { LandingLayout } from "../layouts/Layout";
 
 import { createClaim } from "utils/createClaim";
+import { atom } from "jotai";
 
-
+export const imageDataAtom = atom('');
 
 export function validateFormData(formData: formSchema, image: string){
   
@@ -63,7 +64,7 @@ const Home: NextPage =  () => {
           display={"flex"}
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          <GreenPillForm setFormData={setFormData}  reference={hypercertRef}/>
+          <GreenPillForm setFormData={setFormData}/>
           <Box  ref={hypercertRef} height={'max'}>
           {/* <HyperCertificate formData={formData as formSchema} /> */}
           <HypercertDisplay formData={formData as formSchema} />

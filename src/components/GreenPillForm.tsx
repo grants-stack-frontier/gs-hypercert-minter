@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import _ from "lodash";
-import type { RefObject } from "react";
+import { imageDataAtom } from "pages";
 import { useRef, type Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -20,19 +20,19 @@ import CreatableSelect from "react-select/creatable";
 import useSWR from "swr";
 import { fetchChapters, fetchMembers, fetchTags } from "utils/db";
 import { customStyles } from "utils/styles";
-import { exportImage } from "utils/svg";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
+import { useAtom } from "jotai";
+
+
 
 const animatedComponents = makeAnimated();
 
 function GreenPillForm({
   setFormData,
-  reference,
 }: {
   setFormData: Dispatch<formSchema>;
-  reference: RefObject<HTMLDivElement>;
 }) {
   const {
     control,
@@ -49,11 +49,11 @@ function GreenPillForm({
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
 
+
+
+  const [imageData,] = useAtom(imageDataAtom);
+
   const selectedChapter = _.map(allValues)[4] as unknown as  optionType;
-
-  const { data: image } = useSWR(reference, () => exportImage(reference));
-
-
   const { data: members } = useSWR(
     selectedChapter,
     () => fetchMembers(selectedChapter?.value),
@@ -246,7 +246,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-              <PreviewComp formData={allValues} image={image} />
+              <PreviewComp formData={allValues} image={imageData} />
       </Stack>
     </form>
   );

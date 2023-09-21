@@ -6,7 +6,7 @@ import { HStack, VStack } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 export const HypercertTile = ({ uri, id }: Omit<Claim, 'creation'> ) => {
-  const { data } = useGetHypercertData(uri || '')
+  const { data } = useGetHypercertData(uri ?? '')
   if (!data) {
     return null;
   }
