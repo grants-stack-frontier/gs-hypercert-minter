@@ -16,7 +16,7 @@ export const roboto_mono = Roboto_Mono({
 export default async function handler(req: Request) {
   const form = await req.json();
 
-  if (form) {
+  try {
     const { formData } = form as { formData: formSchema };
     const selectedChapter = Object.values(formData)
       ?.[4] as unknown as optionType;
@@ -167,7 +167,8 @@ export default async function handler(req: Request) {
         height: 400,
       },
     );
-  } else {
+  }
+   catch (error) {
     return new Response("No data", { status: 400 });
   }
 }
