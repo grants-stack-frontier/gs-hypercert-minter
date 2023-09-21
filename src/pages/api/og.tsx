@@ -18,8 +18,14 @@ export default async function handler(req: Request) {
 
 
     const { formData } = form as { formData: formSchema };
-    const selectedChapter = Object.values(formData)?.[4] as unknown as optionType;
+    
 
+    if(!formData) {
+      return new Response('No form data provided', { status: 400 })
+    }
+
+    const selectedChapter = Object.values(formData)?.[4] as unknown as optionType;
+    
     return new ImageResponse(
       (
         <div
