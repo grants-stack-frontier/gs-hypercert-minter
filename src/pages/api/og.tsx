@@ -13,33 +13,35 @@ export const roboto_mono = Roboto_Mono({
   subsets: ["latin"],
   display: "swap",
 });
-// export default function handler(req: NextApiRequest) {
-export default function handler() {
-  // const {formData} = req.body;
-  const formData: formSchema = {
-    workTimeframeStart: "2023-09-21",
-    workTimeframeEnd: "2023-09-28",
-    externalUrl: "www.cnn.com",
-    description: "Raid Guild",
-    name: [
-      {
-        label: "GreenPill Mars",
-        value: "ad18ae38-de78-4bc4-a4eb-c9ad1c4a72f6",
-      },
-    ],
-    workScope: [
-      {
-        label: "Climate Change",
-        value: "climate_change",
-      },
-    ],
-    contributors: [
-      {
-        label: "Raid Guild",
-        value: "raid_guild",
-      },
-    ],
-  };
+
+export default function handler(req: NextApiRequest) {
+// export default function handler() {
+  const { formData }: { formData: formSchema } = req.body;
+
+  // const formData: formSchema = {
+  //   workTimeframeStart: "2023-09-21",
+  //   workTimeframeEnd: "2023-09-28",
+  //   externalUrl: "www.cnn.com",
+  //   description: "Raid Guild",
+  //   name: [
+  //     {
+  //       label: "GreenPill Mars",
+  //       value: "ad18ae38-de78-4bc4-a4eb-c9ad1c4a72f6",
+  //     },
+  //   ],
+  //   workScope: [
+  //     {
+  //       label: "Climate Change",
+  //       value: "climate_change",
+  //     },
+  //   ],
+  //   contributors: [
+  //     {
+  //       label: "Raid Guild",
+  //       value: "raid_guild",
+  //     },
+  //   ],
+  // };
 
   const workScope = _.map(formData?.workScope, "value");
 
