@@ -61,7 +61,8 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
         variant={"secondary"}
         w={"full"}
         my={8}
-        color={"white"}
+        color={"green"}
+        _hover={{ bgColor: "green", textColor: "dark-green" }}
         width={"max"}
       >
         Preview Hypercert
@@ -112,6 +113,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
               variant={"secondary"}
               bgColor={"green"}
               textColor={"dark-green"}
+              _hover={{ textColor: "green", bgColor: "dark-green" }}
               onClick={onClose}
             >
               Cancel
@@ -121,6 +123,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
               variant={"secondary"}
               width={"max"}
               onClick={handleMint}
+              _hover={{ bgColor: "green", textColor: "dark-green" }}
             >
               <ArrowRightIcon mr={2} /> Mint HyperCert
             </Button>

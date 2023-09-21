@@ -1,3 +1,4 @@
+'use client'
 import { ChevronDownIcon, CopyIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -11,10 +12,11 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { formatAddress } from "utils/formatting";
 import { useBalance } from "wagmi";
-
+import { useRouter } from "next/router";
 const PrivyAuthButton = () => {
   const { login, ready, authenticated, user, logout } = usePrivy();
   
+  const router = useRouter();
   const [,copyToClipboard] = useCopyToClipboard();
 
   const { data } = useBalance({
@@ -40,6 +42,7 @@ const PrivyAuthButton = () => {
         <MenuList >
           <MenuItem onClick={() => copyToClipboard(user?.wallet?.address as string)}><CopyIcon mr={2}/> Copy Wallet Address</MenuItem>
           <MenuItem>{data?.formatted} {data?.symbol}</MenuItem>
+          <MenuItem onClick={() => router.push('/my-hypercerts')}> My Hypercerts</MenuItem>
           <MenuItem onClick={logout}>Logout 
           </MenuItem>
         </MenuList>
