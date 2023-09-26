@@ -36,11 +36,6 @@ export const HypercertDisplay = ({ formData }: { formData: formSchema }) => {
     mutation.mutate(formData);
   }, [formData]);
     
-
-
-  console.log(imageData)
-
-
   return (
     <VStack>
 
