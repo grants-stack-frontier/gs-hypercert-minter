@@ -4,6 +4,7 @@ import PrivyAuthButton from "components/PrivyAuthButton";
 import Head from "next/head";
 import NextLink from "next/link";
 import site from "../config/site";
+import { Button } from "@chakra-ui/react";
 
 export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -46,6 +47,16 @@ function Header() {
           width={"146px"}
           height={"50px"}
         />
+      </Link>
+      <Link href={"/my-hypercerts"}>
+        <Button
+          bgColor="dark-green"
+          color="green"
+          _hover={{ bgColor: "mid-green", textColor: "dark-green" }}
+          _active={{ bgColor: "mid-green", textColor: "dark-green" }}
+        >
+          Hypercert Gallery
+        </Button>
       </Link>
 
       <PrivyAuthButton />
