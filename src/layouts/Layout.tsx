@@ -37,6 +37,7 @@ function Header() {
       backgroundColor={"transparent"}
       height={"5rem"}
       top={"0"}
+      padding={"1rem"}
     >
       <Link as={NextLink} href={"/"} variant="primary" textColor={"dark-green"}>
         <Img
