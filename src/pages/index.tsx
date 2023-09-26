@@ -1,56 +1,56 @@
 "use client";
-import { atom, useAtom } from 'jotai';
 import { Box, useMediaQuery } from "@chakra-ui/react";
-import GreenPillForm from "components/GreenPillForm";
-import HyperCertificate from "components/HyperCert";
-import type { NextPage } from "next";
-import { useState } from "react";
-import type { formSchema } from "utils/types";
-import { LandingLayout } from "../layouts/Layout";
-
 import type {
   HypercertClaimdata,
   HypercertMetadata,
 } from "@hypercerts-org/sdk";
 import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
+import GreenPillForm from "components/GreenPillForm";
+import { HypercertDisplay } from "components/HypercertDisplay";
+import type { NextPage } from "next";
+import { useRef, useState } from "react";
+import type { formSchema } from "utils/types";
+import { LandingLayout } from "../layouts/Layout";
 
-import useMint from "hooks/useMint";
 import { createClaim } from "utils/createClaim";
+import { atom } from "jotai";
 
-export function validateFormData(formData: formSchema) {
-  const metadata = createClaim(formData);
+export const imageDataAtom = atom('');
 
-  const validClaim = validateClaimData(
-    metadata.hypercert as HypercertClaimdata,
-  );
-  const validMetadata = validateMetaData(metadata as HypercertMetadata);
+export function validateFormData(formData: formSchema, image: string){
+  
+  
 
-  console.log("validated claim data", validClaim);
-  console.log("validated metadata", validMetadata);
+  const metadata = createClaim(formData, image);
 
-  if (validClaim && validMetadata) {
-    return metadata;
+  if(!metadata){
+    return false;
   }
-  return validClaim && validMetadata;
-}
-export const intentAtom = atom(false);
 
-const Home: NextPage = () => {
+  const validClaim =  validateClaimData(metadata.hypercert as HypercertClaimdata);
+  const validMetadata = validateMetaData(metadata as HypercertMetadata);
+  const isValid = validClaim.valid && validMetadata.valid;
+
+  console.log("validClaim", validClaim);
+  console.log("validMetadata", validMetadata);
+  console.log("isValid", isValid);
+
+  return isValid ? metadata : false;
+}
+
+
+
+const Home: NextPage =  () => {
+
+  
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [formData, setFormData] = useState<formSchema>();
-  const [metadata, setMetadata] = useState<HypercertMetadata>();
-  const [wantToMint, setWantToMint] = useAtom(intentAtom);
+  const hypercertRef = useRef<HTMLDivElement>(null);
+  
+  
+  
 
-
-  const handleForm = () => {
-    const readyToMint = validateFormData(formData as formSchema);
-    console.log("ready to mint", readyToMint);
-    setMetadata(readyToMint as HypercertMetadata);
-    setWantToMint(true);
-    return Boolean(readyToMint);
-  };
-
-  useMint(metadata as HypercertMetadata, wantToMint);
+  
 
   return (
     <LandingLayout>
@@ -64,8 +64,11 @@ const Home: NextPage = () => {
           display={"flex"}
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          <GreenPillForm setFormData={setFormData} handleForm={handleForm} />
-          <HyperCertificate formData={formData as formSchema} />
+          <GreenPillForm setFormData={setFormData}/>
+          <Box  ref={hypercertRef} height={'max'}>
+          {/* <HyperCertificate formData={formData as formSchema} /> */}
+          <HypercertDisplay formData={formData as formSchema} />
+          </Box>
         </Box>
       )}
     </LandingLayout>

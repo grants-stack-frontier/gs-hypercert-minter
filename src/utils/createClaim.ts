@@ -4,7 +4,7 @@ import { toYear } from "./date";
 import type { formSchema, optionType } from './types';
 
 
-export const createClaim = (formData: formSchema) => {
+export const createClaim = (formData: formSchema, imageData: string) => {
 
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
 
@@ -20,13 +20,11 @@ export const createClaim = (formData: formSchema) => {
 
 
 
-
-
   return {
     name,
     description,
     version: "0.0.1",
-    image: `data:image/svg+xml;base64,${btoa("svg")}`,
+    image: imageData,
     external_url: externalUrl,
     properties: [],
     hypercert: {
@@ -60,6 +58,7 @@ export const createClaim = (formData: formSchema) => {
       },
     },
   };
+
 };
 
 

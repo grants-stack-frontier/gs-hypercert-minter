@@ -1,32 +1,55 @@
 import { HypercertClient } from "@hypercerts-org/sdk";
-import type { ConnectedWallet} from '@privy-io/react-auth';
+import type { ConnectedWallet } from '@privy-io/react-auth';
+import {usePrivy, useWallets} from "@privy-io/react-auth";
+import {useEffect, useState} from "react";
+import {useNetwork} from "wagmi";
 
 const tokens = {
   nftStorageToken: process.env.NEXT_PUBLIC_NFT_STORAGE_TOKEN,
   web3StorageToken: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN,
 };
 
-export async function getHyperCertClient(wallets: ConnectedWallet[]) {
+export const useHypercertClient = () => {
+  const { ready } = usePrivy();
+  const { wallets } = useWallets();
+  const [hyperCertClient, setHyperCertClient] = useState<HypercertClient | null>(null);
+  const { chain } = useNetwork();
 
-  
 
-  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
-  console.log("loaded embedded wallet", embeddedWallet)
-  void embeddedWallet?.switchChain(5);
-  
-  const provider = await embeddedWallet?.getEthersProvider() // ethers provider object
-  
-  if(!provider)
-    return {hyperCertClient: null}
+  useEffect(() => {
+    const loadHyperCertClient = async () => {
+      const { hyperCertClient } = await getHyperCertClient(wallets, chain?.id || 10);
+      setHyperCertClient(hyperCertClient);
+    };
 
-  const signer = provider.getSigner(embeddedWallet?.address); // ethers signer object
+    void loadHyperCertClient();
+  }, [wallets, ready, chain?.id]);
 
-  console.log("loaded signer", signer)
-  
-
-  return new HypercertClient({
-    chainId: 5,
-    operator: signer,
-    ...tokens,
-  });
+  return hyperCertClient;
 }
+
+
+export async function getHyperCertClient(wallets: ConnectedWallet[], chainId: number) {
+  const wallet = wallets.find((wallet) => wallet.isConnected);
+
+  // void wallet?.switchChain(chainId);
+
+  const provider = await wallet?.getEthersProvider(); // ethers provider object
+
+  if (!provider) {
+    return { hyperCertClient: null };
+  }
+
+  const signer = provider.getSigner(wallet?.address); // ethers signer object
+
+  console.log("loaded signer", signer);
+
+  return {
+    hyperCertClient: new HypercertClient({
+      chainId: chainId,
+      operator: signer,
+      ...tokens,
+    }),
+  };
+}
+

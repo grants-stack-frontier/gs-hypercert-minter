@@ -1,10 +1,9 @@
 import { Divider, Heading, HStack, Tag, Text, VStack } from "@chakra-ui/react";
-import type { HypercertMetadata } from "@hypercerts-org/sdk";
+import _ from "lodash";
 import Image from "next/image";
 import React from "react";
-import { createClaim } from "utils/createClaim";
 import type { formSchema, optionType } from "utils/types";
-import _ from "lodash";
+
 const greenPillProps = {
   src: "/logo-yellow.svg",
   width: 140,
@@ -32,8 +31,12 @@ const vStackProps = {
 };
 
 function HyperCertificate({ formData }: { formData: formSchema }) {
-  const metadata: HypercertMetadata = createClaim(formData);
-  const selectedChapter = _.map(formData)[4] as unknown as  optionType;
+  const selectedChapter = _.map(formData)[4] as unknown as optionType;
+  const workScope = _.map(formData?.workScope, "value");
+  const workStartString = formData?.workTimeframeStart;
+  const workEndString = formData?.workTimeframeEnd;
+  console.log("FORMDATA", formData);
+
   return (
     <VStack {...vStackProps}>
       <HStack w="full" justifyContent="center">
@@ -42,8 +45,9 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
       <HStack w="full" justifyContent="space-between" padding={0} fontSize={15}>
         <Text>Timeframe</Text>
         <Text>
-          {metadata?.hypercert?.work_timeframe.display_value ??
-            "Start Date - End Date"}
+          {workStartString ?? "Start Date"}
+          {" — "}
+          {workEndString ?? "End Date"}
         </Text>
       </HStack>
 
@@ -57,26 +61,28 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
         my={2}
         fontFamily="Volkhov, serif"
       >
-        
         {selectedChapter?.label ?? "Name of the chapter"}
       </Heading>
 
       <HStack spacing={1} flexWrap="wrap">
-        {(metadata?.hypercert?.work_scope?.display_value ??
-          "Work, Scope, goes, here").split(", ").map((tag) => (
+        {(workScope ?? "Work, Scope, goes, here".split(", ")).map(
+          (tag: string) => (
             <Tag
               key={tag + tag.substring(0, 2)}
               color="green"
               borderColor="green"
               border="1px"
               rounded="full"
+              height={"auto"}
               bgColor="transparent"
               fontSize="12px"
               fontWeight="normal"
+              alignItems={"center"}
             >
               {tag.toLowerCase()}
             </Tag>
-          ))}
+          )
+        )}
       </HStack>
 
       <Divider borderColor="green" borderWidth="1px" width="100%" />

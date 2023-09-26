@@ -10,83 +10,129 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
-import HyperCertificate from "components/HyperCert";
-import { useAtom } from "jotai";
-import { intentAtom } from "pages";
-import React from "react";
+import type { HypercertMetadata } from "@hypercerts-org/sdk";
+import { useWallets } from "@privy-io/react-auth";
+// import HyperCertificate from "components/HyperCert";
+import { HypercertDisplay } from "./HypercertDisplay";
+import { validateFormData } from "pages";
+import React, { useState } from "react";
 import PreviewData from "utils/DataPreview";
-import { type formSchema } from "utils/types";
-import { validateFormData } from "../pages/index";
+import mintClaim from "utils/mint";
 
+import type { ContractTransaction } from "ethers";
+import { type formSchema } from "utils/types";
+import Confirmation from "./Confirmation";
+import {useChainId} from "wagmi";
 interface PreviewCompProps {
   formData: formSchema;
-  handleForm: () => boolean;
+  image: string;
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({ formData, handleForm }) => {
-  
-  
-  
-  const [wantToMint, setWantToMint] = useAtom(intentAtom);
+const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const chainId = useChainId()
+
+  const { wallets } = useWallets();
 
   
+  const [tx, setTx] = useState<ContractTransaction>();
+
+  const shouldweMint = validateFormData(formData, image as unknown as string);
+  const mintNow =  async () => await mintClaim(wallets, shouldweMint as unknown as HypercertMetadata, true, chainId);
+
+
+  const handleMint = async () => {
+    const result =  shouldweMint ? await mintNow() : false;
+
+    if(result) 
+      {
+        console.log(result)
+        setTx(result)
+        
+      }
+      return new Error("Something went wrong");
+  }
+
 
   return (
     <>
       <Button
-            onClick={() => validateFormData(formData) ?  onOpen() : null}
-            type="submit"
-            variant={"secondary"}
-            w={"full"}
-            my={8}
-            width={"max"}
-          >
-            Preview Hypercert
-          </Button>
+        onClick={shouldweMint ? onOpen : onClose}
+        type="submit"
+        variant={"secondary"}
+        w={"full"}
+        my={8}
+        color={"green"}
+        _hover={{ bgColor: "green", textColor: "dark-green" }}
+        width={"max"}
+      >
+        Preview Hypercert
+      </Button>
       <Modal isCentered={true} isOpen={isOpen} onClose={onClose} size={"3xl"}>
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(20px)"
         />
-        <ModalContent background={'#242423'} rounded={'2xl'} p={2}>
-          <ModalHeader fontWeight={'400'}>Preview HyperCert</ModalHeader>
+        {tx?.blockHash || tx?.hash ? <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
+          <ModalHeader fontWeight={"400"}>Mint Success</ModalHeader>
+          <ModalCloseButton onClick={() => {onClose(); setTx(undefined)}} />
+          <ModalBody>
+            <Confirmation id="confirmation" />
+
+          </ModalBody>
+          </ModalContent>
+              :
+
+        <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
+          <ModalHeader fontWeight={"400"}>Preview Hypercert</ModalHeader>
           <ModalCloseButton />
-          <ModalBody >
-            <Flex flexDirection={'row'} justifyContent={'space-between'} gap={4}>
-              
-              
-                
-                
-                
-                <Box w={'360px'}>
+          <ModalBody>
+            <Flex
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              gap={4}
+            >
+              <Box w={"360px"}>
                 <PreviewData formData={formData} />
-                </Box>
-                
-              
-                <Box minW={'400px'} justifyContent={'flex-end'} alignItems={'center'}>
-                <HyperCertificate
+              </Box>
+
+              <Box
+                minW={"400px"}
+                justifyContent={"flex-end"}
+                alignItems={"center"}
+              >
+                {/* <HyperCertificate
                   formData={formData}
-                />
-                </Box>
-              
+                /> */}
+                <HypercertDisplay formData={formData} />
+              </Box>
             </Flex>
+
+            
           </ModalBody>
           <ModalFooter gap={4}>
-            <Button variant={'secondary'} bgColor={'green'} textColor={'dark-green'} onClick={() => {onClose();  wantToMint ? setWantToMint(false): onClose()}}>Cancel</Button>
+            <Button
+              variant={"secondary"}
+              bgColor={"green"}
+              textColor={"dark-green"}
+              _hover={{ textColor: "green", bgColor: "dark-green" }}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
             <Button
               type="submit"
               variant={"secondary"}
               width={"max"}
-              onClick={handleForm}
+              onClick={handleMint}
+              _hover={{ bgColor: "green", textColor: "dark-green" }}
             >
-              <ArrowRightIcon mr={2}/> Mint HyperCert
+              <ArrowRightIcon mr={2} /> Mint HyperCert
             </Button>
-          </ModalFooter>  
-        </ModalContent>
-        
+          </ModalFooter>
+        </ModalContent>}
       </Modal>
     </>
   );

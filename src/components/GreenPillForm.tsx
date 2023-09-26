@@ -10,6 +10,8 @@ import {
   Tooltip
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import _ from "lodash";
+import { imageDataAtom } from "pages";
 import { useRef, type Dispatch } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -21,15 +23,15 @@ import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
-import _ from "lodash";
+import { useAtom } from "jotai";
+
+
 
 const animatedComponents = makeAnimated();
 
 function GreenPillForm({
-  handleForm,
   setFormData,
 }: {
-  handleForm: () => boolean;
   setFormData: Dispatch<formSchema>;
 }) {
   const {
@@ -42,23 +44,24 @@ function GreenPillForm({
     resolver: zodResolver(zFormSchema),
   });
 
-  ;
+  
   const { data: chapters } = useSWR("chapters", fetchChapters);
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
 
+
+
+  const [imageData,] = useAtom(imageDataAtom);
+
   const selectedChapter = _.map(allValues)[4] as unknown as  optionType;
-
-
-
-
   const { data: members } = useSWR(
     selectedChapter,
     () => fetchMembers(selectedChapter?.value),
   );
 
 
-  
+
+
 
   const portalRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +69,7 @@ function GreenPillForm({
  
   const onSubmit = (values: formSchema) => {
     console.log(values);
+    
   };
 
   return (
@@ -242,8 +246,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-
-            <PreviewComp formData={allValues} handleForm={handleForm} />
+              <PreviewComp formData={allValues} image={imageData} />
       </Stack>
     </form>
   );
