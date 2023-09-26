@@ -38,7 +38,7 @@ export const HypercertDisplay = ({ formData }: { formData: formSchema }) => {
     
 
 
-  console.log(imageData)
+  // console.log(imageData)
 
 
   return (
