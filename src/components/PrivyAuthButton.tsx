@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import { ChevronDownIcon, CopyIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -7,47 +7,24 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Tag,
 } from "@chakra-ui/react";
-import { WalletConnector, usePrivy, useWallets } from "@privy-io/react-auth";
+import { usePrivy } from "@privy-io/react-auth";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { useRouter } from "next/router";
 import { formatAddress } from "utils/formatting";
 import { useBalance } from "wagmi";
-import ChainSwitcher from "./ChainSwitcher";
-
-
-
 const PrivyAuthButton = () => {
   const { login, ready, authenticated, user, logout } = usePrivy();
-  const { data } = useBalance({
-    address: wallet?.address as `0x${string}`,
-    chainId: Number(chainId)
-  });
   
-
-
-
   const router = useRouter();
-  const [, copyToClipboard] = useCopyToClipboard();
+  const [,copyToClipboard] = useCopyToClipboard();
 
-
+  const { data } = useBalance({
+    address: user?.wallet?.address as `0x${string}`,
+  });
 
   const address = user?.wallet?.address;
   if (!ready) return <Box>Loading...</Box>;
-  
-  
-  const handleChain = () => {
-    const nextChainId = chainId != '10' ? 10 : 5;
-    void wallet?.switchChain(nextChainId)
-  };
-  
-
-  console.log(chainId)
-  
-  
-  
-
 
   if (authenticated) {
     return (
@@ -56,46 +33,18 @@ const PrivyAuthButton = () => {
           as={Button}
           rightIcon={<ChevronDownIcon />}
           bgColor="dark-green"
-          color="green"
+          color='green'
           _hover={{ bgColor: "mid-green", textColor: "dark-green" }}
           _active={{ bgColor: "mid-green", textColor: "dark-green" }}
         >
-          {`Logged in as `}
-          {typeof ensName == 'string' ? ensName : formatAddress(wallet?.address ?? "") }
+          {`Logged in as ` + formatAddress(address ?? "")}
         </MenuButton>
-        <MenuList p={2} background={"#242423"} textColor={'white'}>
-          <MenuItem
-            onClick={() => copyToClipboard(user?.wallet?.address as string)}
-            p={2}
-
-            bg={'transparent'}
-            rounded={'md'}
-            _hover={{ bgColor: 'green', color: 'dark-green', fontWeight: 'medium' }}
-          >
-            <CopyIcon mr={2} /> Copy Wallet Address
-
+        <MenuList >
+          <MenuItem onClick={() => copyToClipboard(user?.wallet?.address as string)}><CopyIcon mr={2}/> Copy Wallet Address</MenuItem>
+          <MenuItem>{data?.formatted} {data?.symbol}</MenuItem>
+          <MenuItem onClick={() => router.push('/my-hypercerts')}> My Hypercerts</MenuItem>
+          <MenuItem onClick={logout}>Logout 
           </MenuItem>
-
-          <MenuItem p={2}
-            bg={'transparent'}
-            rounded={'md'}
-            _hover={{ bgColor: 'green', color: 'dark-green', fontWeight: 'medium' }}>
-            {data?.formatted.substring(0, 8)} {data?.symbol}
-          </MenuItem>
-          <ChainSwitcher />
-          <MenuItem
-            bg={'transparent'}
-            _hover={{ bgColor: 'green', color: 'dark-green', fontWeight: 'medium' }}
-            onClick={() => router.push("/my-hypercerts")}>
-            {" "}
-            My Hypercerts
-          </MenuItem >
-          <MenuItem onClick={logout} p={2}
-            rounded={'md'}
-            bg={'transparent'}
-
-            _hover={{ bgColor: 'green', color: 'dark-green', fontWeight: 'medium' }}
-          >Logout</MenuItem>
         </MenuList>
       </Menu>
     );
