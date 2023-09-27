@@ -48,12 +48,18 @@ function Header() {
         />
       </Link>
       <HStack gap={2}>
-      <Link as={NextLink} href={"/my-hypercerts"} variant="primary" textColor={"dark-green"} _hover={{color:'mid-green'}} fontWeight={'semibold'}>
-        
+        <Link
+          as={NextLink}
+          href={"/my-hypercerts"}
+          variant="primary"
+          textColor={"dark-green"}
+          _hover={{ color: "mid-green" }}
+          fontWeight={"semibold"}
+        >
           Hypercert Gallery
-      </Link>
+        </Link>
 
-      <PrivyAuthButton />
+        <PrivyAuthButton />
       </HStack>
     </Flex>
   );
