@@ -56,8 +56,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             siteName: title,
           }}
           twitter={{
-            handle: "@supermodularxyz",
-            site: "@supermodularxyz",
+            handle: "@greenpillnet",
+            site: "https://greenpill.network/",
             cardType: "summary_large_image",
           }}
         />
