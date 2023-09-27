@@ -1,7 +1,7 @@
-import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
-import { configureChains } from 'wagmi';
-import { goerli, optimism } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
+import { PrivyWagmiConnector } from "@privy-io/wagmi-connector";
+import { configureChains } from "wagmi";
+import { goerli, optimism, optimismGoerli } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 import type { User } from "@privy-io/react-auth";
@@ -11,11 +11,18 @@ import { NextSeo } from "next-seo";
 import { type AppType } from "next/dist/shared/lib/utils";
 import theme from "utils/theme";
 import site from "../config/site";
-import { Provider } from 'jotai'
+import { Provider } from "jotai";
 import { ChakraProvider } from "@chakra-ui/react";
 
-export const wagmiConfig = configureChains([optimism], [alchemyProvider({apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string}), publicProvider()]);
-
+export const wagmiConfig = configureChains(
+  [goerli, optimism, optimismGoerli],
+  [
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string,
+    }),
+    publicProvider(),
+  ]
+);
 
 const handleLogin = (user: User) => {
   console.log(`User ${user?.id} logged in!`);
@@ -55,26 +62,24 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           }}
         />
         <QueryClientProvider client={queryClient}>
-          
-            <PrivyProvider
-              appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
-              onSuccess={handleLogin}
-              config={{
-                loginMethods: ['wallet', 'email', 'google', 'discord',],
-                appearance: {
-                  theme: "dark",
-                  accentColor: "#C2E812",
-                  logo: "https://greenpill.network/src/images/greenpill-logo.svg",
-                },
-              }}
-            >
-              <PrivyWagmiConnector wagmiChainsConfig={wagmiConfig}>
-                <Provider>
-              <Component {...pageProps} />
+          <PrivyProvider
+            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
+            onSuccess={handleLogin}
+            config={{
+              loginMethods: ["wallet", "email", "google", "discord"],
+              appearance: {
+                theme: "dark",
+                accentColor: "#C2E812",
+                logo: "https://greenpill.network/src/images/greenpill-logo.svg",
+              },
+            }}
+          >
+            <PrivyWagmiConnector wagmiChainsConfig={wagmiConfig}>
+              <Provider>
+                <Component {...pageProps} />
               </Provider>
-              </PrivyWagmiConnector>
-            </PrivyProvider>
-    
+            </PrivyWagmiConnector>
+          </PrivyProvider>
         </QueryClientProvider>
       </ChakraProvider>
     </>
