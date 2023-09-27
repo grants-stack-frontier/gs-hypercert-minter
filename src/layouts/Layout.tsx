@@ -1,10 +1,9 @@
 import { Analytics } from "@vercel/analytics/react";
-import { Flex, Img, Link, Text, VStack } from "@chakra-ui/react";
+import { Flex, Img, Link, Text, VStack, HStack } from "@chakra-ui/react";
 import PrivyAuthButton from "components/PrivyAuthButton";
 import Head from "next/head";
 import NextLink from "next/link";
 import site from "../config/site";
-import { Button } from "@chakra-ui/react";
 
 export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -48,18 +47,20 @@ function Header() {
           height={"50px"}
         />
       </Link>
-      <Link href={"/my-hypercerts"}>
-        <Button
-          bgColor="dark-green"
-          color="green"
-          _hover={{ bgColor: "mid-green", textColor: "dark-green" }}
-          _active={{ bgColor: "mid-green", textColor: "dark-green" }}
+      <HStack gap={2}>
+        <Link
+          as={NextLink}
+          href={"/my-hypercerts"}
+          variant="primary"
+          textColor={"dark-green"}
+          _hover={{ color: "mid-green" }}
+          fontWeight={"semibold"}
         >
           Hypercert Gallery
-        </Button>
-      </Link>
+        </Link>
 
-      <PrivyAuthButton />
+        <PrivyAuthButton />
+      </HStack>
     </Flex>
   );
 }
