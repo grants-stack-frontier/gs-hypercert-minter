@@ -85,7 +85,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
         {tx?.hash && isSuccess ? (
           // {true ?
           <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
-            <ModalHeader fontWeight={"400"}>Mint Success</ModalHeader>
+            <ModalHeader fontWeight={"600"} color={'white'}>Mint Success</ModalHeader>
             <ModalCloseButton
               onClick={() => {
                 onClose();
@@ -97,29 +97,21 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
             </ModalBody>
           </ModalContent>
         ) : (
-          <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
-            <ModalHeader fontWeight={"400"}>Preview Hypercert</ModalHeader>
+          <ModalContent background={"#242423"} rounded={"3xl"} p={2} width={'max'}>
+            <ModalHeader fontWeight={"600"} color={'white'}>Preview Hypercert</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+            <ModalBody maxWidth={'100vw'}>
               <Flex
-                flexDirection={"row"}
                 justifyContent={"space-between"}
                 gap={4}
+                flexWrap={'wrap'}
               >
                 <Box w={"360px"}>
-                  <PreviewData formData={formData} />
+                  <PreviewData formData={formData}/>
                 </Box>
 
-                <Box
-                  minW={"400px"}
-                  justifyContent={"flex-end"}
-                  alignItems={"center"}
-                >
-                  {/* <HyperCertificate
-                  formData={formData}
-                /> */}
                   <HypercertDisplay formData={formData} />
-                </Box>
+
               </Flex>
             </ModalBody>
             <ModalFooter gap={4}>
