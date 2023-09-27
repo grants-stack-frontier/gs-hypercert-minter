@@ -41,7 +41,7 @@ function Header() {
     >
       <Link as={NextLink} href={"/"} variant="primary" textColor={"dark-green"}>
         <Img
-          src={"/logo.svg"}
+          src={"/logo.png"}
           alt="Green pill logo"
           width={"146px"}
           height={"50px"}

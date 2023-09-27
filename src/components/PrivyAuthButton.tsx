@@ -7,8 +7,9 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tag,
 } from "@chakra-ui/react";
-import { usePrivy } from "@privy-io/react-auth";
+import { WalletConnector, usePrivy, useWallets } from "@privy-io/react-auth";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { useRouter } from "next/router";
 import { formatAddress } from "utils/formatting";
@@ -19,10 +20,13 @@ import ChainSwitcher from "./ChainSwitcher";
 
 const PrivyAuthButton = () => {
   const { login, ready, authenticated, user, logout } = usePrivy();
-
   const { data } = useBalance({
-    address: user?.wallet?.address as `0x${string}`,
+    address: wallet?.address as `0x${string}`,
+    chainId: Number(chainId)
   });
+  
+
+
 
   const router = useRouter();
   const [, copyToClipboard] = useCopyToClipboard();
@@ -31,6 +35,19 @@ const PrivyAuthButton = () => {
 
   const address = user?.wallet?.address;
   if (!ready) return <Box>Loading...</Box>;
+  
+  
+  const handleChain = () => {
+    const nextChainId = chainId != '10' ? 10 : 5;
+    void wallet?.switchChain(nextChainId)
+  };
+  
+
+  console.log(chainId)
+  
+  
+  
+
 
   if (authenticated) {
     return (
@@ -43,7 +60,8 @@ const PrivyAuthButton = () => {
           _hover={{ bgColor: "mid-green", textColor: "dark-green" }}
           _active={{ bgColor: "mid-green", textColor: "dark-green" }}
         >
-          {`Logged in as ` + formatAddress(address ?? "")}
+          {`Logged in as `}
+          {typeof ensName == 'string' ? ensName : formatAddress(wallet?.address ?? "") }
         </MenuButton>
         <MenuList p={2} background={"#242423"} textColor={'white'}>
           <MenuItem
@@ -55,6 +73,7 @@ const PrivyAuthButton = () => {
             _hover={{ bgColor: 'green', color: 'dark-green', fontWeight: 'medium' }}
           >
             <CopyIcon mr={2} /> Copy Wallet Address
+
           </MenuItem>
 
           <MenuItem p={2}

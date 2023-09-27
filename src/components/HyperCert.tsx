@@ -1,3 +1,5 @@
+// To be deprecated, not in use, for reference only
+
 import { Divider, Heading, HStack, Tag, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
 import Image from "next/image";
