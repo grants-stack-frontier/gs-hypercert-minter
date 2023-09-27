@@ -1,5 +1,4 @@
 import {
-    Box,
     MenuItem,
     Modal,
     ModalBody,
@@ -9,10 +8,10 @@ import {
     ModalOverlay,
     useDisclosure
 } from '@chakra-ui/react';
-import { useNetwork } from "wagmi";
 import { useWallets } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
 import type { Chain } from "wagmi";
+import { useNetwork } from "wagmi";
 
 export default function ChainSwitcher(){
     
