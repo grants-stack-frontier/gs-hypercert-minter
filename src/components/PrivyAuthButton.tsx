@@ -8,17 +8,28 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { usePrivy } from "@privy-io/react-auth";
+import {usePrivy, useWallets} from "@privy-io/react-auth";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { useRouter } from "next/router";
 import { formatAddress } from "utils/formatting";
 import { useBalance } from "wagmi";
 import ChainSwitcher from "./ChainSwitcher";
+import {useEffect} from "react";
+import {usePrivyWagmi} from "@privy-io/wagmi-connector";
 
 
 
 const PrivyAuthButton = () => {
   const { login, ready, authenticated, user, logout } = usePrivy();
+  const { setActiveWallet  } = usePrivyWagmi();
+  const { wallets } = useWallets();
+
+  useEffect(() => {
+    const activeWallet = wallets.find(w => w.address === user?.wallet?.address);
+    if(activeWallet){
+      setActiveWallet(activeWallet);
+    }
+  }, [wallets.length, user?.wallet?.address, setActiveWallet, authenticated]);
 
   const { data } = useBalance({
     address: user?.wallet?.address as `0x${string}`,

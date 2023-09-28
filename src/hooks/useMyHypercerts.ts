@@ -1,23 +1,25 @@
 import { useHypercertClient } from "./useHypercert";
-import { usePrivy } from "@privy-io/react-auth";
 import { useQuery } from "@tanstack/react-query";
+import {usePrivyWagmi} from "@privy-io/wagmi-connector";
+import {useChainId} from "wagmi";
 
 export const useMyHypercerts = () => {
-  const { user } = usePrivy();
+  const { wallet} = usePrivyWagmi();
   const client = useHypercertClient();
-  console.log("client", client);
-  const address = user?.wallet?.address;
+  const chainId = useChainId();
+  const address = wallet?.address;
 
   return useQuery(
-    ["my-hypercerts", address],
+    ["my-hypercerts", address, chainId],
     async () => {
       if (!client || !address) {
         return null;
       }
-      return client.indexer.claimsByOwner(address);
+      const result = await client.indexer.claimsByOwner(address);
+      return result;
     },
     {
-      enabled: !!client && !!address,
+      enabled: !!client && !!address
     }
   );
 };
