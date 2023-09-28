@@ -81,11 +81,10 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
       >
         Preview Hypercert
       </Button>
-      {/* <Modal isCentered={true} isOpen={true} onClose={onClose} size={"3xl"}> */}
+
       <Modal isCentered={true} isOpen={isOpen} onClose={onClose} size={"3xl"}>
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(20px)" />
         {tx?.hash ? (
-          // {true ? (
           isSuccess ? (
             <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
               <ModalHeader fontWeight={"600"} color={"white"}>
@@ -102,12 +101,24 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
               </ModalBody>
             </ModalContent>
           ) : (
-            <ModalContent background={"#242423"} rounded={"2xl"} p={2}>
-              <ModalHeader fontWeight={"600"} color={"white"}>
+            <ModalContent
+              background={"#242423"}
+              rounded={"2xl"}
+              p={2}
+              height="400px"
+            >
+              <ModalHeader
+                fontWeight={"600"}
+                color={"white"}
+                textAlign="center"
+                fontSize={"300%"}
+              >
                 Minting...
               </ModalHeader>
               <ModalBody>
-                <Spinner />
+                <Flex justify="center" align="center" height="100%">
+                  <Spinner size="xl" thickness="4px" color="green" />
+                </Flex>
               </ModalBody>
             </ModalContent>
           )
