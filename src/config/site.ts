@@ -1,7 +1,7 @@
 const site = {
-  title: "GreenPill.network",
+  title: "Green Pill Network Impactooorrr",
   description:
-    "Gratitude is the lifeblood of a regenerative team culture. If your coworker did something great, mint them a gratitude hypercert to show your appreciation for their work!",
+    "We’re building a CoordiNation across Nations & Cultures. If you did something regen, mint yourself or team a Greenpill hypercert to show your proof of impact",
   url: "https://GreenPill.network",
 };
 

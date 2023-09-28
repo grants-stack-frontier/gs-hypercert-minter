@@ -10,7 +10,7 @@ const PreviewData: React.FC<PreviewProps> = ({ formData }) => {
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
 
   return (
-    <Box borderWidth="1px" w={'full'}  p={4} borderRadius="lg" _hover={{borderColor: 'green', backgroundColor:`rgba(0, 0, 0, 0.1)`}}>
+    <Box borderWidth="1px"   p={4} borderRadius="lg" _hover={{borderColor: 'green', backgroundColor:`rgba(0, 0, 0, 0.1)`}}>
       <Text mt={4} fontSize="lg" fontWeight="bold">Name:</Text>
       <Text>{selectedChapter?.label}</Text>
 

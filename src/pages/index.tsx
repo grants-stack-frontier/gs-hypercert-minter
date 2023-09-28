@@ -19,7 +19,6 @@ export const imageDataAtom = atom('');
 
 export function validateFormData(formData: formSchema, image: string){
   
-  
 
   const metadata = createClaim(formData, image);
 
@@ -42,19 +41,13 @@ export function validateFormData(formData: formSchema, image: string){
 
 const Home: NextPage =  () => {
 
-  
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [formData, setFormData] = useState<formSchema>();
   const hypercertRef = useRef<HTMLDivElement>(null);
   
-  
-  
-
-  
 
   return (
     <LandingLayout>
-      {(
         <Box
           my={10}
           p={20}
@@ -66,11 +59,9 @@ const Home: NextPage =  () => {
         >
           <GreenPillForm setFormData={setFormData}/>
           <Box  ref={hypercertRef} height={'max'}>
-          {/* <HyperCertificate formData={formData as formSchema} /> */}
           <HypercertDisplay formData={formData as formSchema} />
           </Box>
         </Box>
-      )}
     </LandingLayout>
   );
 };
