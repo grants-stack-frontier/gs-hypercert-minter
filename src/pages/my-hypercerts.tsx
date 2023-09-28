@@ -7,7 +7,11 @@ const MyHypercertsPage = () => {
   const { data, isLoading } = useMyHypercerts();
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <LandingLayout>
+        <Spinner />
+      </LandingLayout>
+    );
   }
 
   return (
