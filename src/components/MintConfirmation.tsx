@@ -3,12 +3,14 @@ import { Button, HStack, Heading, VStack } from "@chakra-ui/react";
 import Lottie from "lottie-react";
 import confirmation from "utils/confirmation.json";
 import Link from "next/link";
+import type { Chain } from "wagmi";
 
-type MintProps = {
+interface MintConfirmationProps {
   txHash: string;
-};
+  chain?: Chain & { unsupported?: boolean };
+}
 
-export const MintConfirmation = (props: MintProps) => {
+export const MintConfirmation = (props: MintConfirmationProps) => {
   const { txHash } = props;
 
   return (
@@ -30,19 +32,26 @@ export const MintConfirmation = (props: MintProps) => {
       <HStack m={8}>
         <Link href={`/my-hypercerts`}>
           <Button as="a" variant={"secondary"}>
-            View Hypercert
+            View Hypercerts
           </Button>
         </Link>
-        <Link href={`https://goerli.etherscan.io/tx/${txHash}`}>
+        <Link
+          href={
+            props?.chain?.network
+              ? `https://${props.chain.network}.etherscan.io/tx/${txHash}`
+              : ""
+          }
+        >
           <Button
             as="a"
             gap={2}
             variant={"secondary"}
             bgColor={"green"}
             textColor={"dark-green"}
+            disabled={!props?.chain?.network}
           >
             <ExternalLinkIcon boxSize={4} fontWeight={"medium"} />
-            Verify
+            View Transaction
           </Button>
         </Link>
       </HStack>
