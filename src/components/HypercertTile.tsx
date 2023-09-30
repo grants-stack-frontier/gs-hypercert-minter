@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { HStack, VStack } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import {useChainId} from "wagmi";
 
 // const chainNameToChainId = (chainName: string) => {
 //   console.log(chainName);
@@ -19,12 +20,12 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 export const HypercertTile = ({ uri, id }: Omit<Claim, 'creation'> ) => {
   const { data } = useGetHypercertData(uri ?? '')
+  const chainId = useChainId();
 
   if (!data) {
     return null;
   }
 
-  const chainId = 10;
   return (
     <VStack p={4} bgColor={'white'} shadow={'base'} border={'default-grey'} borderRadius={12} justifyContent={'flex-end'} alignItems={'flex-end'} _hover={{backgroundColor:'gray.50'}}>
       
