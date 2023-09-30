@@ -28,7 +28,7 @@ export const useHypercertClient = () => {
       setHyperCertClient(hyperCertClient);
     };
 
-    loadHyperCertClient();
+    void loadHyperCertClient();
   }, [wallets.length, ready, chainId]);
 
   return hyperCertClient;

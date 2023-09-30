@@ -27,7 +27,7 @@ const PrivyAuthButton = () => {
   useEffect(() => {
     const activeWallet = wallets.find(w => w.address === user?.wallet?.address);
     if(activeWallet){
-      setActiveWallet(activeWallet);
+      void setActiveWallet(activeWallet);
     }
   }, [wallets.length, user?.wallet?.address, setActiveWallet, authenticated]);
 
