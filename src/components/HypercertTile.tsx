@@ -32,7 +32,7 @@ export const HypercertTile = ({ uri, id }: Omit<Claim, 'creation'> ) => {
       
       <Image src={data.image} alt={data.name} width={320} height={400}/>
       <HStack  justifyContent={'flex-end'}  w={'max'} px={4} py={2} _hover={{background: 'green', fontWeight: 'medium', borderRadius:'full', textColor: 'dark-green'}}>
-        <Link  href={`https://grants-stack-builder-orpin.vercel.app/#/projects/new?chainId=${chainId}&hypercertId=${id}`} color="dark-green" target={'_blank'}>
+        <Link  href={`https://grants-builder.greenpill.network//#/projects/new?chainId=${chainId}&hypercertId=${id}`} color="dark-green" target={'_blank'}>
           <ExternalLinkIcon boxSize={4}/> Apply
         </Link>
       </HStack>
