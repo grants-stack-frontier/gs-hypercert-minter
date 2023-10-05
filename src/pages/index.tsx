@@ -8,60 +8,86 @@ import { validateClaimData, validateMetaData } from "@hypercerts-org/sdk";
 import GreenPillForm from "components/GreenPillForm";
 import { HypercertDisplay } from "components/HypercertDisplay";
 import type { NextPage } from "next";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { formSchema } from "utils/types";
 import { LandingLayout } from "../layouts/Layout";
 
 import { createClaim } from "utils/createClaim";
 import { atom } from "jotai";
+import { usePrivy } from "@privy-io/react-auth";
+import { useNetwork } from "wagmi";
 
-export const imageDataAtom = atom('');
+export const imageDataAtom = atom("");
 
-export function validateFormData(formData: formSchema, image: string){
-  
-
+export function validateFormData(formData: formSchema, image: string) {
   const metadata = createClaim(formData, image);
 
-  if(!metadata){
+  if (!metadata) {
     return false;
   }
 
-  const validClaim =  validateClaimData(metadata.hypercert as HypercertClaimdata);
+  const validClaim = validateClaimData(
+    metadata.hypercert as HypercertClaimdata
+  );
   const validMetadata = validateMetaData(metadata as HypercertMetadata);
   const isValid = validClaim.valid && validMetadata.valid;
-
-  console.log("validClaim", validClaim);
-  console.log("validMetadata", validMetadata);
-  console.log("isValid", isValid);
 
   return isValid ? metadata : false;
 }
 
-
-
-const Home: NextPage =  () => {
-
+const Home: NextPage = () => {
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [formData, setFormData] = useState<formSchema>();
   const hypercertRef = useRef<HTMLDivElement>(null);
-  
+
+  const { chain, chains } = useNetwork();
+  const { authenticated, user } = usePrivy();
+
+  const [authenticatedAndCorrectChain, setAuthenticatedAndCorrectChain] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    const currentId = chain?.id;
+    if (
+      user &&
+      authenticated &&
+      chains.find((chain) => chain.id === currentId)
+    ) {
+      setAuthenticatedAndCorrectChain(true);
+    } else {
+      setAuthenticatedAndCorrectChain(false);
+    }
+  }, [user, authenticated, chains, chain]);
 
   return (
     <LandingLayout>
+      {!authenticatedAndCorrectChain && (
         <Box
-          my={10}
-          p={20}
-          w="full"
-          justifyContent={"center"}
-          gap={20}
-          display={"flex"}
+          px={5}
+          fontSize="xl"
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          <GreenPillForm setFormData={setFormData}/>
-          <Box  ref={hypercertRef} height={'max'}>
-          <HypercertDisplay formData={formData as formSchema} />
-          </Box>
+          Please connect above to either Optimism, Optimism-Goerli, or Goerli.
         </Box>
+      )}
+      <Box
+        my={10}
+        p={20}
+        w="full"
+        justifyContent={"center"}
+        gap={20}
+        display={"flex"}
+        flexDir={isLargerThan600 ? "row" : "column-reverse"}
+      >
+        <GreenPillForm
+          setFormData={setFormData}
+          authenticatedAndCorrectChain={authenticatedAndCorrectChain}
+          chain={chain}
+        />
+        <Box ref={hypercertRef} height={"max"}>
+          <HypercertDisplay formData={formData as formSchema} />
+        </Box>
+      </Box>
     </LandingLayout>
   );
 };
