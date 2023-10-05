@@ -5,9 +5,10 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   Stack,
-  Tooltip
+  Tooltip,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import _ from "lodash";
@@ -24,16 +25,22 @@ import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
 import { useAtom } from "jotai";
-
-
+import type { Chain } from "wagmi";
+// import { useNetwork } from "wagmi";
 
 const animatedComponents = makeAnimated();
 
+interface GreenPillFormProps {
+  setFormData: Dispatch<formSchema>;
+  authenticatedAndCorrectChain: boolean;
+  chain: Chain | undefined;
+}
+
 function GreenPillForm({
   setFormData,
-}: {
-  setFormData: Dispatch<formSchema>;
-}) {
+  authenticatedAndCorrectChain,
+  chain,
+}: GreenPillFormProps) {
   const {
     control,
     handleSubmit,
@@ -43,33 +50,21 @@ function GreenPillForm({
   } = useForm<formSchema>({
     resolver: zodResolver(zFormSchema),
   });
-
-  
   const { data: chapters } = useSWR("chapters", fetchChapters);
   const { data: tags } = useSWR("tags", fetchTags);
   const allValues = watch();
-
-
-
-  const [imageData,] = useAtom(imageDataAtom);
-
-  const selectedChapter = _.map(allValues)[4] as unknown as  optionType;
-  const { data: members } = useSWR(
-    selectedChapter,
-    () => fetchMembers(selectedChapter?.value),
+  const selectedChapter = _.map(allValues)[4] as unknown as optionType;
+  const { data: members } = useSWR(selectedChapter, () =>
+    fetchMembers(selectedChapter?.value)
   );
+  useSWR(allValues, () => setFormData(allValues));
 
-
-
-
+  const [imageData] = useAtom(imageDataAtom);
 
   const portalRef = useRef<HTMLDivElement>(null);
 
-  useSWR(allValues, () => setFormData(allValues));
- 
   const onSubmit = (values: formSchema) => {
     console.log(values);
-    
   };
 
   return (
@@ -79,12 +74,10 @@ function GreenPillForm({
     >
       <Stack ref={portalRef} gap={4}>
         <FormControl>
+          <HStack>TEST</HStack>
           <FormLabel fontWeight={550}>
             Name of the chapter
-            <Tooltip
-              label="What's the name of your chapter?"
-              fontSize="md"
-            >
+            <Tooltip label="What's the name of your chapter?" fontSize="md">
               <InfoIcon ml={2} />
             </Tooltip>
           </FormLabel>
@@ -149,9 +142,7 @@ function GreenPillForm({
           id="workTimeframeStart"
           isInvalid={!!errors.workTimeframeStart}
         >
-          <FormLabel fontWeight={550}>
-            Work Timeframe Start
-          </FormLabel>
+          <FormLabel fontWeight={550}>Work Timeframe Start</FormLabel>
           <Input
             placeholder="Work Timeframe Start"
             type="date"
@@ -161,7 +152,6 @@ function GreenPillForm({
             {errors.workTimeframeStart?.message as string}
           </FormErrorMessage>
         </FormControl>
-
         <FormControl
           id="workTimeframeEnd"
           isInvalid={!!errors.workTimeframeEnd}
@@ -176,7 +166,6 @@ function GreenPillForm({
             {errors.workTimeframeEnd?.message as string}
           </FormErrorMessage>
         </FormControl>
-
         <FormControl id="externalUrl" isInvalid={!!errors.externalUrl}>
           <FormLabel fontWeight={550}>
             External URL{" "}
@@ -192,7 +181,6 @@ function GreenPillForm({
             {errors.externalUrl?.message as string}
           </FormErrorMessage>
         </FormControl>
-
         <FormControl id="description" isInvalid={!!errors.description}>
           <FormLabel fontWeight={550}>
             Description
@@ -212,7 +200,6 @@ function GreenPillForm({
             {errors.description?.message as string}
           </FormErrorMessage>
         </FormControl>
-
         <FormControl>
           <FormLabel fontWeight={550}>
             Contributors
@@ -246,7 +233,12 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-              <PreviewComp formData={allValues} image={imageData} />
+        <PreviewComp
+          formData={allValues}
+          image={imageData}
+          authenticatedAndCorrectChain={authenticatedAndCorrectChain}
+          chain={chain}
+        />
       </Stack>
     </form>
   );
