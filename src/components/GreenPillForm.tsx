@@ -26,7 +26,6 @@ import { zFormSchema } from "utils/types";
 import PreviewComp from "./Preview";
 import { useAtom } from "jotai";
 import type { Chain } from "wagmi";
-// import { useNetwork } from "wagmi";
 
 const animatedComponents = makeAnimated();
 
@@ -176,7 +175,7 @@ function GreenPillForm({
               <InfoIcon ml={2} />
             </Tooltip>
           </FormLabel>
-          <Input placeholder="URL" type="url" {...register("externalUrl")} />
+          <Input placeholder="URL" {...register("externalUrl")} />
           <FormErrorMessage>
             {errors.externalUrl?.message as string}
           </FormErrorMessage>
