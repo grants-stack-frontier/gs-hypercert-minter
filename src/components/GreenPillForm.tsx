@@ -23,7 +23,7 @@ import { fetchChapters, fetchMembers, fetchTags } from "utils/db";
 import { customStyles } from "utils/styles";
 import type { formSchema, optionType } from "utils/types";
 import { zFormSchema } from "utils/types";
-import PreviewComp from "./Preview";
+import Preview from "./Preview";
 import { useAtom } from "jotai";
 import type { Chain } from "wagmi";
 
@@ -232,7 +232,7 @@ function GreenPillForm({
             control={control}
           />
         </FormControl>
-        <PreviewComp
+        <Preview
           formData={allValues}
           image={imageData}
           authenticatedAndCorrectChain={authenticatedAndCorrectChain}

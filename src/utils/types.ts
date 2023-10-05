@@ -22,9 +22,9 @@ export const zFormSchema = z
     }),
     externalUrl: z
       .string()
-      .url({
-        message: "Invalid URL format URL must start with http:// or https://",
-      })
+      // .url({
+      //   message: "Invalid URL format URL must start with http:// or https://",
+      // })
       .refine((value) => /^https?:\/\//.test(value), {
         message: "URL must start with http:// or https://",
       }),

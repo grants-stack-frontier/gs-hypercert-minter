@@ -19,7 +19,17 @@ import { useNetwork } from "wagmi";
 
 export const imageDataAtom = atom("");
 
+function isValidURL(url: string) {
+  const regex = /^https?:\/\/[^ "]+$/;
+  return regex.test(url);
+}
 export function validateFormData(formData: formSchema, image: string) {
+  if (!isValidURL(formData.externalUrl)) {
+    console.error(
+      "Invalid URL format. URL must start with http:// or https://"
+    );
+    return false;
+  }
   const metadata = createClaim(formData, image);
 
   if (!metadata) {

@@ -28,14 +28,14 @@ import { type formSchema } from "utils/types";
 import { MintConfirmation } from "./MintConfirmation";
 import { useWaitForTransaction, type Chain } from "wagmi";
 
-interface PreviewCompProps {
+interface PreviewProps {
   formData: formSchema;
   image: string;
   authenticatedAndCorrectChain: boolean;
   chain: Chain | undefined;
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({
+const Preview: React.FC<PreviewProps> = ({
   formData,
   image,
   authenticatedAndCorrectChain,
@@ -45,6 +45,7 @@ const PreviewComp: React.FC<PreviewCompProps> = ({
   const { wallets } = useWallets();
 
   const [tx, setTx] = useState<ContractTransaction>();
+  const [loading, setLoading] = useState(false);
 
   const shouldweMint = validateFormData(formData, image as unknown as string);
 
@@ -56,19 +57,25 @@ const PreviewComp: React.FC<PreviewCompProps> = ({
     let transaction;
 
     if (chain && shouldweMint) {
-      transaction = await mintClaim(
-        wallets,
-        shouldweMint as unknown as HypercertMetadata,
-        true,
-        chain?.id
-      );
-    }
+      try {
+        setLoading(true);
+        transaction = await mintClaim(
+          wallets,
+          shouldweMint as unknown as HypercertMetadata,
+          true,
+          chain?.id
+        );
 
-    if (transaction) {
-      console.log("transaction", transaction);
-      setTx(transaction);
+        if (transaction) {
+          setLoading(false);
+          console.log("transaction", transaction);
+          setTx(transaction);
+        }
+      } catch (e) {
+        setLoading(false);
+        return new Error("Something went wrong");
+      }
     }
-    return new Error("Something went wrong");
   };
 
   return (
@@ -170,7 +177,8 @@ const PreviewComp: React.FC<PreviewCompProps> = ({
                 onClick={handleMint}
                 _hover={{ bgColor: "green", textColor: "dark-green" }}
               >
-                <ArrowRightIcon mr={2} /> Mint HyperCert
+                <ArrowRightIcon mr={2} />
+                {loading ? <>Confirm in your wallet</> : <> Mint HyperCert</>}
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -180,4 +188,4 @@ const PreviewComp: React.FC<PreviewCompProps> = ({
   );
 };
 
-export default PreviewComp;
+export default Preview;
