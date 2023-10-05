@@ -18,11 +18,14 @@ const MyHypercertsPage = () => {
     <LandingLayout>
       <Center>
         <SimpleGrid maxWidth={960} columns={3} spacing={4} m={10}>
-          {data?.claims.map((claim) => (
-            <GridItem key={claim.id}>
-              {claim.uri ? <HypercertTile {...claim} /> : null}
-            </GridItem>
-          ))}
+          {data?.claims
+            .slice()
+            .reverse()
+            .map((claim) => (
+              <GridItem key={claim.id}>
+                {claim.uri ? <HypercertTile {...claim} /> : null}
+              </GridItem>
+            ))}
         </SimpleGrid>
       </Center>
     </LandingLayout>
