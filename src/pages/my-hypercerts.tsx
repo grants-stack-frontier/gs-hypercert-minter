@@ -13,7 +13,7 @@ import { LandingLayout } from "layouts/Layout";
 import Link from "next/link";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useChainId } from "wagmi";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 
 type ClaimsByOwnerQuery = {
   claims: Array<
@@ -44,26 +44,27 @@ const MyHypercertsPage = () => {
   const [data, setData] = useState<ClaimsByOwnerQuery | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const loadHyperCertClient = useCallback(async () => {
+    if (!chainId || !wallets.length) {
+      console.log("no chain or wallets");
+      setHyperCertClient(null);
+      return;
+    }
+    const wallet = wallets.find((wallet) => wallet.isConnected);
+    const provider = await wallet?.getEthersProvider();
+    if (!provider) return;
+    const signer = provider.getSigner(wallet?.address);
+    const client = new HypercertClient({
+      chainId: chainId,
+      operator: signer,
+      ...tokens,
+    });
+    setHyperCertClient(client);
+  }, [chainId, wallets]);
+
   useEffect(() => {
-    const loadHyperCertClient = async () => {
-      if (!chainId || !wallets.length) {
-        console.log("no chain or wallets");
-        setHyperCertClient(null);
-        return;
-      }
-      const wallet = wallets.find((wallet) => wallet.isConnected);
-      const provider = await wallet?.getEthersProvider();
-      if (!provider) return;
-      const signer = provider.getSigner(wallet?.address);
-      const client = new HypercertClient({
-        chainId: chainId,
-        operator: signer,
-        ...tokens,
-      });
-      setHyperCertClient(client);
-    };
     void loadHyperCertClient();
-  }, [wallets.length, ready, chainId, wallets]);
+  }, [wallets.length, ready, loadHyperCertClient]);
 
   useEffect(() => {
     const fetchClaims = async () => {
