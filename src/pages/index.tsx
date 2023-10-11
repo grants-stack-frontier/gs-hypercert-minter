@@ -14,8 +14,10 @@ import { LandingLayout } from "../layouts/Layout";
 
 import { createClaim } from "utils/createClaim";
 import { atom } from "jotai";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useNetwork } from "wagmi";
+import { usePrivyWagmi } from "@privy-io/wagmi-connector";
+import { useAuthenticationAndChainCheck } from "hooks/useAuthenticationAndCorrectChain";
 
 export const imageDataAtom = atom("");
 
@@ -25,9 +27,6 @@ function isValidURL(url: string) {
 }
 export function validateFormData(formData: formSchema, image: string) {
   if (!isValidURL(formData.externalUrl)) {
-    console.error(
-      "Invalid URL format. URL must start with http:// or https://"
-    );
     return false;
   }
   const metadata = createClaim(formData, image);
@@ -51,23 +50,44 @@ const Home: NextPage = () => {
   const hypercertRef = useRef<HTMLDivElement>(null);
 
   const { chain, chains } = useNetwork();
-  const { authenticated, user } = usePrivy();
+  const { user } = usePrivy();
 
-  const [authenticatedAndCorrectChain, setAuthenticatedAndCorrectChain] =
-    useState<boolean>(false);
+  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
+  const { wallets } = useWallets();
+  const authenticatedAndCorrectChain = useAuthenticationAndChainCheck();
 
   useEffect(() => {
     const currentId = chain?.id;
-    if (
-      user &&
-      authenticated &&
-      chains.find((chain) => chain.id === currentId)
-    ) {
-      setAuthenticatedAndCorrectChain(true);
-    } else {
-      setAuthenticatedAndCorrectChain(false);
-    }
-  }, [user, authenticated, chains, chain]);
+    const setWallet = async () => {
+      if (!activeWallet) {
+        const foundWallet = wallets.find(
+          (w) => w.address === user?.wallet?.address
+        );
+
+        const connectedToSupportedChain = chains.find(
+          (chain) => chain.id === currentId
+        );
+        if (foundWallet && connectedToSupportedChain) {
+          try {
+            await setActiveWallet(foundWallet);
+          } catch (error) {
+            console.error("Error setting active wallet:", error);
+          }
+        }
+      }
+    };
+
+    setWallet().catch((error) => {
+      console.error("Error in setWallet:", error);
+    });
+  }, [
+    wallets,
+    user?.wallet?.address,
+    activeWallet,
+    chain?.id,
+    chains,
+    setActiveWallet,
+  ]);
 
   return (
     <LandingLayout>

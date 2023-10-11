@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
-// import HyperCertificate from "components/HyperCert";
 import { HypercertDisplay } from "./HypercertDisplay";
 import { validateFormData } from "pages";
 import React, { useState } from "react";
@@ -31,7 +30,7 @@ import { useWaitForTransaction, type Chain } from "wagmi";
 interface PreviewProps {
   formData: formSchema;
   image: string;
-  authenticatedAndCorrectChain: boolean;
+  authenticatedAndCorrectChain: string;
   chain: Chain | undefined;
 }
 
@@ -83,7 +82,7 @@ const Preview: React.FC<PreviewProps> = ({
       <Tooltip
         label="Please connect via the button in the top right corner to continue"
         placement="top"
-        isDisabled={authenticatedAndCorrectChain}
+        isDisabled={authenticatedAndCorrectChain.length > 0}
       >
         <Button
           onClick={shouldweMint ? onOpen : onClose}
