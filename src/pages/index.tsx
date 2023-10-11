@@ -91,13 +91,13 @@ const Home: NextPage = () => {
 
   return (
     <LandingLayout>
-      {!authenticatedAndCorrectChain && (
+      {authenticatedAndCorrectChain === "settled" ? null : (
         <Box
           px={5}
           fontSize="xl"
           flexDir={isLargerThan600 ? "row" : "column-reverse"}
         >
-          Please connect above to either Optimism, Optimism-Goerli, or Goerli.
+          Please connect above to either Optimism or Goerli.
         </Box>
       )}
       <Box
