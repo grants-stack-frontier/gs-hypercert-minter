@@ -1,30 +1,37 @@
 // hooks/useAuthenticationAndChainCheck.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useNetwork } from "wagmi";
-import { useChainId } from "wagmi";
 
 export const useAuthenticationAndChainCheck = () => {
   const { authenticated, user } = usePrivy();
-  const { chains } = useNetwork();
-  const chainId = useChainId();
-  const [authenticatedAndCorrectChain, setAuthenticatedAndCorrectChain] =
-    useState<string>("");
+  const { chain, chains } = useNetwork();
+  const [checkCount, setCheckCount] = useState(0);
 
-  useEffect(() => {
-    // console.log("user", user);
-    // console.log("authenticated", authenticated);
-    // console.log("chains", chains);
+  const authenticatedAndCorrectChain = useMemo(() => {
+    console.log("fix", chain);
+    if (!chain || !chain.id) {
+      return "";
+    }
     if (
       user &&
       authenticated &&
-      !!chains.find((chain) => chain.id === chainId)
+      !!chains.find((connectedChain) => connectedChain.id === chain.id)
     ) {
-      setAuthenticatedAndCorrectChain("settled");
-    } else {
-      setAuthenticatedAndCorrectChain("");
+      return "settled";
     }
-  }, [user, authenticated, chains, chainId]);
+    return "";
+  }, [user, authenticated, chains, chain]);
+
+  useEffect(() => {
+    if (checkCount < 20) {
+      const timer = setTimeout(() => {
+        setCheckCount((prevCount) => prevCount + 1);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [checkCount, authenticatedAndCorrectChain]);
 
   return authenticatedAndCorrectChain;
 };

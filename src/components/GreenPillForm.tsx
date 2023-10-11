@@ -73,7 +73,6 @@ function GreenPillForm({
     >
       <Stack ref={portalRef} gap={4}>
         <FormControl>
-          <HStack>TEST</HStack>
           <FormLabel fontWeight={550}>
             Name of the chapter
             <Tooltip label="What's the name of your chapter?" fontSize="md">
