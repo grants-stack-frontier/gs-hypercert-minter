@@ -1,6 +1,6 @@
 import { PrivyWagmiConnector } from "@privy-io/wagmi-connector";
 import { configureChains } from "wagmi";
-import { goerli, optimism, optimismGoerli } from "wagmi/chains";
+import { goerli, optimism } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
@@ -15,7 +15,7 @@ import { Provider } from "jotai";
 import { ChakraProvider } from "@chakra-ui/react";
 
 export const wagmiConfig = configureChains(
-  [goerli, optimism, optimismGoerli],
+  [goerli, optimism],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string,

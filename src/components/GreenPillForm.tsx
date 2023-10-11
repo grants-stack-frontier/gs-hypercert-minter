@@ -31,7 +31,7 @@ const animatedComponents = makeAnimated();
 
 interface GreenPillFormProps {
   setFormData: Dispatch<formSchema>;
-  authenticatedAndCorrectChain: boolean;
+  authenticatedAndCorrectChain: string;
   chain: Chain | undefined;
 }
 

@@ -11,7 +11,7 @@ interface MintConfirmationProps {
 }
 
 export const MintConfirmation = (props: MintConfirmationProps) => {
-  const { txHash } = props;
+  const { chain, txHash } = props;
 
   return (
     <VStack m={8}>
@@ -37,9 +37,9 @@ export const MintConfirmation = (props: MintConfirmationProps) => {
         </Link>
         <Link
           href={
-            props?.chain?.network
-              ? `https://${props.chain.network}.etherscan.io/tx/${txHash}`
-              : ""
+            chain?.id === 5
+              ? `https://goerli.etherscan.io/tx/${txHash}`
+              : `https://optimistic.etherscan.io//tx/${txHash}`
           }
         >
           <Button
