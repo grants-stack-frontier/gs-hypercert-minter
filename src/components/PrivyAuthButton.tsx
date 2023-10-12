@@ -57,15 +57,17 @@ const PrivyAuthButton = () => {
       } else {
         setButtonText("Connect");
       }
-    } else if (privyWagmiReady && !authenticatedAndCorrectChain) {
-      if (hasConnected && !wallets[0]) {
-        void handleLogout();
+    } else if (!authenticatedAndCorrectChain) {
+      if (privyWagmiReady) {
+          if (hasConnected && !wallets[0]) {
+              void handleLogout();
+          } else {
+              setButtonText("Please check your wallet and network");
+          }
       } else {
-        setButtonText("Please check your wallet and network");
+          setButtonText("Connect");
       }
-    } else if (!privyWagmiReady && !authenticatedAndCorrectChain) {
-      setButtonText("Connect");
-    }
+  }
     setTimeout(() => {
       setLoading(false);
     }, 500);
@@ -79,7 +81,7 @@ const PrivyAuthButton = () => {
     address,
     privyWagmiReady,
     authenticatedAndCorrectChain,
-    wallets,
+    wallets
   ]);
 
   if (user && authenticated) {
