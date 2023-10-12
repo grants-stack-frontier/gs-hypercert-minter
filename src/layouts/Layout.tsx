@@ -5,7 +5,11 @@ import Head from "next/head";
 import NextLink from "next/link";
 import site from "../config/site";
 
-export const LandingLayout = ({ children }: { children: React.ReactNode }) => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export const LandingLayout = ({ children }: LayoutProps) => {
   return (
     <VStack minHeight="100vh">
       <Head>

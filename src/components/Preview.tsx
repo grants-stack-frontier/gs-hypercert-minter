@@ -12,10 +12,10 @@ import {
   ModalOverlay,
   useDisclosure,
   Spinner,
+  Tooltip,
 } from "@chakra-ui/react";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { useWallets } from "@privy-io/react-auth";
-// import HyperCertificate from "components/HyperCert";
 import { HypercertDisplay } from "./HypercertDisplay";
 import { validateFormData } from "pages";
 import React, { useState } from "react";
@@ -25,22 +25,26 @@ import mintClaim from "utils/mint";
 import type { ContractTransaction } from "ethers";
 import { type formSchema } from "utils/types";
 import { MintConfirmation } from "./MintConfirmation";
-import { useNetwork } from "wagmi";
-import { useWaitForTransaction } from "wagmi";
+import { useWaitForTransaction, type Chain } from "wagmi";
 
-interface PreviewCompProps {
+interface PreviewProps {
   formData: formSchema;
   image: string;
+  authenticatedAndCorrectChain: string;
+  chain: Chain | undefined;
 }
 
-const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
+const Preview: React.FC<PreviewProps> = ({
+  formData,
+  image,
+  authenticatedAndCorrectChain,
+  chain,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { chain } = useNetwork();
-
   const { wallets } = useWallets();
 
   const [tx, setTx] = useState<ContractTransaction>();
+  const [loading, setLoading] = useState(false);
 
   const shouldweMint = validateFormData(formData, image as unknown as string);
 
@@ -52,35 +56,48 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
     let transaction;
 
     if (chain && shouldweMint) {
-      transaction = await mintClaim(
-        wallets,
-        shouldweMint as unknown as HypercertMetadata,
-        true,
-        chain?.id
-      );
-    }
+      try {
+        setLoading(true);
+        transaction = await mintClaim(
+          wallets,
+          shouldweMint as unknown as HypercertMetadata,
+          true,
+          chain?.id
+        );
 
-    if (transaction) {
-      console.log("transaction", transaction);
-      setTx(transaction);
+        if (transaction) {
+          setLoading(false);
+          console.log("transaction", transaction);
+          setTx(transaction);
+        }
+      } catch (e) {
+        setLoading(false);
+        return new Error("Something went wrong");
+      }
     }
-    return new Error("Something went wrong");
   };
 
   return (
     <>
-      <Button
-        onClick={shouldweMint ? onOpen : onClose}
-        type="submit"
-        variant={"secondary"}
-        w={"full"}
-        my={8}
-        color={"green"}
-        _hover={{ bgColor: "green", textColor: "dark-green" }}
-        width={"max"}
+      <Tooltip
+        label="Please connect via the button in the top right corner to continue"
+        placement="top"
+        isDisabled={authenticatedAndCorrectChain.length > 0}
       >
-        Preview Hypercert
-      </Button>
+        <Button
+          onClick={shouldweMint ? onOpen : onClose}
+          type="submit"
+          variant={"secondary"}
+          w={"full"}
+          my={8}
+          color={"green"}
+          _hover={{ bgColor: "green", textColor: "dark-green" }}
+          width={"max"}
+          isDisabled={!authenticatedAndCorrectChain}
+        >
+          Preview Hypercert
+        </Button>
+      </Tooltip>
 
       <Modal isCentered={true} isOpen={isOpen} onClose={onClose} size={"3xl"}>
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(20px)" />
@@ -159,7 +176,8 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
                 onClick={handleMint}
                 _hover={{ bgColor: "green", textColor: "dark-green" }}
               >
-                <ArrowRightIcon mr={2} /> Mint HyperCert
+                <ArrowRightIcon mr={2} />
+                {loading ? <>Confirm in your wallet</> : <> Mint HyperCert</>}
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -169,4 +187,4 @@ const PreviewComp: React.FC<PreviewCompProps> = ({ formData, image }) => {
   );
 };
 
-export default PreviewComp;
+export default Preview;

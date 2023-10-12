@@ -8,14 +8,19 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useWallets } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
+import { useWallets } from "@privy-io/react-auth";
 import type { Chain } from "wagmi";
-import { useNetwork } from "wagmi";
 
-export default function ChainSwitcher() {
+interface ChainSwitcherProps {
+  chain: Chain | undefined;
+  chains: Chain[];
+}
+
+export const ChainSwitcher = ({ chain, chains }: ChainSwitcherProps) => {
   const [chainName, setChainName] = useState<string>("" as string);
-  const { chains, chain } = useNetwork();
+
+  const { wallets } = useWallets();
 
   useEffect(() => {
     if (chain) {
@@ -23,7 +28,6 @@ export default function ChainSwitcher() {
     }
   }, [chain]);
 
-  const { wallets } = useWallets();
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   return (
@@ -90,4 +94,4 @@ export default function ChainSwitcher() {
       </Modal>
     </>
   );
-}
+};
