@@ -9,7 +9,6 @@ export const useAuthenticationAndChainCheck = () => {
   const [checkCount, setCheckCount] = useState(0);
 
   const authenticatedAndCorrectChain = useMemo(() => {
-    console.log("fix", chain);
     if (!chain || !chain.id) {
       return "";
     }
