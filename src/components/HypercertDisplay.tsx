@@ -45,6 +45,12 @@ export const HypercertDisplay = ({ formData }: { formData: formSchema }) => {
   );
 
   useEffect(() => {
+
+    if (!formData) return;
+    if (!formData.name || formData.name.length === 0) {
+      formData.name = [{value: "", label: ""}];
+  }
+
     mutation.mutate(formData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
