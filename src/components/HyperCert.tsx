@@ -37,7 +37,6 @@ function HyperCertificate({ formData }: { formData: formSchema }) {
   const workScope = _.map(formData?.workScope, "value");
   const workStartString = formData?.workTimeframeStart;
   const workEndString = formData?.workTimeframeEnd;
-  console.log("FORMDATA", formData);
 
   return (
     <VStack {...vStackProps}>

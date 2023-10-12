@@ -1,4 +1,4 @@
-import { HypercertClient, type Claim } from "@hypercerts-org/sdk";
+import type { Claim } from "@hypercerts-org/sdk";
 import {
   Button,
   Center,
@@ -11,9 +11,11 @@ import {
 import { HypercertTile } from "../components/HypercertTile";
 import { LandingLayout } from "layouts/Layout";
 import Link from "next/link";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useWallets } from "@privy-io/react-auth";
 import { useChainId } from "wagmi";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useHypercertClient } from "hooks/useHypercert";
+
 
 type ClaimsByOwnerQuery = {
   claims: Array<
@@ -30,41 +32,37 @@ type ClaimsByOwnerQuery = {
     >
   >;
 };
-const tokens = {
-  nftStorageToken: process.env.NEXT_PUBLIC_NFT_STORAGE_TOKEN,
-  web3StorageToken: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN,
-};
-
 const MyHypercertsPage = () => {
-  const { ready } = usePrivy();
   const { wallets } = useWallets();
   const chainId = useChainId();
-  const [hyperCertClient, setHyperCertClient] =
-    useState<HypercertClient | null>(null);
+  // const [hyperCertClient, setHyperCertClient] =
+  //   useState<HypercertClient | null>(null);
   const [data, setData] = useState<ClaimsByOwnerQuery | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadHyperCertClient = useCallback(async () => {
-    if (!chainId || !wallets.length) {
-      console.log("no chain or wallets");
-      setHyperCertClient(null);
-      return;
-    }
-    const wallet = wallets.find((wallet) => wallet.isConnected);
-    const provider = await wallet?.getEthersProvider();
-    if (!provider) return;
-    const signer = provider.getSigner(wallet?.address);
-    const client = new HypercertClient({
-      chainId: chainId,
-      operator: signer,
-      ...tokens,
-    });
-    setHyperCertClient(client);
-  }, [chainId, wallets]);
+  const hyperCertClient = useHypercertClient();
 
-  useEffect(() => {
-    void loadHyperCertClient();
-  }, [wallets.length, ready, loadHyperCertClient]);
+  // const loadHyperCertClient = useCallback(async () => {
+  //   if (!chainId || !wallets.length) {
+  //     console.log("no chain or wallets");
+  //     setHyperCertClient(null);
+  //     return;
+  //   }
+  //   const wallet = wallets.find((wallet) => wallet.isConnected);
+  //   const provider = await wallet?.getEthersProvider();
+  //   if (!provider) return;
+  //   const signer = provider.getSigner(wallet?.address);
+  //   const client = new HypercertClient({
+  //     chainId: chainId,
+  //     operator: signer,
+  //     ...tokens,
+  //   });
+  //   setHyperCertClient(client);
+  // }, [chainId, wallets]);
+
+  // useEffect(() => {
+  //   void loadHyperCertClient();
+  // }, [wallets.length, ready, loadHyperCertClient]);
 
   useEffect(() => {
     const fetchClaims = async () => {
@@ -79,7 +77,6 @@ const MyHypercertsPage = () => {
           first: 1000,
         }
       );
-      console.log("result", result);
       setData(result);
       setIsLoading(false);
     };
