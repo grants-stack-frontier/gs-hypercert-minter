@@ -106,6 +106,8 @@ export const Footer = () => (
     height={"5rem"}
     bottom={"0"}
   >
-    Learn More
+    <Text fontSize={"sm"} color={"dark-green"}>
+      The GreenPill Network
+    </Text>
   </Flex>
 );

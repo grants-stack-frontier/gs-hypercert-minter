@@ -1,36 +1,32 @@
 // hooks/useAuthenticationAndChainCheck.js
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useNetwork } from "wagmi";
+import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 
 export const useAuthenticationAndChainCheck = () => {
   const { authenticated, user } = usePrivy();
-  const { chain, chains } = useNetwork();
-  const [checkCount, setCheckCount] = useState(0);
+  const { chains } = useNetwork();
+  const { wallet: activeWallet } = usePrivyWagmi();
 
   const authenticatedAndCorrectChain = useMemo(() => {
-    if (!chain || !chain.id) {
+    if (!activeWallet || !activeWallet.chainId) {
       return "";
+    }
+    let id: number | undefined;
+
+    if (activeWallet && activeWallet.chainId) {
+      id = parseInt(activeWallet.chainId.split(":")[1]!, 10);
     }
     if (
       user &&
       authenticated &&
-      !!chains.find((connectedChain) => connectedChain.id === chain.id)
+      !!chains.find((connectedChain) => connectedChain.id === id)
     ) {
       return "settled";
     }
     return "";
-  }, [user, authenticated, chains, chain]);
-
-  useEffect(() => {
-    if (checkCount < 20) {
-      const timer = setTimeout(() => {
-        setCheckCount((prevCount) => prevCount + 1);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [checkCount, authenticatedAndCorrectChain]);
+  }, [user, authenticated, chains, activeWallet]);
 
   return authenticatedAndCorrectChain;
 };

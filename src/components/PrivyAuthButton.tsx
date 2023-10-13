@@ -1,6 +1,6 @@
 "use client";
 import { ChevronDownIcon, CopyIcon } from "@chakra-ui/icons";
-import { Button, Menu, MenuButton, MenuItem, MenuList, Spinner } from "@chakra-ui/react";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { useRouter } from "next/router";
@@ -22,7 +22,6 @@ const PrivyAuthButton = () => {
 
   const [buttonText, setButtonText] = useState("");
   const [hasConnected, setHasConnected] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const { data } = useBalance({
     address: user?.wallet?.address as `0x${string}`,
@@ -34,9 +33,7 @@ const PrivyAuthButton = () => {
   const address = user?.wallet?.address;
 
   useEffect(() => {
-    setLoading(true);
     const handleLogout = async () => {
-
       try {
         await logout();
         setHasConnected(false);
@@ -55,22 +52,19 @@ const PrivyAuthButton = () => {
       ) {
         setButtonText("Please check your wallet and network");
       } else {
-        setButtonText("Connect");
+        setButtonText("Connect1");
       }
     } else if (!authenticatedAndCorrectChain) {
       if (privyWagmiReady) {
-          if (hasConnected && !wallets[0]) {
-              void handleLogout();
-          } else {
-              setButtonText("Please check your wallet and network");
-          }
+        if (hasConnected && !wallets[0]) {
+          void handleLogout();
+        } else {
+          setButtonText("Please check your wallet and network");
+        }
       } else {
-          setButtonText("Connect");
+        setButtonText("Connect");
       }
-  }
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    }
   }, [
     activeWallet,
     hasConnected,
@@ -81,7 +75,7 @@ const PrivyAuthButton = () => {
     address,
     privyWagmiReady,
     authenticatedAndCorrectChain,
-    wallets
+    wallets,
   ]);
 
   if (user && authenticated) {
@@ -96,7 +90,7 @@ const PrivyAuthButton = () => {
           _active={{ bgColor: "mid-green", textColor: "dark-green" }}
           // isDisabled={activeWallet && !authenticatedAndCorrectChain}
         >
-          {loading ? <Spinner/> : buttonText}
+          {buttonText}
         </MenuButton>
 
         <MenuList p={2} background={"#242423"} textColor={"white"}>
