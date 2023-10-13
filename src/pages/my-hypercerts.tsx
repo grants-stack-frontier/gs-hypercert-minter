@@ -16,7 +16,6 @@ import { useChainId } from "wagmi";
 import { useEffect, useState, useMemo } from "react";
 import { useHypercertClient } from "hooks/useHypercert";
 
-
 type ClaimsByOwnerQuery = {
   claims: Array<
     Pick<
@@ -35,38 +34,15 @@ type ClaimsByOwnerQuery = {
 const MyHypercertsPage = () => {
   const { wallets } = useWallets();
   const chainId = useChainId();
-  // const [hyperCertClient, setHyperCertClient] =
-  //   useState<HypercertClient | null>(null);
   const [data, setData] = useState<ClaimsByOwnerQuery | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const hyperCertClient = useHypercertClient();
 
-  // const loadHyperCertClient = useCallback(async () => {
-  //   if (!chainId || !wallets.length) {
-  //     console.log("no chain or wallets");
-  //     setHyperCertClient(null);
-  //     return;
-  //   }
-  //   const wallet = wallets.find((wallet) => wallet.isConnected);
-  //   const provider = await wallet?.getEthersProvider();
-  //   if (!provider) return;
-  //   const signer = provider.getSigner(wallet?.address);
-  //   const client = new HypercertClient({
-  //     chainId: chainId,
-  //     operator: signer,
-  //     ...tokens,
-  //   });
-  //   setHyperCertClient(client);
-  // }, [chainId, wallets]);
-
-  // useEffect(() => {
-  //   void loadHyperCertClient();
-  // }, [wallets.length, ready, loadHyperCertClient]);
-
   useEffect(() => {
     const fetchClaims = async () => {
       if (!hyperCertClient) return;
+      setIsLoading(true);
       const wallet = wallets.find((wallet) => wallet.isConnected);
       if (!wallet) return;
       const result = await hyperCertClient.indexer.claimsByOwner(
@@ -105,14 +81,6 @@ const MyHypercertsPage = () => {
     );
   }, [data, chainId]);
 
-  if (isLoading) {
-    return (
-      <LandingLayout>
-        <Spinner />
-      </LandingLayout>
-    );
-  }
-
   return (
     <LandingLayout>
       <Center>
@@ -122,7 +90,9 @@ const MyHypercertsPage = () => {
           spacing={4}
           m={10}
         >
-          {filteredClaims.length === 0 ? (
+          {isLoading ? (
+            <Spinner />
+          ) : filteredClaims.length === 0 ? (
             <VStack alignItems="center" spacing={4}>
               <Text color="black" fontSize="xl" fontWeight="bold">
                 No hypercerts found on this network.

@@ -14,7 +14,7 @@ import { useWallets } from "@privy-io/react-auth";
 import { useAuthenticationAndChainCheck } from "hooks/useAuthenticationAndCorrectChain";
 
 const PrivyAuthButton = () => {
-  const { login, authenticated, user, logout } = usePrivy();
+  const { ready, login, authenticated, user, logout } = usePrivy();
   const authenticatedAndCorrectChain = useAuthenticationAndChainCheck();
   const { chain, chains } = useNetwork();
   const { wallet: activeWallet, ready: privyWagmiReady } = usePrivyWagmi();
@@ -41,7 +41,7 @@ const PrivyAuthButton = () => {
         console.error("Error during logout:", error);
       }
     };
-    if (privyWagmiReady && authenticatedAndCorrectChain) {
+    if (ready && privyWagmiReady && authenticatedAndCorrectChain) {
       if (activeWallet && authenticatedAndCorrectChain.length > 0) {
         setButtonText(`Logged in as ${formatAddress(address ?? "")}`);
         setHasConnected(true);
@@ -73,6 +73,7 @@ const PrivyAuthButton = () => {
     chains,
     chain,
     address,
+    ready,
     privyWagmiReady,
     authenticatedAndCorrectChain,
     wallets,
