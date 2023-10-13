@@ -39,6 +39,10 @@ export async function getHyperCertClient(
 ) {
   const wallet = wallets.find((wallet) => wallet.isConnected);
 
+  if (!wallet) {
+    return { hyperCertClient: null };
+  }
+
   const provider = await wallet?.getEthersProvider(); // ethers provider object
 
   if (!provider) {
