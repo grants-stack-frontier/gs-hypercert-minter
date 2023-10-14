@@ -1,4 +1,4 @@
-import type { Claim } from "@hypercerts-org/sdk";
+import type { Claim, HypercertMetadata } from "@hypercerts-org/sdk";
 import {
   Button,
   Center,
@@ -8,13 +8,18 @@ import {
   VStack,
   Text,
 } from "@chakra-ui/react";
-import { HypercertTile } from "../components/HypercertTile";
+import { HypercertTile } from "../../components/HypercertTile";
 import { LandingLayout } from "layouts/Layout";
 import Link from "next/link";
 import { useWallets } from "@privy-io/react-auth";
-import { useChainId } from "wagmi";
+import { useChainId, useNetwork } from "wagmi";
 import { useEffect, useState, useMemo } from "react";
 import { useHypercertClient } from "hooks/useHypercert";
+import { useWalletUpdateListener } from "hooks/useWalletUpdateListener";
+import { usePrivyWagmi } from "@privy-io/wagmi-connector";
+import { usePrivy } from "@privy-io/react-auth";
+import useSWR from "swr";
+import { fetchChapters } from "utils/db";
 
 type ClaimsByOwnerQuery = {
   claims: Array<
@@ -33,11 +38,25 @@ type ClaimsByOwnerQuery = {
 };
 const MyHypercertsPage = () => {
   const { wallets } = useWallets();
+  const { chains } = useNetwork();
+  const { user } = usePrivy();
+
+  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
   const chainId = useChainId();
   const [data, setData] = useState<ClaimsByOwnerQuery | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const { data: chapters } = useSWR("chapters", fetchChapters);
   const hyperCertClient = useHypercertClient();
+  const [resolvedClaims, setResolvedClaims] = useState<Claim[] | null>(null);
+
+  useWalletUpdateListener(
+    chainId,
+    activeWallet,
+    wallets,
+    user,
+    chains,
+    setActiveWallet
+  );
 
   useEffect(() => {
     const fetchClaims = async () => {
@@ -61,6 +80,7 @@ const MyHypercertsPage = () => {
 
   const filteredClaims = useMemo(() => {
     if (!data?.claims) return [];
+
     return data.claims.filter(
       (
         claim: Pick<
@@ -81,6 +101,27 @@ const MyHypercertsPage = () => {
     );
   }, [data, chainId]);
 
+  useEffect(() => {
+    const fetchClaimsWithMatchingMetadata = async () => {
+      const claimsPromises = filteredClaims.map(async (claim) => {
+        if (!hyperCertClient) return undefined;
+
+        const claimMetadata: HypercertMetadata =
+          await hyperCertClient.storage.getMetadata(claim.uri!);
+        const isMatchingChapter = chapters?.some(
+          (chapter) => chapter.label === claimMetadata.name
+        );
+
+        return isMatchingChapter ? claim : undefined;
+      });
+
+      const resolved = await Promise.all(claimsPromises);
+      setResolvedClaims(resolved.filter(Boolean) as Claim[]);
+    };
+
+    fetchClaimsWithMatchingMetadata().catch(console.error);
+  }, [filteredClaims, hyperCertClient, chapters]);
+
   return (
     <LandingLayout>
       <Center>
@@ -99,7 +140,8 @@ const MyHypercertsPage = () => {
               </Text>
             </VStack>
           ) : (
-            filteredClaims.map((claim) => (
+            resolvedClaims &&
+            resolvedClaims.map((claim) => (
               <GridItem key={claim.id}>
                 {claim.uri ? <HypercertTile {...claim} /> : null}
               </GridItem>

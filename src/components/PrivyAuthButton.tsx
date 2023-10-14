@@ -5,7 +5,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { useRouter } from "next/router";
 import { formatAddress } from "utils/formatting";
-import { useBalance, useNetwork } from "wagmi";
+import { useBalance, useChainId, useNetwork } from "wagmi";
 import { ChainSwitcher } from "./ChainSwitcher";
 import { useEffect, useState } from "react";
 
@@ -16,7 +16,8 @@ import { useAuthenticationAndChainCheck } from "hooks/useAuthenticationAndCorrec
 const PrivyAuthButton = () => {
   const { ready, login, authenticated, user, logout } = usePrivy();
   const authenticatedAndCorrectChain = useAuthenticationAndChainCheck();
-  const { chain, chains } = useNetwork();
+  const { chains } = useNetwork();
+  const chainId = useChainId();
   const { wallet: activeWallet, ready: privyWagmiReady } = usePrivyWagmi();
   const { wallets } = useWallets();
 
@@ -33,45 +34,37 @@ const PrivyAuthButton = () => {
   const address = user?.wallet?.address;
 
   useEffect(() => {
-    const handleLogout = async () => {
-      try {
-        await logout();
-        setHasConnected(false);
-      } catch (error) {
-        console.error("Error during logout:", error);
-      }
-    };
-    if (ready && privyWagmiReady && authenticatedAndCorrectChain) {
+    let newButtonText = "Connect";
+    let newHasConnected = false;
+
+    if (ready && privyWagmiReady) {
       if (activeWallet && authenticatedAndCorrectChain.length > 0) {
-        setButtonText(`Logged in as ${formatAddress(address ?? "")}`);
-        setHasConnected(true);
+        newButtonText = `Logged in as ${formatAddress(address ?? "")}`;
+        newHasConnected = true;
       } else if (
         activeWallet &&
         authenticatedAndCorrectChain.length === 0 &&
-        !chains.find((connectedChain) => connectedChain.id === chain?.id)
+        !chains.find((connectedChain) => connectedChain.id === chainId)
       ) {
-        setButtonText("Please check your wallet and network");
-      } else {
-        setButtonText("Connect1");
+        newButtonText = "Please check your wallet and network";
       }
-    } else if (!authenticatedAndCorrectChain) {
-      if (privyWagmiReady) {
-        if (hasConnected && !wallets[0]) {
-          void handleLogout();
-        } else {
-          setButtonText("Please check your wallet and network");
-        }
+    } else if (!authenticatedAndCorrectChain && privyWagmiReady) {
+      if (hasConnected && !wallets[0]) {
+        void logout();
       } else {
-        setButtonText("Connect");
+        newButtonText = "Please check your wallet and network";
       }
     }
+
+    setButtonText(newButtonText);
+    setHasConnected(newHasConnected);
   }, [
     activeWallet,
     hasConnected,
     logout,
     authenticated,
     chains,
-    chain,
+    chainId,
     address,
     ready,
     privyWagmiReady,
@@ -79,7 +72,7 @@ const PrivyAuthButton = () => {
     wallets,
   ]);
 
-  if (user && authenticated) {
+  if (user && authenticated && chains) {
     return (
       <Menu>
         <MenuButton
@@ -121,7 +114,7 @@ const PrivyAuthButton = () => {
           >
             {data?.formatted.substring(0, 8)} {data?.symbol}
           </MenuItem>
-          <ChainSwitcher chain={chain} chains={chains} />
+          <ChainSwitcher chains={chains} />
           <MenuItem
             bg={"transparent"}
             _hover={{
