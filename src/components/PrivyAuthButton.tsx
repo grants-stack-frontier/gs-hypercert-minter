@@ -36,7 +36,6 @@ const PrivyAuthButton = () => {
   useEffect(() => {
     let newButtonText = "Connect";
     let newHasConnected = false;
-
     if (ready && privyWagmiReady) {
       if (activeWallet && authenticatedAndCorrectChain.length > 0) {
         newButtonText = `Logged in as ${formatAddress(address ?? "")}`;
@@ -72,7 +71,7 @@ const PrivyAuthButton = () => {
     wallets,
   ]);
 
-  if (user && authenticated && chains) {
+  if (user && authenticated) {
     return (
       <Menu>
         <MenuButton
@@ -124,7 +123,6 @@ const PrivyAuthButton = () => {
             }}
             onClick={() => router.push("/my-hypercerts")}
           >
-            {" "}
             My Hypercerts
           </MenuItem>
           <MenuItem

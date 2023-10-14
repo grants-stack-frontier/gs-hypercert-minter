@@ -20,6 +20,7 @@ import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 import { usePrivy } from "@privy-io/react-auth";
 import useSWR from "swr";
 import { fetchChapters } from "utils/db";
+import { useAuthenticationAndChainCheck } from "hooks/useAuthenticationAndCorrectChain";
 
 type ClaimsByOwnerQuery = {
   claims: Array<
@@ -37,16 +38,17 @@ type ClaimsByOwnerQuery = {
   >;
 };
 const MyHypercertsPage = () => {
+  const { data: chapters } = useSWR("chapters", fetchChapters);
   const { wallets } = useWallets();
   const { chains } = useNetwork();
-  const { user } = usePrivy();
-
-  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
   const chainId = useChainId();
+
+  const { user } = usePrivy();
+  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
+
   const [data, setData] = useState<ClaimsByOwnerQuery | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { data: chapters } = useSWR("chapters", fetchChapters);
-  const hyperCertClient = useHypercertClient();
+
   const [resolvedClaims, setResolvedClaims] = useState<Claim[] | null>(null);
 
   useWalletUpdateListener(
@@ -57,6 +59,9 @@ const MyHypercertsPage = () => {
     chains,
     setActiveWallet
   );
+  const hyperCertClient = useHypercertClient();
+
+  useAuthenticationAndChainCheck();
 
   useEffect(() => {
     const fetchClaims = async () => {
