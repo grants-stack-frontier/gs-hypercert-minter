@@ -85,7 +85,10 @@ const Preview: React.FC<PreviewProps> = ({
         isDisabled={authenticatedAndCorrectChain.length > 0}
       >
         <Button
-          onClick={shouldweMint ? onOpen : onClose}
+          onClick={() => {
+            console.log(shouldweMint);
+            if (shouldweMint) { onOpen(); } else { onClose(); }
+          }}
           type="submit"
           variant={"secondary"}
           w={"full"}
