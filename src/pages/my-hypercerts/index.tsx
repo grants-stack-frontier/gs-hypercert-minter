@@ -86,20 +86,29 @@ const MyHypercertsPage = () => {
       }[] = [];
 
       if (result?.claims) {
-        const filteredClaims = result.claims.filter(
-          (claim: ClaimByOwnerQuery) =>
-            chainId === 5
-              ? claim.chainName === "hypercerts-testnet"
-              : claim.chainName === "hypercerts-testnet"
-        );
+        // const filteredClaims = result.claims.filter(
+        //   (claim: ClaimByOwnerQuery) =>
+        //     chainId === 5
+        //       ? claim.chainName === "hypercerts-testnet"
+        //       : claim.chainName === "hypercerts-testnet"
 
-        for (const claim of filteredClaims) {
+  
+        // );
+
+        for (const claim of result.claims) {
           const claimMetadata: HypercertMetadata =
             await hyperCertClient.storage.getMetadata(claim.uri!);
+            console.log(claimMetadata)
           // can check for prop.network below but not included on previous hypercerts
           const isGreenPillCertOnCorrectNetwork =
             claimMetadata?.properties?.some(
-              (prop) => prop.trait_type === "GreenPill" && prop.value === "true"
+              (prop) => 
+              (chainId === 10 && 
+                prop.trait_type === "GreenPill" && 
+                prop.value === "true") || 
+              (chainId === 5 && 
+                !(prop.trait_type === "GreenPill" && 
+                  prop.value === "true"))
             );
 
           if (isGreenPillCertOnCorrectNetwork) {
@@ -119,6 +128,12 @@ const MyHypercertsPage = () => {
         setHasFetched(true);
       });
   }, [hyperCertClient, wallets, chainId]);
+
+  const renderHypercertTile = (idAndMetadata: { id: string; claim: ClaimByOwnerQuery; metadata: HypercertMetadata } ) => (
+    <GridItem key={idAndMetadata.id}>
+      <HypercertTile data={idAndMetadata} />
+    </GridItem>
+  );
 
   return (
     <LandingLayout>
@@ -156,12 +171,8 @@ const MyHypercertsPage = () => {
               </Text>
             </VStack>
           ) : (
-            resolvedData &&
-            resolvedData.map((idAndMetadata) => (
-              <GridItem key={idAndMetadata.id}>
-                <HypercertTile data={idAndMetadata} />
-              </GridItem>
-            ))
+            resolvedData && resolvedData.map(renderHypercertTile)
+
           )}
         </SimpleGrid>
       </Center>
