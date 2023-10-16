@@ -16,6 +16,7 @@ export const validUrlRegex = /(^https?|^ipfs):\/\//;
 
 export const zFormSchema = z
   .object({
+    network: z.number().min(1, { message: "Network chain id is required" }),
     name: z.array(zOptionType).nonempty({
       message: "Chapter Name is required",
     }),

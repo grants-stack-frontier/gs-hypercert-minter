@@ -111,8 +111,6 @@ function GreenPillForm({
             </Tooltip>
           </FormLabel>
 
-          {/* add greenish styling and 60px height to the Creatable Select */}
-
           <Controller
             render={({ field }) => (
               <>

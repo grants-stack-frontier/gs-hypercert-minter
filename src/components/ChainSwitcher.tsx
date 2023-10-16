@@ -11,16 +11,19 @@ import {
 import { useEffect, useState } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import type { Chain } from "wagmi";
+import { useNetwork } from "wagmi";
+import eventBus from "utils/eventBus";
 
 interface ChainSwitcherProps {
-  chain: Chain | undefined;
   chains: Chain[];
 }
 
-export const ChainSwitcher = ({ chain, chains }: ChainSwitcherProps) => {
+export const ChainSwitcher = ({ chains }: ChainSwitcherProps) => {
   const [chainName, setChainName] = useState<string>("" as string);
 
   const { wallets } = useWallets();
+
+  const { chain } = useNetwork();
 
   useEffect(() => {
     if (chain) {
@@ -71,6 +74,7 @@ export const ChainSwitcher = ({ chain, chains }: ChainSwitcherProps) => {
                       if (wallets && wallets[0]) {
                         try {
                           await wallets[0].switchChain(chainItem.id);
+                          eventBus.emit("walletsUpdated");
                           onClose();
                         } catch (error) {
                           console.log(error);

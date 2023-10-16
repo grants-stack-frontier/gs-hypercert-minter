@@ -1,24 +1,23 @@
-import { getTime, parseISO } from 'date-fns';
+import { getTime, parseISO } from "date-fns";
 import _ from "lodash";
 import { toYear } from "./date";
-import type { formSchema, optionType } from './types';
+import type { formSchema, optionType } from "./types";
 
-
-export const createClaim = (formData: formSchema, imageData: string) => {
-
+export const createClaim = (
+  formData: formSchema,
+  imageData: string,
+  chainId: number
+) => {
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
 
-
   const name = selectedChapter?.label;
-  const workScope = _.map(formData?.workScope, 'value');
+  const workScope = _.map(formData?.workScope, "value");
   const externalUrl = formData?.externalUrl;
   const description = formData?.description;
-  const contributors = _.map(formData?.contributors, 'value');
-  const workTimeframeStart = formData?.workTimeframeStart
-  const workTimeframeEnd = formData?.workTimeframeEnd
-
-
-
+  const contributors = _.map(formData?.contributors, "value");
+  const workTimeframeStart = formData?.workTimeframeStart;
+  const workTimeframeEnd = formData?.workTimeframeEnd;
+  const network = chainId;
 
   return {
     name,
@@ -26,17 +25,25 @@ export const createClaim = (formData: formSchema, imageData: string) => {
     version: "0.0.1",
     image: imageData,
     external_url: externalUrl,
-    properties: [{
-      trait_type: "GreenPill",
-      value: "true",
-    }],
+    properties: [
+      {
+        trait_type: "GreenPill",
+        value: "true",
+        network: network,
+      },
+    ],
     hypercert: {
-      impact_scope:{"name":"Impact Scope","value":["all"],"excludes":[],"display_value":"all"},
+      impact_scope: {
+        name: "Impact Scope",
+        value: ["all"],
+        excludes: [],
+        display_value: "all",
+      },
       work_scope: {
         name: "Work Scope",
         value: [...workScope],
         excludes: [],
-        display_value: [...workScope].join(", "), 
+        display_value: [...workScope].join(", "),
       },
       impact_timeframe: {
         name: "Impact Timeframe",
@@ -45,7 +52,10 @@ export const createClaim = (formData: formSchema, imageData: string) => {
       },
       work_timeframe: {
         name: "Work Timeframe",
-        value: [getTime(parseISO(workTimeframeStart)), getTime(parseISO(workTimeframeEnd))],
+        value: [
+          getTime(parseISO(workTimeframeStart)),
+          getTime(parseISO(workTimeframeEnd)),
+        ],
         display_value: `${workTimeframeStart} → ${workTimeframeEnd}`,
       },
       rights: {
@@ -61,7 +71,4 @@ export const createClaim = (formData: formSchema, imageData: string) => {
       },
     },
   };
-
 };
-
-

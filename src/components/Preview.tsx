@@ -25,7 +25,7 @@ import mintClaim from "utils/mint";
 import type { ContractTransaction } from "ethers";
 import { type formSchema } from "utils/types";
 import { MintConfirmation } from "./MintConfirmation";
-import { useWaitForTransaction, type Chain } from "wagmi";
+import { useWaitForTransaction, useChainId, type Chain } from "wagmi";
 
 interface PreviewProps {
   formData: formSchema;
@@ -42,11 +42,16 @@ const Preview: React.FC<PreviewProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { wallets } = useWallets();
+  const chainId = useChainId();
 
   const [tx, setTx] = useState<ContractTransaction>();
   const [loading, setLoading] = useState(false);
 
-  const shouldweMint = validateFormData(formData, image as unknown as string);
+  const shouldweMint = validateFormData(
+    formData,
+    image as unknown as string,
+    chainId
+  );
 
   const { isSuccess } = useWaitForTransaction({
     hash: tx?.hash as `0x${string}`,
@@ -87,7 +92,11 @@ const Preview: React.FC<PreviewProps> = ({
         <Button
           onClick={() => {
             console.log(shouldweMint);
-            if (shouldweMint) { onOpen(); } else { onClose(); }
+            if (shouldweMint) {
+              onOpen();
+            } else {
+              onClose();
+            }
           }}
           type="submit"
           variant={"secondary"}
