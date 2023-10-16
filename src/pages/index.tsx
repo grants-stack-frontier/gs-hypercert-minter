@@ -18,12 +18,12 @@ import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useNetwork } from "wagmi";
 import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 import { useAuthenticationAndChainCheck } from "hooks/useAuthenticationAndCorrectChain";
+import {validUrlRegex} from "utils/types";
 
 export const imageDataAtom = atom("");
 
 function isValidURL(url: string) {
-  const regex = /^https?:\/\/[^ "]+$/;
-  return regex.test(url);
+  return validUrlRegex.test(url);
 }
 export function validateFormData(formData: formSchema, image: string) {
   if (!isValidURL(formData.externalUrl)) {

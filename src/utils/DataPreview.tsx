@@ -6,6 +6,14 @@ interface PreviewProps {
   formData: formSchema;
 }
 
+const formatExternalUrl = (externalUrl: string) => {
+  if (externalUrl.startsWith('ipfs://')) {
+    return externalUrl.replace('ipfs://', 'https://ipfs.io/ipfs/');
+  }
+
+  return externalUrl;
+}
+
 const PreviewData: React.FC<PreviewProps> = ({ formData }) => {
   const selectedChapter = _.map(formData)[4] as unknown as optionType;
 
@@ -19,7 +27,7 @@ const PreviewData: React.FC<PreviewProps> = ({ formData }) => {
       <Text>{`End: ${formData?.workTimeframeEnd}`}</Text>
 
       <Text mt={4} fontSize="lg" fontWeight="bold">External URL:</Text>
-      <Link href={formData?.externalUrl} color="green" padding={0}>
+      <Link isExternal href={formatExternalUrl(formData.externalUrl)} color="green" padding={0}>
         {formData?.externalUrl}
       </Link>
 

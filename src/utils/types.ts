@@ -12,6 +12,8 @@ const zOptionType = z.object({
   label: z.string(),
 });
 
+export const validUrlRegex = /(^https?|^ipfs):\/\//;
+
 export const zFormSchema = z
   .object({
     name: z.array(zOptionType).nonempty({
@@ -25,8 +27,8 @@ export const zFormSchema = z
       // .url({
       //   message: "Invalid URL format URL must start with http:// or https://",
       // })
-      .refine((value) => /^https?:\/\//.test(value), {
-        message: "URL must start with http:// or https://",
+      .refine((value) => validUrlRegex.test(value), {
+        message: "URL must start with http://, https:// or ipfs://",
       }),
     description: z.string().min(1, { message: "Description is required" }),
     contributors: z.array(zOptionType).nonempty({
