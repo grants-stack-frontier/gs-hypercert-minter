@@ -98,7 +98,7 @@ const MyHypercertsPage = () => {
         for (const claim of result.claims) {
           const claimMetadata: HypercertMetadata =
             await hyperCertClient.storage.getMetadata(claim.uri!);
-            console.log(claimMetadata)
+
           // can check for prop.network below but not included on previous hypercerts
           const isGreenPillCertOnCorrectNetwork =
             claimMetadata?.properties?.some(
