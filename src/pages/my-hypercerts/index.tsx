@@ -99,17 +99,20 @@ const MyHypercertsPage = () => {
           const claimMetadata: HypercertMetadata =
             await hyperCertClient.storage.getMetadata(claim.uri!);
 
-          // can check for prop.network below but not included on previous hypercerts
-          const isGreenPillCertOnCorrectNetwork =
-            claimMetadata?.properties?.some(
-              (prop) => 
-              (chainId === 10 && 
-                prop.trait_type === "GreenPill" && 
-                prop.value === "true") || 
-              (chainId === 5 && 
-                !(prop.trait_type === "GreenPill" && 
-                  prop.value === "true"))
+      
+          let isGreenPillCertOnCorrectNetwork = false;
+
+       
+          if (chainId === 10) {
+            isGreenPillCertOnCorrectNetwork = !!claimMetadata?.properties?.some(
+              prop => prop.trait_type === "GreenPill" && prop.value === "true"
             );
+          }
+          
+       
+          if (chainId === 5) {
+            isGreenPillCertOnCorrectNetwork = true;
+          }
 
           if (isGreenPillCertOnCorrectNetwork) {
             fetchedData.push({ id: claim.id, claim, metadata: claimMetadata });
