@@ -37,49 +37,28 @@ export default async function handler(req: Request) {
           padding: "16px",
           display: "flex",
           flexDirection: "column",
-          gap: "0.5rem",
           borderRadius: "10px",
           overflow: "hidden",
         }}
       >
-        <div
+        <h1
           style={{
-            width: "100%",
-            justifyContent: "center",
-            display: "flex",
-          }}
-        >
-          <img
-            src={`${process.env.NEXT_PUBLIC_DEPLOYMENT_IMAGES}/collection_logos/green-pill.png`}
-            alt=""
-            width="140"
-          />
-        </div>
-        <div
-          style={{
-            width: "100%",
-            justifyContent: "space-between",
-            display: "flex",
-            fontSize: "14px",
-            fontFamily: "Raleway, sans-serif",
-            fontWeight: "bolder",
             color: "white",
+            fontWeight: "bolder",
+            fontSize: "24px",
+            margin: 'auto 0px 0px 0px',
+            fontFamily: volkhov.style.fontFamily,
           }}
         >
-          <p>Timeframe</p>
-          <p>
-            {formData.workTimeframeStart ?? "Start Date"}
-            {" — "}
-            {formData.workTimeframeEnd ?? "End Date"}
-          </p>
-        </div>
+          {selectedChapter?.label ?? "Name of the chapter"}
+        </h1>
 
         <hr
           style={{
             borderColor: "#C2E812",
             borderWidth: "1px",
             width: "100%",
-            margin: "5px 0",
+            margin: "5px 0px 12px 0px",
           }}
         />
 
@@ -88,21 +67,9 @@ export default async function handler(req: Request) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            flex: 1,
+            width: '100%'
           }}
         >
-          <h1
-            style={{
-              color: "white",
-              fontWeight: "bolder",
-              fontSize: "24px",
-              margin: "4px 5px 8px 5px",
-              fontFamily: volkhov.style.fontFamily,
-            }}
-          >
-            {selectedChapter?.label ?? "Name of the chapter"}
-          </h1>
-
           <div
             style={{
               display: "flex",
@@ -126,7 +93,6 @@ export default async function handler(req: Request) {
                     fontWeight: "normal",
                     display: "flex",
                     alignItems: "center",
-                    marginTop: "4px",
                     padding: "3px 10px",
                   }}
                 >
@@ -135,6 +101,27 @@ export default async function handler(req: Request) {
               )
             )}
           </div>
+
+          <div
+            style={{
+              width: "100%",
+              justifyContent: "space-between",
+              display: "flex",
+              fontSize: "14px",
+              lineHeight: '14px',
+              fontFamily: "Raleway, sans-serif",
+              fontWeight: "bolder",
+              color: "white",
+              marginTop: '12px'
+            }}
+          >
+            <span>Timeframe</span>
+            <span>
+              {formData.workTimeframeStart ?? "Start Date"}
+              {" — "}
+              {formData.workTimeframeEnd ?? "End Date"}
+            </span>
+          </div>
         </div>
 
         <hr
@@ -142,7 +129,7 @@ export default async function handler(req: Request) {
             borderColor: "#C2E812",
             borderWidth: "1px",
             width: "100%",
-            margin: "5px 0",
+            margin: "12px 0px 12px 0px",
           }}
         />
 
