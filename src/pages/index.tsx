@@ -18,7 +18,7 @@ import { useNetwork, useChainId } from "wagmi";
 import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 
 import { useAuthenticationAndChainCheck } from "hooks/useAuthenticationAndCorrectChain";
-import {validUrlRegex} from "utils/types";
+import { validUrlRegex } from "utils/types";
 import { useWalletUpdateListener } from "hooks/useWalletUpdateListener";
 
 export const imageDataAtom = atom("");
@@ -26,11 +26,15 @@ export const imageDataAtom = atom("");
 function isValidURL(url: string) {
   return validUrlRegex.test(url);
 }
-export function validateFormData(formData: formSchema, image: string) {
+export function validateFormData(
+  formData: formSchema,
+  image: string,
+  chainId: number
+) {
   if (!isValidURL(formData.externalUrl)) {
     return false;
   }
-  const metadata = createClaim(formData, image);
+  const metadata = createClaim(formData, image, chainId);
 
   if (!metadata) {
     return false;

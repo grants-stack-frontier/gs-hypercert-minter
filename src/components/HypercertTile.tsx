@@ -1,18 +1,16 @@
-import type { Claim } from "@hypercerts-org/sdk";
-import { useGetHypercertData } from "../hooks/useGetHypercertData";
 import Link from "next/link";
 import Image from "next/image";
 import { HStack, VStack } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { useChainId } from "wagmi";
+import type { HypercertMetadata } from "@hypercerts-org/sdk";
 
-export const HypercertTile = ({ uri, id }: Omit<Claim, "creation">) => {
-  const { data } = useGetHypercertData(uri ?? "");
+interface HypercertTileProps {
+  data: { id: string; metadata: HypercertMetadata };
+}
+
+export const HypercertTile = ({ data }: HypercertTileProps) => {
   const chainId = useChainId();
-
-  if (!data) {
-    return null;
-  }
 
   return (
     <VStack
@@ -25,7 +23,12 @@ export const HypercertTile = ({ uri, id }: Omit<Claim, "creation">) => {
       alignItems={"flex-end"}
       _hover={{ backgroundColor: "gray.50" }}
     >
-      <Image src={data.image} alt={data.name} width={320} height={400} />
+      <Image
+        src={data.metadata.image}
+        alt={data.metadata.name}
+        width={320}
+        height={400}
+      />
       <HStack
         justifyContent={"flex-end"}
         w={"max"}
@@ -39,7 +42,7 @@ export const HypercertTile = ({ uri, id }: Omit<Claim, "creation">) => {
         }}
       >
         <Link
-          href={`https://grants-builder.greenpill.network/#/projects/new?chainId=${chainId}&hypercertId=${id}`}
+          href={`https://grants-builder.greenpill.network/#/projects/new?chainId=${chainId}&hypercertId=${data.id}`}
           color="dark-green"
           target={"_blank"}
         >
