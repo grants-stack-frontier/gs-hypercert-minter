@@ -26,7 +26,10 @@ export const createClaim = (formData: formSchema, imageData: string) => {
     version: "0.0.1",
     image: imageData,
     external_url: externalUrl,
-    properties: [],
+    properties: [{
+      trait_type: "GreenPill",
+      value: "true",
+    }],
     hypercert: {
       impact_scope:{"name":"Impact Scope","value":["all"],"excludes":[],"display_value":"all"},
       work_scope: {
