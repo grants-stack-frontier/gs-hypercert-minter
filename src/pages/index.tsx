@@ -46,6 +46,11 @@ export function validateFormData(
   const validMetadata = validateMetaData(metadata as HypercertMetadata);
   const isValid = validClaim.valid && validMetadata.valid;
 
+  if (!isValid && (validClaim.errors || validMetadata.errors)) {
+    console.log("Validation claim errors", validClaim.errors);
+    console.log("Validation metadata errors", validMetadata.errors);
+  }
+
   return isValid ? metadata : false;
 }
 

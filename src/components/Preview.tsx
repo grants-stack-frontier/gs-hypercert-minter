@@ -47,6 +47,8 @@ const Preview: React.FC<PreviewProps> = ({
   const [tx, setTx] = useState<ContractTransaction>();
   const [loading, setLoading] = useState(false);
 
+  console.log("Preview", formData, image, chainId, wallets);
+
   const shouldweMint = validateFormData(
     formData,
     image as unknown as string,
