@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { HStack, VStack } from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import {Box, Button, HStack, VStack} from "@chakra-ui/react";
+import {CopyIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import { useChainId } from "wagmi";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
+import {useCopyToClipboard} from "@uidotdev/usehooks";
 
 interface HypercertTileProps {
   data: { id: string; metadata: HypercertMetadata };
@@ -11,6 +12,7 @@ interface HypercertTileProps {
 
 export const HypercertTile = ({ data }: HypercertTileProps) => {
   const chainId = useChainId();
+  const [_, copyToClipboard] = useCopyToClipboard();
 
   return (
     <VStack
@@ -30,24 +32,30 @@ export const HypercertTile = ({ data }: HypercertTileProps) => {
         height={400}
       />
       <HStack
-        justifyContent={"flex-end"}
-        w={"max"}
-        px={4}
-        py={2}
-        _hover={{
+        justifyContent={"space-between"}
+        w={"100%"}
+      >
+        <Button onClick={() => copyToClipboard(data.id)} variant={'outline'}>
+          <CopyIcon mr={2} />Copy ID
+        </Button>
+        <Box
+          px={4}
+          py={2}
+          _hover={{
           background: "green",
           fontWeight: "medium",
           borderRadius: "full",
           textColor: "dark-green",
-        }}
-      >
-        <Link
-          href={`https://grants-builder.greenpill.network/#/projects/new?chainId=${chainId}&hypercertId=${data.id}`}
-          color="dark-green"
-          target={"_blank"}
-        >
-          <ExternalLinkIcon boxSize={4} /> Apply
-        </Link>
+        }}>
+
+          <Link
+            href={`https://grants-builder.greenpill.network/#/projects/new?chainId=${chainId}&hypercertId=${data.id}`}
+            color="dark-green"
+            target={"_blank"}
+          >
+            <ExternalLinkIcon boxSize={4} /> Apply
+          </Link>
+        </Box>
       </HStack>
     </VStack>
   );
