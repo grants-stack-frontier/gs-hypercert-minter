@@ -12,7 +12,7 @@ interface HypercertTileProps {
 
 export const HypercertTile = ({ data }: HypercertTileProps) => {
   const chainId = useChainId();
-  const [_, copyToClipboard] = useCopyToClipboard();
+  const [, copyToClipboard] = useCopyToClipboard();
 
   return (
     <VStack
