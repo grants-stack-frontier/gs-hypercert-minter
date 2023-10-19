@@ -49,7 +49,7 @@ export const HypercertTile = ({ data }: HypercertTileProps) => {
         }}>
 
           <Link
-            href={`https://grants-builder.greenpill.network/#/projects/new?chainId=${chainId}&hypercertId=${data.id}`}
+            href={`${process.env.NEXT_PUBLIC_GRANTS_BUILDER_URL}/#/projects/new?chainId=${chainId}&hypercertId=${data.id}`}
             color="dark-green"
             target={"_blank"}
           >
