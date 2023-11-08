@@ -21,7 +21,8 @@ export default async function handler(req: Request) {
     return new Response("No form data provided", { status: 400 });
   }
 
-  const selectedChapter = Object.values(formData)?.[4] as unknown as optionType;
+  const selectedChapter = Object.values(formData)?.[5] as unknown as optionType;
+
   return new ImageResponse(
     (
       <div
@@ -41,6 +42,7 @@ export default async function handler(req: Request) {
           overflow: "hidden",
         }}
       >
+        <div style={{display: "flex", flexDirection: "column"}}>
         <h1
           style={{
             color: "white",
@@ -52,6 +54,19 @@ export default async function handler(req: Request) {
         >
           {selectedChapter?.label ?? "Name of the chapter"}
         </h1>
+        <h2
+          style={{
+            color: "white",
+            fontWeight: "bolder",
+            fontSize: "15px",
+            margin: 'auto 0px 0px 0px',
+            fontFamily: volkhov.style.fontFamily,
+          }}
+        >
+          {formData?.ref}
+        </h2>
+        </div>
+
 
         <hr
           style={{

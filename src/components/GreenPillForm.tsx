@@ -99,7 +99,26 @@ function GreenPillForm({
             name="name"
             control={control}
           />
-        </FormControl>{" "}
+        </FormControl>
+        <FormControl id="ref" isInvalid={!!errors.ref}>
+          <FormLabel fontWeight={550}>
+            Topic
+            <Tooltip
+              label="Add a brief topic for the scope of work"
+              fontSize="md"
+            >
+              <InfoIcon ml={2} />
+            </Tooltip>
+          </FormLabel>
+          <Input
+            placeholder="Topic"
+            type="text"
+            {...register("ref")}
+          />
+          <FormErrorMessage>
+            {errors.ref?.message as string}
+          </FormErrorMessage>
+        </FormControl>
         <FormControl>
           <FormLabel fontWeight={550}>
             List the tags for the scope of work

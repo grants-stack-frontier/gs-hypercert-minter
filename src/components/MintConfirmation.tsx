@@ -39,7 +39,7 @@ export const MintConfirmation = (props: MintConfirmationProps) => {
           href={
             chain?.id === 5
               ? `https://goerli.etherscan.io/tx/${txHash}`
-              : `https://optimistic.etherscan.io//tx/${txHash}`
+              : `https://optimistic.etherscan.io/tx/${txHash}`
           }
         >
           <Button

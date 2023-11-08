@@ -6,7 +6,7 @@ import type { formSchema, optionType } from './types';
 
 export const createClaim = (formData: formSchema, imageData: string) => {
 
-  const selectedChapter = _.map(formData)[4] as unknown as optionType;
+  const selectedChapter = _.map(formData)[5] as unknown as optionType;
 
 
   const name = selectedChapter?.label;
@@ -16,6 +16,7 @@ export const createClaim = (formData: formSchema, imageData: string) => {
   const contributors = _.map(formData?.contributors, 'value');
   const workTimeframeStart = formData?.workTimeframeStart
   const workTimeframeEnd = formData?.workTimeframeEnd
+  const ref = formData?.ref
 
 
 
@@ -26,6 +27,7 @@ export const createClaim = (formData: formSchema, imageData: string) => {
     version: "0.0.1",
     image: imageData,
     external_url: externalUrl,
+    ref,
     properties: [{
       trait_type: "GreenPill",
       value: "true",

@@ -19,6 +19,7 @@ export const zFormSchema = z
     name: z.array(zOptionType).nonempty({
       message: "Chapter Name is required",
     }),
+    ref: z.string().min(1, { message: "Topic is required" }),
     workScope: z.array(zOptionType).nonempty({
       message: "At least one work scope is required",
     }),
