@@ -102,7 +102,7 @@ function GreenPillForm({
         </FormControl>
         <FormControl id="ref" isInvalid={!!errors.ref}>
           <FormLabel fontWeight={550}>
-            Topic
+            Topic (max 30 characters)
             <Tooltip
               label="Add a brief topic for the scope of work"
               fontSize="md"
@@ -114,6 +114,7 @@ function GreenPillForm({
             placeholder="Topic"
             type="text"
             {...register("ref")}
+            maxLength={30}
           />
           <FormErrorMessage>
             {errors.ref?.message as string}
